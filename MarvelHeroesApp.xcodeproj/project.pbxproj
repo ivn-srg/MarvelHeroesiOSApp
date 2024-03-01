@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		936DBDA42B91F8DE0098E9C6 /* PagingCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936DBDA32B91F8DD0098E9C6 /* PagingCollectionViewLayout.swift */; };
 		93CD1E9E2B90F16300AD2752 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93CD1E9D2B90F16300AD2752 /* AppDelegate.swift */; };
 		93CD1EA02B90F16300AD2752 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93CD1E9F2B90F16300AD2752 /* SceneDelegate.swift */; };
 		93CD1EA22B90F16300AD2752 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93CD1EA12B90F16300AD2752 /* ViewController.swift */; };
@@ -15,6 +16,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		936DBDA32B91F8DD0098E9C6 /* PagingCollectionViewLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PagingCollectionViewLayout.swift; path = ../../../../../../Downloads/PagingCollectionViewLayout.swift; sourceTree = "<group>"; };
 		93CD1E9A2B90F16300AD2752 /* MarvelHeroesApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MarvelHeroesApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		93CD1E9D2B90F16300AD2752 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		93CD1E9F2B90F16300AD2752 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -35,6 +37,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		936DBDA22B91F8A60098E9C6 /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				936DBDA32B91F8DD0098E9C6 /* PagingCollectionViewLayout.swift */,
+			);
+			path = Libraries;
+			sourceTree = "<group>";
+		};
 		93CD1E912B90F16300AD2752 = {
 			isa = PBXGroup;
 			children = (
@@ -54,6 +64,7 @@
 		93CD1E9C2B90F16300AD2752 /* MarvelHeroesApp */ = {
 			isa = PBXGroup;
 			children = (
+				936DBDA22B91F8A60098E9C6 /* Libraries */,
 				93CD1E9D2B90F16300AD2752 /* AppDelegate.swift */,
 				93CD1E9F2B90F16300AD2752 /* SceneDelegate.swift */,
 				93CD1EA12B90F16300AD2752 /* ViewController.swift */,
@@ -134,6 +145,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				936DBDA42B91F8DE0098E9C6 /* PagingCollectionViewLayout.swift in Sources */,
 				93CD1EA22B90F16300AD2752 /* ViewController.swift in Sources */,
 				93CD1E9E2B90F16300AD2752 /* AppDelegate.swift in Sources */,
 				93CD1EA02B90F16300AD2752 /* SceneDelegate.swift in Sources */,
