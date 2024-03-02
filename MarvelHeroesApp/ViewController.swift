@@ -35,14 +35,20 @@ class ViewController: UIViewController {
     }()
     
     private lazy var collectionView: UICollectionView = {
-        let layout = PagingCollectionViewLayout()
-        layout.itemSize = CGSize(width: 400, height: 600)
+       let layout = PagingCollectionViewLayout()
+        layout.itemSize = CGSize(width: 330, height: 550)
         layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 20
+        layout.minimumInteritemSpacing = 20
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.contentInsetAdjustmentBehavior = .never
         collectionView.backgroundColor = nil
         collectionView.register(HeroCollectionViewCell.self, forCellWithReuseIdentifier: HeroCollectionViewCell.identifier)
+        collectionView.contentInset = UIEdgeInsets(top: 30, left: 20, bottom: 30, right: 20)
+        collectionView.alwaysBounceHorizontal = true
+        collectionView.showsHorizontalScrollIndicator = false
         return collectionView
     }()
 
@@ -52,13 +58,13 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view
         
-        setupView()
+        setupUI()
         
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
     }
 
-    private func setupView() {
+    private func setupUI() {
         
         box.backgroundColor = UIColor(rgb: 0x2b272b)
         
@@ -92,7 +98,7 @@ class ViewController: UIViewController {
         collectionView.snp.makeConstraints{ (make) -> Void in
             make.top.equalTo(chooseHeroText.snp.bottom)
             make.width.equalTo(box.snp.width)
-            make.bottom.equalTo(box.snp.bottom).offset(-30)
+            make.bottom.equalTo(box.snp.bottom)
             
         }
     }
@@ -114,12 +120,5 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
 }
 
 extension ViewController: UICollectionViewDelegateFlowLayout {
-    // Vertical spacing
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        20
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        0
-    }
+
 }

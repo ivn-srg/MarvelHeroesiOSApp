@@ -22,15 +22,16 @@ class HeroCollectionViewCell: UICollectionViewCell {
         iv.image = UIImage(systemName: "questionmark")
         iv.tintColor = .white
         iv.clipsToBounds = true
+        iv.layer.cornerRadius = 20
         return iv
     }()
     
     private lazy var nameOfHero: UILabel = {
         let lbl = UILabel()
         lbl.translatesAutoresizingMaskIntoConstraints = false
-        lbl.font = .systemFont(ofSize: 30, weight: .bold)
+        lbl.font = .systemFont(ofSize: 36, weight: .bold)
         lbl.textColor = .white
-        lbl.textAlignment = .center
+        lbl.textAlignment = .left
         return lbl
     }()
     
@@ -47,15 +48,14 @@ class HeroCollectionViewCell: UICollectionViewCell {
         self.addSubview(imageView)
         imageView.snp.makeConstraints{ (make) -> Void in
             make.top.equalTo(self.snp.top)
-            make.leading.equalTo(self.snp.leading)
-            make.trailing.equalTo(self.snp.trailing)
+            make.width.equalTo(self.snp.width)
             make.bottom.equalTo(self.snp.bottom)
         }
         
         self.addSubview(nameOfHero)
         nameOfHero.snp.makeConstraints { make in
-            make.bottom.equalTo(self.snp.bottom).offset(-30)
-            make.width.equalTo(self.snp.width).multipliedBy(0.8)
+            make.bottom.equalTo(self.snp.bottom).offset(-40)
+            make.leading.equalTo(self.snp.leading).offset(40)
         }
     }
     
