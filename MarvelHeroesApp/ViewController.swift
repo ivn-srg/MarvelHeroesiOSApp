@@ -8,7 +8,20 @@
 import UIKit
 import SnapKit
 
+let screenWidth = UIScreen.main.bounds.width
+let screenHeight = UIScreen.main.bounds.height
+
 class ViewController: UIViewController {
+    
+    //MARK: - Variables
+    
+    var itemW: CGFloat {
+        screenWidth * 0.7
+    }
+    
+    var itemH: CGFloat {
+        itemW * 1.65
+    }
     
     // MARK: - UI components
     
@@ -34,19 +47,21 @@ class ViewController: UIViewController {
         return txt
     }()
     
+    private lazy var customLayout: CustomHeroItemLayer = {
+        let lt = CustomHeroItemLayer()
+        lt.itemSize.width = itemW
+        lt.scrollDirection = .horizontal
+        lt.minimumLineSpacing = 50
+        return lt
+    }()
+    
     private lazy var collectionView: UICollectionView = {
-       let layout = PagingCollectionViewLayout()
-        layout.itemSize = CGSize(width: 330, height: 550)
-        layout.scrollDirection = .horizontal
-        layout.minimumLineSpacing = 20
-        layout.minimumInteritemSpacing = 20
-        
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: customLayout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.contentInsetAdjustmentBehavior = .never
-        collectionView.backgroundColor = nil
+        collectionView.backgroundColor = .clear
         collectionView.register(HeroCollectionViewCell.self, forCellWithReuseIdentifier: HeroCollectionViewCell.identifier)
-        collectionView.contentInset = UIEdgeInsets(top: 30, left: 20, bottom: 30, right: 20)
+        collectionView.contentInset = UIEdgeInsets(top: 0, left: 55, bottom: 0, right: 55)
         collectionView.alwaysBounceHorizontal = true
         collectionView.showsHorizontalScrollIndicator = false
         return collectionView
@@ -63,6 +78,20 @@ class ViewController: UIViewController {
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        let indexPath = IndexPath(item: 0, section: 0)
+        collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+        
+        customLayout.currentPage = indexPath.item
+        
+        if let cell = collectionView.cellForItem(at: indexPath) {
+            transformCell(cell)
+        }
+    }
+    
+    // MARK: - private functions
 
     private func setupUI() {
         
@@ -117,8 +146,59 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
         
         return cell
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if indexPath.item == customLayout.currentPage {
+            
+        } else {
+            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+            
+            customLayout.currentPage = indexPath.item
+            customLayout.previosOffset = customLayout.updateOffset(collectionView)
+            setupCell()
+        }
+    }
 }
 
 extension ViewController: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: itemW, height: itemH)
+    }
+}
 
+extension ViewController {
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if decelerate {
+            setupCell()
+        }
+    }
+    
+    private func setupCell() {
+        let indexPath = IndexPath(item: customLayout.currentPage, section: 0)
+        let cell = collectionView.cellForItem(at: indexPath)
+        transformCell(cell!)
+    }
+    
+    private func transformCell(_ cell: UICollectionViewCell, isEffect: Bool = true) {
+        if !isEffect {
+            cell.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
+            return
+        }
+        
+        UIView.animate(withDuration: 0.2) {
+            cell.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
+        }
+        
+        for otherCell in collectionView.visibleCells {
+            if let indexPath = collectionView.indexPath(for: otherCell) {
+                if indexPath.item != customLayout.currentPage {
+                    UIView.animate(withDuration: 0.2) {
+                        otherCell.transform = .identity
+                    }
+                }
+            }
+        }
+    }
+                                                
 }

@@ -29,7 +29,7 @@ class HeroCollectionViewCell: UICollectionViewCell {
     private lazy var nameOfHero: UILabel = {
         let lbl = UILabel()
         lbl.translatesAutoresizingMaskIntoConstraints = false
-        lbl.font = .systemFont(ofSize: 36, weight: .bold)
+        lbl.font = .systemFont(ofSize: 28, weight: .bold)
         lbl.textColor = .white
         lbl.textAlignment = .left
         return lbl
@@ -55,7 +55,7 @@ class HeroCollectionViewCell: UICollectionViewCell {
         self.addSubview(nameOfHero)
         nameOfHero.snp.makeConstraints { make in
             make.bottom.equalTo(self.snp.bottom).offset(-40)
-            make.leading.equalTo(self.snp.leading).offset(40)
+            make.leading.equalTo(self.snp.leading).offset(30)
         }
     }
     
