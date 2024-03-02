@@ -66,6 +66,12 @@ class ViewController: UIViewController {
         collectionView.showsHorizontalScrollIndicator = false
         return collectionView
     }()
+    
+    private lazy var triangleView: TriangleView = {
+        let tv = TriangleView(frame: CGRect(x: 0, y: UIScreen.main.bounds.height * 0.3, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height * 0.6))
+        tv.translatesAutoresizingMaskIntoConstraints = false
+        return tv
+    }()
 
     // MARK: - lifecycle
     
@@ -109,6 +115,9 @@ class ViewController: UIViewController {
             make.trailing.equalTo(self.view.safeAreaLayoutGuide.snp.trailing)
         }
         
+        TriangleView.triangle.backgroundColor = .clear
+        box.addSubview(TriangleView.triangle)
+
         box.addSubview(marvelLogo)
         marvelLogo.snp.makeConstraints{ (make) -> Void in
             make.top.equalTo(self.box.snp.top).offset(25)
@@ -128,7 +137,6 @@ class ViewController: UIViewController {
             make.top.equalTo(chooseHeroText.snp.bottom)
             make.width.equalTo(box.snp.width)
             make.bottom.equalTo(box.snp.bottom)
-            
         }
     }
 }
