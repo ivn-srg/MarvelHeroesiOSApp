@@ -8,12 +8,9 @@
 import UIKit
 import SnapKit
 
-let screenWidth = UIScreen.main.bounds.width
-let screenHeight = UIScreen.main.bounds.height
-
 class ViewController: UIViewController {
     
-    //MARK: - Variables
+    // MARK: - Fields
     
     var itemW: CGFloat {
         screenWidth * 0.7
@@ -67,8 +64,10 @@ class ViewController: UIViewController {
         return collectionView
     }()
     
-    private lazy var triangleView: TriangleView = {
-        let tv = TriangleView(frame: CGRect(x: 0, y: UIScreen.main.bounds.height * 0.3, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height * 0.6))
+    private var triangleView: TriangleView = {
+        let tv = TriangleView(
+            colorOfTriangle: mockDataOfHeroes.result.entities[0].color,
+            frame: RectForTriagle)
         tv.translatesAutoresizingMaskIntoConstraints = false
         return tv
     }()
@@ -77,7 +76,6 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view
         
         setupUI()
         
@@ -101,9 +99,9 @@ class ViewController: UIViewController {
 
     private func setupUI() {
         
-        box.backgroundColor = UIColor(rgb: 0x2b272b)
+        box.backgroundColor = UIColor(rgb: bgColor)
         
-        marvelLogo.image = UIImage(named: "marvelLogo")
+        marvelLogo.image = Logo
         
         chooseHeroText.text = "Choose your hero"
         
@@ -115,8 +113,8 @@ class ViewController: UIViewController {
             make.trailing.equalTo(self.view.safeAreaLayoutGuide.snp.trailing)
         }
         
-        TriangleView.triangle.backgroundColor = .clear
-        box.addSubview(TriangleView.triangle)
+        triangleView.backgroundColor = .clear
+        box.addSubview(triangleView)
 
         box.addSubview(marvelLogo)
         marvelLogo.snp.makeConstraints{ (make) -> Void in
@@ -141,15 +139,17 @@ class ViewController: UIViewController {
     }
 }
 
+// MARK: - Extensions
+
 extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        ResponseModel.mockDataOfHeroes.result.totalCount
+        mockDataOfHeroes.result.totalCount
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HeroCollectionViewCell.identifier, for: indexPath) as? HeroCollectionViewCell else { return UICollectionViewCell() }
         
-        let hero = ResponseModel.mockDataOfHeroes.result.entities[indexPath.row]
+        let hero = mockDataOfHeroes.result.entities[indexPath.row]
         cell.configure(with: hero)
         
         return cell
@@ -157,7 +157,7 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.item == customLayout.currentPage {
-            
+            print("Item \(indexPath.item) has been tapped")
         } else {
             collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
             
@@ -184,7 +184,11 @@ extension ViewController {
     
     private func setupCell() {
         let indexPath = IndexPath(item: customLayout.currentPage, section: 0)
+        let hero = mockDataOfHeroes.result.entities[indexPath.row]
         let cell = collectionView.cellForItem(at: indexPath)
+        
+        triangleView.colorOfTriangle = hero.color
+        triangleView.setNeedsDisplay()
         transformCell(cell!)
     }
     
