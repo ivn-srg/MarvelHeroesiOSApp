@@ -8,9 +8,11 @@
 import UIKit
 import SnapKit
 
-class ViewController: UIViewController {
+class HeroListViewController: UIViewController {
     
     // MARK: - Fields
+    
+    let viewModel: HeroListViewModel
     
     var itemW: CGFloat {
         screenWidth * 0.7
@@ -73,6 +75,15 @@ class ViewController: UIViewController {
     }()
 
     // MARK: - lifecycle
+    
+    init(vm: HeroListViewModel) {
+        self.viewModel = vm
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -141,15 +152,15 @@ class ViewController: UIViewController {
 
 // MARK: - Extensions
 
-extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+extension HeroListViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        mockDataOfHeroes.result.totalCount
+        viewModel.countOfRow()
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HeroCollectionViewCell.identifier, for: indexPath) as? HeroCollectionViewCell else { return UICollectionViewCell() }
         
-        let hero = mockDataOfHeroes.result.entities[indexPath.row]
+        let hero = viewModel.dataSource[indexPath.row]
         cell.configure(with: hero)
         
         return cell
@@ -168,14 +179,14 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     }
 }
 
-extension ViewController: UICollectionViewDelegateFlowLayout {
+extension HeroListViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: itemW, height: itemH)
     }
 }
 
-extension ViewController {
+extension HeroListViewController {
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         if decelerate {
             setupCell()
@@ -184,7 +195,7 @@ extension ViewController {
     
     private func setupCell() {
         let indexPath = IndexPath(item: customLayout.currentPage, section: 0)
-        let hero = mockDataOfHeroes.result.entities[indexPath.row]
+        let hero = viewModel.dataSource[indexPath.row]
         let cell = collectionView.cellForItem(at: indexPath)
         
         triangleView.colorOfTriangle = hero.color
