@@ -7,7 +7,7 @@
 
 import UIKit
 
-let bgColor = 0x2b272b
+let bgColor = UIColor(rgb: 0x2b272b)
 
 let RectForTriagle = CGRect(
     x: 0,
@@ -21,3 +21,4 @@ let screenHeight = UIScreen.main.bounds.height
 
 // images
 let Logo = UIImage(named: "marvelLogo")
+let QuestionImage = UIImage(systemName: "questionmark")

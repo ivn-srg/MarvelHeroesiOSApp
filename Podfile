@@ -7,5 +7,6 @@ target 'MarvelHeroesApp' do
 
   # Pods for MarvelHeroesApp
   pod 'SnapKit'
+  pod 'TinyConstraints'
 
 end

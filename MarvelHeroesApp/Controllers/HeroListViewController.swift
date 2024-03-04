@@ -40,7 +40,7 @@ class HeroListViewController: UIViewController {
     private lazy var chooseHeroText: UILabel = {
         let txt = UILabel()
         txt.translatesAutoresizingMaskIntoConstraints = false
-        txt.font = .systemFont(ofSize: 34, weight: .bold)
+        txt.font = UIFont(name: Font.InterBold, size: 28)
         txt.textColor = .white
         txt.textAlignment = .center
         return txt
@@ -66,9 +66,9 @@ class HeroListViewController: UIViewController {
         return collectionView
     }()
     
-    private var triangleView: TriangleView = {
+    private lazy var triangleView: TriangleView = {
         let tv = TriangleView(
-            colorOfTriangle: mockDataOfHeroes.result.entities[0].color,
+            colorOfTriangle: viewModel.dataSource[0].color,
             frame: RectForTriagle)
         tv.translatesAutoresizingMaskIntoConstraints = false
         return tv
@@ -110,7 +110,7 @@ class HeroListViewController: UIViewController {
 
     private func setupUI() {
         
-        box.backgroundColor = UIColor(rgb: bgColor)
+        box.backgroundColor = bgColor
         
         marvelLogo.image = Logo
         

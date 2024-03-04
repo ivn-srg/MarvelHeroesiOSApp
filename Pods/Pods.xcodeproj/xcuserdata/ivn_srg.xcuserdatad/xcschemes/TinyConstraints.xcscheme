@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "413EECF2614B0C6D3405C05838362A51"
-               BuildableName = "Pods_MarvelHeroesApp.framework"
-               BlueprintName = "Pods-MarvelHeroesApp"
+               BlueprintIdentifier = "45C4E325E7851DD54CC3AD44C7A71935"
+               BuildableName = "TinyConstraints.framework"
+               BlueprintName = "TinyConstraints"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>

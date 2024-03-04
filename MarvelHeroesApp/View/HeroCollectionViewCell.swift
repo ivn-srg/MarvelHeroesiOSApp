@@ -19,7 +19,7 @@ class HeroCollectionViewCell: UICollectionViewCell {
         let iv = UIImageView()
         iv.translatesAutoresizingMaskIntoConstraints = false
         iv.contentMode = .scaleAspectFill
-        iv.image = UIImage(systemName: "questionmark")
+        iv.image = QuestionImage
         iv.tintColor = .white
         iv.clipsToBounds = true
         iv.layer.cornerRadius = 20
@@ -29,7 +29,7 @@ class HeroCollectionViewCell: UICollectionViewCell {
     private lazy var nameOfHero: UILabel = {
         let lbl = UILabel()
         lbl.translatesAutoresizingMaskIntoConstraints = false
-        lbl.font = .systemFont(ofSize: 28, weight: .bold)
+        lbl.font = UIFont(name: Font.InterBold, size: 28)
         lbl.textColor = .white
         lbl.textAlignment = .left
         return lbl
