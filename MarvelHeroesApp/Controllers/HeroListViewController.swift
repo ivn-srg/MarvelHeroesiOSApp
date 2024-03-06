@@ -73,7 +73,7 @@ class HeroListViewController: UIViewController {
         tv.translatesAutoresizingMaskIntoConstraints = false
         return tv
     }()
-
+    
     // MARK: - lifecycle
     
     init(vm: HeroListViewModel) {
@@ -107,7 +107,7 @@ class HeroListViewController: UIViewController {
     }
     
     // MARK: - private functions
-
+    
     private func setupUI() {
         
         box.backgroundColor = bgColor
@@ -126,7 +126,7 @@ class HeroListViewController: UIViewController {
         
         triangleView.backgroundColor = .clear
         box.addSubview(triangleView)
-
+        
         box.addSubview(marvelLogo)
         marvelLogo.snp.makeConstraints{ (make) -> Void in
             make.top.equalTo(self.box.snp.top).offset(25)
@@ -173,7 +173,7 @@ extension HeroListViewController: UICollectionViewDelegate, UICollectionViewData
             collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
             
             customLayout.currentPage = indexPath.item
-            customLayout.previosOffset = customLayout.updateOffset(collectionView)
+            customLayout.previousOffset = customLayout.updateOffset(collectionView)
             setupCell()
         }
     }
@@ -187,20 +187,19 @@ extension HeroListViewController: UICollectionViewDelegateFlowLayout {
 }
 
 extension HeroListViewController {
-    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        if decelerate {
-            setupCell()
-        }
+
+    func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
+        setupCell()
     }
     
     private func setupCell() {
         let indexPath = IndexPath(item: customLayout.currentPage, section: 0)
         let hero = viewModel.dataSource[indexPath.row]
-        let cell = collectionView.cellForItem(at: indexPath)
+        guard let cell = collectionView.cellForItem(at: indexPath) else { return }
         
         triangleView.colorOfTriangle = hero.color
         triangleView.setNeedsDisplay()
-        transformCell(cell!)
+        transformCell(cell)
     }
     
     private func transformCell(_ cell: UICollectionViewCell, isEffect: Bool = true) {
@@ -223,5 +222,4 @@ extension HeroListViewController {
             }
         }
     }
-                                                
 }

@@ -42,6 +42,7 @@ class HeroCollectionViewCell: UICollectionViewCell {
         self.nameOfHero.text = hero.name
         
         self.setupUI()
+        awakeFromNib()
     }
     
     private func setupUI() {
@@ -62,5 +63,6 @@ class HeroCollectionViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         self.imageView.image = nil
+        self.nameOfHero.text = nil
     }
 }

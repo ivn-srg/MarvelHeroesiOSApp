@@ -35,7 +35,6 @@ class TriangleView: UIView {
         trianglePath.move(to: CGPoint(x: rect.size.width, y: rect.size.height))
         trianglePath.addLine(to: CGPoint(x: 0, y: rect.size.height))
         trianglePath.addLine(to: CGPoint(x: rect.size.width, y: 0))
-        trianglePath.close()
         
         let fillColor = UIColor(rgb: color)
         fillColor.setFill()

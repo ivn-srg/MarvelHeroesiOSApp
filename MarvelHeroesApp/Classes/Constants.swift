@@ -14,7 +14,7 @@ let RectForTriagle = CGRect(
     y: UIScreen.main.bounds.height * 0.3,
     width: UIScreen.main.bounds.width,
     height: UIScreen.main.bounds.height * 0.6
-    )
+)
 
 let screenWidth = UIScreen.main.bounds.width
 let screenHeight = UIScreen.main.bounds.height
