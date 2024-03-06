@@ -1,5 +1,23 @@
 {
   "sourceLanguage" : "en",
-  "strings" : {},
+  "strings" : {
+    "mainScreenTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose your hero"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выберите своего персонажа"
+          }
+        }
+      }
+    }
+  },
   "version" : "1.0"
 }

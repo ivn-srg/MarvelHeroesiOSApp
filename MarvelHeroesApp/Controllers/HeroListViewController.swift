@@ -43,6 +43,7 @@ class HeroListViewController: UIViewController {
         txt.font = UIFont(name: Font.InterBold, size: 28)
         txt.textColor = .white
         txt.textAlignment = .center
+        txt.numberOfLines = 2
         return txt
     }()
     
@@ -114,7 +115,7 @@ class HeroListViewController: UIViewController {
         
         marvelLogo.image = Logo
         
-        chooseHeroText.text = "Choose your hero"
+        chooseHeroText.text = mainScreenTitle
         
         view.addSubview(box)
         box.snp.makeConstraints{ (make) -> Void in

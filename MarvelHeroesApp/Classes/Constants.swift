@@ -22,3 +22,6 @@ let screenHeight = UIScreen.main.bounds.height
 // images
 let Logo = UIImage(named: "marvelLogo")
 let QuestionImage = UIImage(systemName: "questionmark")
+
+// localizable strings
+let mainScreenTitle = NSLocalizedString("mainScreenTitle", comment: "")

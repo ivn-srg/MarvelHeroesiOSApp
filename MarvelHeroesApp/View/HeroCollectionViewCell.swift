@@ -42,7 +42,6 @@ class HeroCollectionViewCell: UICollectionViewCell {
         self.nameOfHero.text = hero.name
         
         self.setupUI()
-        awakeFromNib()
     }
     
     private func setupUI() {
