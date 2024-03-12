@@ -12,15 +12,69 @@ let mockDataOfHeroes =  ResponseModel(
     result: ListOfHeroesModel(
         totalCount: 9,
         entities: [
-            HeroModel(name: "Deadpool", imageName: "deadPool", color: 0x770309),
-            HeroModel(name: "Iron Man", imageName: "ironMan", color: 0x94141a),
-            HeroModel(name: "Captain America", imageName: "captainAmerica", color: 0x3d50b5),
-            HeroModel(name: "Spiderman", imageName: "spiderMan", color: 0x981518),
-            HeroModel(name: "Doctor Strange", imageName: "drStrange", color: 0x0a7a53),
-            HeroModel(name: "Thor", imageName: "thor", color: 0x0b84ba),
-            HeroModel(name: "Thanos", imageName: "thanos", color: 0x6c0fc5),
-            HeroModel(name: "Hulk", imageName: "hulk", color: 0x008000),
-            HeroModel(name: "Black Panther", imageName: "panther", color: 0x000000)
+            HeroModel(
+                name: "Deadpool",
+                info: "This is Deadpool",
+                imageName: "deadPool",
+                color: 0x770309,
+                urlImage: "https://clck.ru/39Nw8q"
+            ),
+            HeroModel(
+                name: "Iron Man",
+                info: "This is name",
+                imageName: "ironMan",
+                color: 0x94141a,
+                urlImage: "https://iili.io/JMnuDI2.png"
+            ),
+            HeroModel(
+                name: "Captain America",
+                info: "This is name",
+                imageName: "captainAmerica",
+                color: 0x3d50b5,
+                urlImage: "https://goo.su/Pr6hL"
+            ),
+            HeroModel(
+                name: "Spiderman",
+                info: "This is name",
+                imageName: "spiderMan",
+                color: 0x981518,
+                urlImage: "https://goo.su/qBEKPid"
+            ),
+            HeroModel(
+                name: "Doctor Strange",
+                info: "This is name",
+                imageName: "drStrange",
+                color: 0x0a7a53,
+                urlImage: "https://goo.su/QBvFNS"
+            ),
+            HeroModel(
+                name: "Thor",
+                info: "This is name",
+                imageName: "thor",
+                color: 0x0b84ba,
+                urlImage: "https://goo.su/w6jWzHL"
+            ),
+            HeroModel(
+                name: "Thanos",
+                info: "This is name",
+                imageName: "thanos",
+                color: 0x6c0fc5,
+                urlImage: "https://goo.su/Uapa6U"
+            ),
+            HeroModel(
+                name: "Hulk",
+                info: "This is name",
+                imageName: "hulk",
+                color: 0x008000,
+                urlImage: "https://sul.su/7Oiq"
+            ),
+            HeroModel(
+                name: "Black Panther",
+                info: "This is name",
+                imageName: "panther",
+                color: 0x000000,
+                urlImage: "https://sul.su/2ySw"
+            )
         ]
     )
 )
@@ -44,7 +98,5 @@ class HeroListViewModel {
     func countOfRow() -> Int {
         dataSource.count
     }
-    
-    
 }
 

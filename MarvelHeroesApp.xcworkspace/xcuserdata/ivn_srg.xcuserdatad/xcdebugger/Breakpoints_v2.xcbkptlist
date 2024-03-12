@@ -20,5 +20,101 @@
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D7323519-4C8E-4EC9-854B-1849EDE251E5"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MarvelHeroesApp/Controllers/DetailHeroViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "93"
+            endingLineNumber = "93"
+            landmarkName = "setupView()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D14727B0-3B9D-48F6-AABF-B03F8E72E909"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MarvelHeroesApp/Controllers/DetailHeroViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "66"
+            endingLineNumber = "66"
+            landmarkName = "init(hero:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "D14727B0-3B9D-48F6-AABF-B03F8E72E909 - 4d4a53e59162d5d1"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "MarvelHeroesApp.DetailHeroViewController.init(hero: MarvelHeroesApp.HeroModel) -&gt; MarvelHeroesApp.DetailHeroViewController"
+                  moduleName = "MarvelHeroesApp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/ivn_srg/Desktop/iOSDev/MarvelHeroesApp/MarvelHeroesiOSApp/MarvelHeroesApp/Controllers/DetailHeroViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "58"
+                  endingLineNumber = "58"
+                  offsetFromSymbolStart = "316">
+               </Location>
+               <Location
+                  uuid = "D14727B0-3B9D-48F6-AABF-B03F8E72E909 - 4d4a53e59162d5f6"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "MarvelHeroesApp.DetailHeroViewController.init(hero: MarvelHeroesApp.HeroModel) -&gt; MarvelHeroesApp.DetailHeroViewController"
+                  moduleName = "MarvelHeroesApp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/ivn_srg/Desktop/iOSDev/MarvelHeroesApp/MarvelHeroesiOSApp/MarvelHeroesApp/Controllers/DetailHeroViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "59"
+                  endingLineNumber = "59"
+                  offsetFromSymbolStart = "316">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "694328D3-48CB-4EBE-A546-77120452697D"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MarvelHeroesApp/Controllers/DetailHeroViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "76"
+            endingLineNumber = "76"
+            landmarkName = "viewDidLoad()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "691CD835-AB9A-4AD6-A170-7E21393AD7E7"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MarvelHeroesApp/Controllers/HeroListViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "179"
+            endingLineNumber = "179"
+            landmarkName = "collectionView(_:didSelectItemAt:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

@@ -168,8 +168,15 @@ extension HeroListViewController: UICollectionViewDelegate, UICollectionViewData
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        let hero = viewModel.dataSource[indexPath.row]
+        
         if indexPath.item == customLayout.currentPage {
-            print("Item \(indexPath.item) has been tapped")
+            print("tap")
+            let vc = DetailHeroViewController(hero: hero)
+            vc.hero = hero
+            self.navigationController?.pushViewController(vc, animated: true)
+//            assertionFailure("here")
         } else {
             collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
             
