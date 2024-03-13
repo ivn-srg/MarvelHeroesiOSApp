@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class DetailHeroViewModel {
     
@@ -17,19 +18,25 @@ class DetailHeroViewModel {
     
     // MARK: - Network work
 
-    func loadImageFromURL(urlString: String, completion: @escaping (Data?) -> Void) {
-        guard let url = URL(string: urlString) else {
-            completion(nil)
-            return
-        }
+    func getImageFromNet(imageView: UIImageView) {
         
-        URLSession.shared.dataTask(with: url) { (data, response, error) in
-            if let data = data {
-                completion(data)
-            } else {
-                completion(nil)
+        let url = URL(string: heroItem.urlImage)
+        let processor = RoundCornerImageProcessor(cornerRadius: 20)
+        imageView.kf.indicatorType = .activity
+
+        imageView.kf.setImage(with: url, options: [.processor(processor), .transition(.fade(0.2))]){ result in
+            switch result {
+            case .success:
+                break
+            case .failure(let error):
+                if let image = UIImage(named: self.heroItem.imageName) {
+                    imageView.image = image
+                }
+                print("Error loading image: \(error)")
+                break
             }
-        }.resume()
+        }
+
     }
         
     

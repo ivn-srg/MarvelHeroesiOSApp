@@ -12,13 +12,13 @@ class HeroListViewController: UIViewController {
     
     // MARK: - Fields
     
-    let viewModel: HeroListViewModel
+    private let viewModel: HeroListViewModel
     
-    var itemW: CGFloat {
+    private var itemW: CGFloat {
         screenWidth * 0.7
     }
     
-    var itemH: CGFloat {
+    private var itemH: CGFloat {
         itemW * 1.65
     }
     
@@ -172,11 +172,8 @@ extension HeroListViewController: UICollectionViewDelegate, UICollectionViewData
         let hero = viewModel.dataSource[indexPath.row]
         
         if indexPath.item == customLayout.currentPage {
-            print("tap")
             let vc = DetailHeroViewController(hero: hero)
-            vc.hero = hero
             self.navigationController?.pushViewController(vc, animated: true)
-//            assertionFailure("here")
         } else {
             collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
             

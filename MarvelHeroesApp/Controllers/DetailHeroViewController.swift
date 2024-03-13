@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class DetailHeroViewController: UIViewController {
     
@@ -27,7 +28,6 @@ class DetailHeroViewController: UIViewController {
         iv.translatesAutoresizingMaskIntoConstraints = false
         iv.contentMode = .scaleAspectFit
         iv.contentMode = .scaleAspectFill
-        iv.image = QuestionImage
         iv.tintColor = .white
         iv.clipsToBounds = true
         iv.layer.cornerRadius = 20
@@ -79,17 +79,10 @@ class DetailHeroViewController: UIViewController {
     // MARK: - private functions
     
     private func setupView() {
-        
-        // Установите прозрачность для панели навигации
-        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        navigationController?.navigationBar.shadowImage = UIImage()
-        navigationController?.navigationBar.isTranslucent = true
 
         box.backgroundColor = bgColor
         
-        DispatchQueue.global().async {
-            self.getImageFromNet(url: self.viewModel.heroItem.urlImage)
-        }
+        viewModel.getImageFromNet(imageView: heroImageView)
         
         heroNameText.text = viewModel.heroItem.name
         heroInfoText.text = viewModel.heroItem.info
@@ -120,20 +113,6 @@ class DetailHeroViewController: UIViewController {
         heroNameText.snp.makeConstraints { make in
             make.bottom.equalTo(heroInfoText.snp.top).offset(-8)
             make.leading.equalTo(heroInfoText.snp.leading)
-        }
-    }
-    
-    private func getImageFromNet(url: String) {
-        
-        viewModel.loadImageFromURL(urlString: url) { [weak self] data in
-            guard let data = data, let image = UIImage(data: data) else {
-                print("Error loading image")
-                return
-            }
-            DispatchQueue.main.async {
-                self?.heroImageView.image = image
-                self?.view.setNeedsDisplay()
-            }
         }
     }
 }
