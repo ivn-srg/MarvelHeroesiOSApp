@@ -183,7 +183,7 @@ extension HeroListViewController: UICollectionViewDelegate, UICollectionViewData
 extension HeroListViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: itemW, height: itemH)
+        return CGSize(width: collectionView.frame.width * 0.7, height: collectionView.frame.height * 0.75)
     }
 }
 
