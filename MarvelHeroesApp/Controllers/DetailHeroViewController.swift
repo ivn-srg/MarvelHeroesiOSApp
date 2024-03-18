@@ -13,7 +13,7 @@ class DetailHeroViewController: UIViewController {
     // MARK: - Fields
     
     let viewModel: DetailHeroViewModel
-    var hero: HeroModel = HeroModel(name: "", info: "", imageName: "", color: 0, urlImage: "")
+    var hero: HeroModel
     
     // MARK: - UI Components
     
@@ -105,7 +105,7 @@ class DetailHeroViewController: UIViewController {
         
         box.addSubview(heroInfoText)
         heroInfoText.snp.makeConstraints { make in
-            make.bottom.equalTo(box.snp.bottom).offset(-20)
+            make.bottom.equalTo(box.snp.bottom).offset(-30)
             make.leading.equalTo(box.snp.leading).offset(20)
             make.trailing.equalTo(box.snp.trailing).offset(-20)
         }
@@ -114,7 +114,7 @@ class DetailHeroViewController: UIViewController {
         heroNameText.snp.makeConstraints { make in
             make.bottom.equalTo(heroInfoText.snp.top).offset(-8)
             make.leading.equalTo(heroInfoText.snp.leading)
-            make.trailing.equalTo(box.snp.trailing).offset(-20)
+            make.trailing.equalTo(heroInfoText.snp.trailing)
         }
     }
 }
