@@ -22,7 +22,12 @@ class DetailHeroViewModel {
         
         let url = URL(string: heroItem.urlImage)
         let processor = RoundCornerImageProcessor(cornerRadius: 20)
+        let indicatorStyle = UIActivityIndicatorView.Style.large
+        let indicator = UIActivityIndicatorView(style: indicatorStyle)
+        
+        indicator.autoresizingMask = [.flexibleLeftMargin, .flexibleRightMargin, .flexibleBottomMargin, .flexibleTopMargin]
         imageView.kf.indicatorType = .activity
+        (imageView.kf.indicator?.view as? UIActivityIndicatorView)?.color = .white
 
         imageView.kf.setImage(with: url, options: [.processor(processor), .transition(.fade(0.2))]){ result in
             switch result {

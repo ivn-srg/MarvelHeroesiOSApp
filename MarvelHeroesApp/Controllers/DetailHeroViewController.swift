@@ -47,7 +47,7 @@ class DetailHeroViewController: UIViewController {
         txt.translatesAutoresizingMaskIntoConstraints = false
         txt.font = UIFont(name: Font.InterBold, size: 24)
         txt.textColor = .white
-        txt.numberOfLines = 2
+        txt.numberOfLines = 3
         return txt
     }()
     
@@ -72,7 +72,7 @@ class DetailHeroViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         
     }
     
@@ -107,12 +107,14 @@ class DetailHeroViewController: UIViewController {
         heroInfoText.snp.makeConstraints { make in
             make.bottom.equalTo(box.snp.bottom).offset(-20)
             make.leading.equalTo(box.snp.leading).offset(20)
+            make.trailing.equalTo(box.snp.trailing).offset(-20)
         }
         
         box.addSubview(heroNameText)
         heroNameText.snp.makeConstraints { make in
             make.bottom.equalTo(heroInfoText.snp.top).offset(-8)
             make.leading.equalTo(heroInfoText.snp.leading)
+            make.trailing.equalTo(box.snp.trailing).offset(-20)
         }
     }
 }
