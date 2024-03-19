@@ -97,13 +97,14 @@ class HeroListViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        let indexPath = IndexPath(item: 0, section: 0)
-        collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         
-        customLayout.currentPage = indexPath.item
-        
-        if let cell = collectionView.cellForItem(at: indexPath) {
-            transformCell(cell)
+        if customLayout.currentPage == 0 {
+            let indexPath = IndexPath(item: 0, section: 0)
+            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+            
+            if let cell = collectionView.cellForItem(at: indexPath) {
+                transformCell(cell)
+            }
         }
     }
     
