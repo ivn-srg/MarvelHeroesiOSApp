@@ -130,13 +130,19 @@ class HeroListViewController: UIViewController {
         
         triangleView.backgroundColor = .clear
         box.addSubview(triangleView)
+        triangleView.snp.makeConstraints{ (make) -> Void in
+            make.top.equalTo(self.box.snp.top).offset(self.view.frame.height * 0.25)
+            make.leading.equalTo(self.box.snp.leading)
+            make.trailing.equalTo(self.box.snp.trailing)
+            make.bottom.equalTo(self.box.snp.bottom)
+        }
         
         box.addSubview(marvelLogo)
         marvelLogo.snp.makeConstraints{ (make) -> Void in
             make.top.equalTo(self.box.snp.top).offset(25)
+            make.width.equalTo(self.box.snp.width).multipliedBy(0.4)
+            make.height.equalTo(self.box.snp.height).multipliedBy(0.04)
             make.centerX.equalTo(self.box.snp.centerX)
-            make.width.equalTo(self.box.snp.width).multipliedBy(0.3)
-            make.height.equalTo(35)
         }
         
         box.addSubview(chooseHeroText)
