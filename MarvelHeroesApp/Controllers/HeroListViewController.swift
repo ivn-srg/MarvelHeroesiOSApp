@@ -19,7 +19,7 @@ class HeroListViewController: UIViewController {
     }
     
     private var itemH: CGFloat {
-        itemW * 1.65
+        itemW * 1.67
     }
     
     // MARK: - UI components
@@ -113,6 +113,8 @@ class HeroListViewController: UIViewController {
     private func setupUI() {
         
         box.backgroundColor = bgColor
+        
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
         
         marvelLogo.image = Logo
         

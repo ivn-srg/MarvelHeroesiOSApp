@@ -22,6 +22,17 @@ class DetailHeroViewController: UIViewController {
         vc.translatesAutoresizingMaskIntoConstraints = false
         return vc
     }()
+    
+    private lazy var backButton: UIButton = {
+        var configuration = UIButton.Configuration.plain()
+        configuration.image = UIImage(systemName: "arrow.left")
+        configuration.baseForegroundColor = .white
+        configuration.buttonSize = .small
+        configuration.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20)
+        let button = UIButton(configuration: configuration)
+        button.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
+        return button
+    }()
 
     private lazy var heroImageView: UIImageView = {
         let iv = UIImageView()
@@ -30,7 +41,7 @@ class DetailHeroViewController: UIViewController {
         iv.contentMode = .scaleAspectFill
         iv.tintColor = .white
         iv.clipsToBounds = true
-        iv.layer.cornerRadius = 20
+        iv.layer.cornerRadius = 25
         return iv
     }()
     
@@ -103,6 +114,12 @@ class DetailHeroViewController: UIViewController {
             make.trailing.equalTo(box.snp.trailing)
         }
         
+        box.addSubview(backButton)
+        backButton.snp.makeConstraints { make in
+            make.top.equalTo(self.box.snp.top)
+            make.leading.equalTo(self.box.snp.leading)
+        }
+        
         box.addSubview(heroInfoText)
         heroInfoText.snp.makeConstraints { make in
             make.bottom.equalTo(box.snp.bottom).offset(-30)
@@ -116,5 +133,9 @@ class DetailHeroViewController: UIViewController {
             make.leading.equalTo(heroInfoText.snp.leading)
             make.trailing.equalTo(heroInfoText.snp.trailing)
         }
+    }
+    
+    @objc func backButtonPressed() {
+        self.navigationController?.popViewController(animated: true)
     }
 }
