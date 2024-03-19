@@ -32,6 +32,7 @@ class DetailHeroViewModel {
         imageView.kf.setImage(with: url, options: [.processor(processor), .transition(.fade(0.2))]){ result in
             switch result {
             case .success:
+                print("average color: \(self.getAverageColorOfImage(image: imageView.image))")
                 break
             case .failure(let error):
                 if let image = UIImage(named: self.heroItem.imageName) {
@@ -47,5 +48,10 @@ class DetailHeroViewModel {
     
     // MARK: - VC func
     
-    
+    func getAverageColorOfImage(image: UIImage?) -> UIColor {
+        guard let image = image else { return .clear }
+        guard let avgColoer = image.averageColor() else { return .systemBlue }
+        
+        return avgColoer
+    }
 }
