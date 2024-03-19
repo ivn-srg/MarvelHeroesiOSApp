@@ -51,7 +51,7 @@ class HeroListViewController: UIViewController {
         let lt = CustomHeroItemLayer()
         lt.itemSize.width = itemW
         lt.scrollDirection = .horizontal
-        lt.minimumLineSpacing = 50
+        lt.minimumLineSpacing = itemW * 0.18
         return lt
     }()
     
@@ -61,7 +61,7 @@ class HeroListViewController: UIViewController {
         collectionView.contentInsetAdjustmentBehavior = .never
         collectionView.backgroundColor = .clear
         collectionView.register(HeroCollectionViewCell.self, forCellWithReuseIdentifier: HeroCollectionViewCell.identifier)
-        collectionView.contentInset = UIEdgeInsets(top: 0, left: 55, bottom: 0, right: 55)
+        collectionView.contentInset = UIEdgeInsets(top: 0, left: itemW * 0.25, bottom: 0, right: itemW * 0.25)
         collectionView.alwaysBounceHorizontal = true
         collectionView.showsHorizontalScrollIndicator = false
         return collectionView
@@ -196,7 +196,10 @@ extension HeroListViewController: UICollectionViewDelegate, UICollectionViewData
 extension HeroListViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: itemW, height: itemH)
+        CGSize(
+            width: collectionView.frame.width * 0.7,
+            height: collectionView.frame.height * 0.75
+        )
     }
 }
 
