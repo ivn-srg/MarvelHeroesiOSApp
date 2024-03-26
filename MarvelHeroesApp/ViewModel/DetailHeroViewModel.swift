@@ -25,7 +25,7 @@ class DetailHeroViewModel {
         let indicatorStyle = UIActivityIndicatorView.Style.large
         let indicator = UIActivityIndicatorView(style: indicatorStyle)
         
-        indicator.autoresizingMask = [.flexibleLeftMargin, .flexibleRightMargin, .flexibleBottomMargin, .flexibleTopMargin]
+        indicator.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         imageView.kf.indicatorType = .activity
         (imageView.kf.indicator?.view as? UIActivityIndicatorView)?.color = .white
 
@@ -49,8 +49,7 @@ class DetailHeroViewModel {
     // MARK: - VC func
     
     func getAverageColorOfImage(image: UIImage?) -> UIColor {
-        guard let image = image else { return .clear }
-        guard let avgColoer = image.averageColor() else { return .systemBlue }
+        guard let image = image, let avgColoer = image.averageColor() else { return .systemBlue }
         
         return avgColoer
     }

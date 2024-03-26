@@ -140,14 +140,14 @@ class HeroListViewController: UIViewController {
         box.addSubview(marvelLogo)
         marvelLogo.snp.makeConstraints{ (make) -> Void in
             make.top.equalTo(self.box.snp.top).offset(25)
-            make.width.equalTo(self.box.snp.width).multipliedBy(0.4)
-            make.height.equalTo(self.box.snp.height).multipliedBy(0.04)
+            make.width.equalTo(self.box.snp.width).multipliedBy(0.5)
+            make.height.equalTo(self.box.snp.height).multipliedBy(0.1)
             make.centerX.equalTo(self.box.snp.centerX)
         }
         
         box.addSubview(chooseHeroText)
         chooseHeroText.snp.makeConstraints{ (make) -> Void in
-            make.top.equalTo(self.marvelLogo.snp.bottom).offset(30)
+            make.top.equalTo(self.marvelLogo.snp.bottom).offset(25)
             make.width.equalTo(self.box.snp.width)
         }
         
@@ -212,7 +212,7 @@ extension HeroListViewController {
     private func setupCell() {
         let indexPath = IndexPath(item: customLayout.currentPage, section: 0)
         let hero = viewModel.dataSource[indexPath.row]
-        guard let cell = collectionView.cellForItem(at: indexPath) else { return }
+        guard let cell = collectionView.cellForItem(at: indexPath), let image = UIImage(named: hero.imageName) else { return }
         
         triangleView.colorOfTriangle = hero.color
         triangleView.setNeedsDisplay()
