@@ -22,3 +22,57 @@ extension UIColor {
        )
    }
 }
+
+extension UIImage {
+
+    /// Возвращает средний цвет изображения
+    /// 
+    /// - Возвращает: UIColor, представляющий средний цвет изображения.
+    func averageColor() -> UIColor? {
+        guard let cgImage = self.cgImage else {
+            return nil
+        }
+        
+        let width = cgImage.width
+        let height = cgImage.height
+        let bytesPerPixel = 4
+        let bytesPerRow = bytesPerPixel * width
+        let bitmapData = UnsafeMutablePointer<UInt8>.allocate(capacity: bytesPerRow * height)
+        
+        let colorSpace = CGColorSpaceCreateDeviceRGB()
+        let context = CGContext(data: bitmapData, width: width, height: height, bitsPerComponent: 8, bytesPerRow: bytesPerRow, space: colorSpace, bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)
+        
+        context?.draw(cgImage, in: CGRect(x: 0, y: 0, width: width, height: height))
+        
+        var red = 0.0
+        var green = 0.0
+        var blue = 0.0
+        var alpha = 0.0
+        
+        for i in 0..<height {
+            for j in 0..<width {
+                let pixelIndex = (i * bytesPerRow) + (j * bytesPerPixel)
+                
+                let r = Double(bitmapData[pixelIndex])
+                let g = Double(bitmapData[pixelIndex + 1])
+                let b = Double(bitmapData[pixelIndex + 2])
+                let a = Double(bitmapData[pixelIndex + 3])
+                
+                red += r
+                green += g
+                blue += b
+                alpha += a
+            }
+        }
+        
+        bitmapData.deallocate()
+        
+        let totalPixels = Double(width * height)
+        let averageRed = red / totalPixels
+        let averageGreen = green / totalPixels
+        let averageBlue = blue / totalPixels
+        let averageAlpha = alpha / totalPixels
+        
+        return UIColor(red: CGFloat(averageRed), green: CGFloat(averageGreen), blue: CGFloat(averageBlue), alpha: CGFloat(averageAlpha))
+    }
+}

@@ -12,9 +12,9 @@ class HeroListViewController: UIViewController {
     
     // MARK: - Fields
     
-    let viewModel: HeroListViewModel
+    private let viewModel: HeroListViewModel
     
-    var itemW: CGFloat {
+    private var itemW: CGFloat {
         screenWidth * 0.7
     }
     
@@ -97,13 +97,14 @@ class HeroListViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        let indexPath = IndexPath(item: 0, section: 0)
-        collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         
-        customLayout.currentPage = indexPath.item
-        
-        if let cell = collectionView.cellForItem(at: indexPath) {
-            transformCell(cell)
+        if customLayout.currentPage == 0 {
+            let indexPath = IndexPath(item: 0, section: 0)
+            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+            
+            if let cell = collectionView.cellForItem(at: indexPath) {
+                transformCell(cell)
+            }
         }
     }
     
@@ -112,6 +113,8 @@ class HeroListViewController: UIViewController {
     private func setupUI() {
         
         box.backgroundColor = bgColor
+        
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
         
         marvelLogo.image = Logo
         
@@ -127,18 +130,24 @@ class HeroListViewController: UIViewController {
         
         triangleView.backgroundColor = .clear
         box.addSubview(triangleView)
+        triangleView.snp.makeConstraints{ (make) -> Void in
+            make.top.equalTo(self.box.snp.top).offset(self.view.frame.height * 0.25)
+            make.leading.equalTo(self.box.snp.leading)
+            make.trailing.equalTo(self.box.snp.trailing)
+            make.bottom.equalTo(self.box.snp.bottom)
+        }
         
         box.addSubview(marvelLogo)
         marvelLogo.snp.makeConstraints{ (make) -> Void in
             make.top.equalTo(self.box.snp.top).offset(25)
+            make.width.equalTo(self.box.snp.width).multipliedBy(0.5)
+            make.height.equalTo(self.box.snp.height).multipliedBy(0.1)
             make.centerX.equalTo(self.box.snp.centerX)
-            make.width.equalTo(self.box.snp.width).multipliedBy(0.3)
-            make.height.equalTo(35)
         }
         
         box.addSubview(chooseHeroText)
         chooseHeroText.snp.makeConstraints{ (make) -> Void in
-            make.top.equalTo(self.marvelLogo.snp.bottom).offset(30)
+            make.top.equalTo(self.marvelLogo.snp.bottom).offset(25)
             make.width.equalTo(self.box.snp.width)
         }
         
@@ -168,8 +177,12 @@ extension HeroListViewController: UICollectionViewDelegate, UICollectionViewData
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        let hero = viewModel.dataSource[indexPath.row]
+        
         if indexPath.item == customLayout.currentPage {
-            print("Item \(indexPath.item) has been tapped")
+            let vc = DetailHeroViewController(hero: hero)
+            self.navigationController?.pushViewController(vc, animated: true)
         } else {
             collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
             
@@ -200,7 +213,7 @@ extension HeroListViewController {
     private func setupCell() {
         let indexPath = IndexPath(item: customLayout.currentPage, section: 0)
         let hero = viewModel.dataSource[indexPath.row]
-        guard let cell = collectionView.cellForItem(at: indexPath) else { return }
+        guard let cell = collectionView.cellForItem(at: indexPath), let image = UIImage(named: hero.imageName) else { return }
         
         triangleView.colorOfTriangle = hero.color
         triangleView.setNeedsDisplay()

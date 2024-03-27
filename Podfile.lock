@@ -1,20 +1,24 @@
 PODS:
+  - Kingfisher (7.11.0)
   - SnapKit (5.7.1)
   - TinyConstraints (4.0.2)
 
 DEPENDENCIES:
+  - Kingfisher (~> 7.0)
   - SnapKit
   - TinyConstraints
 
 SPEC REPOS:
   trunk:
+    - Kingfisher
     - SnapKit
     - TinyConstraints
 
 SPEC CHECKSUMS:
+  Kingfisher: b9c985d864d43515f404f1ef4a8ce7d802ace3ac
   SnapKit: d612e99e678a2d3b95bf60b0705ed0a35c03484a
   TinyConstraints: 7b7ccc0c485bb3bb47082138ff28bc33cd49897f
 
-PODFILE CHECKSUM: 82cbb39ead40e2ea4dd9eba118d826fc94e11c58
+PODFILE CHECKSUM: 9496cc15e37d596b1737f1f8a2d3cb42daf623b3
 
 COCOAPODS: 1.15.2

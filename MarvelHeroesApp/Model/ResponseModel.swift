@@ -19,6 +19,8 @@ struct ListOfHeroesModel: Codable {
 
 struct HeroModel: Codable {
     let name: String
+    let info: String
     let imageName: String
     let color: Int
+    let urlImage: String
 }
