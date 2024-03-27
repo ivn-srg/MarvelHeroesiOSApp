@@ -213,7 +213,7 @@ extension HeroListViewController {
     private func setupCell() {
         let indexPath = IndexPath(item: customLayout.currentPage, section: 0)
         let hero = viewModel.dataSource[indexPath.row]
-        guard let cell = collectionView.cellForItem(at: indexPath), let image = UIImage(named: hero.imageName) else { return }
+        guard let cell = collectionView.cellForItem(at: indexPath) else { return }
         
         triangleView.colorOfTriangle = hero.color
         triangleView.setNeedsDisplay()
