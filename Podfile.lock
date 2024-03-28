@@ -1,24 +1,28 @@
 PODS:
+  - Alamofire (5.9.0)
   - Kingfisher (7.11.0)
   - SnapKit (5.7.1)
   - TinyConstraints (4.0.2)
 
 DEPENDENCIES:
-  - Kingfisher (~> 7.0)
+  - Alamofire
+  - Kingfisher
   - SnapKit
   - TinyConstraints
 
 SPEC REPOS:
   trunk:
+    - Alamofire
     - Kingfisher
     - SnapKit
     - TinyConstraints
 
 SPEC CHECKSUMS:
+  Alamofire: 02b772c9910e8eba1a079227c32fbd9e46c90a24
   Kingfisher: b9c985d864d43515f404f1ef4a8ce7d802ace3ac
   SnapKit: d612e99e678a2d3b95bf60b0705ed0a35c03484a
   TinyConstraints: 7b7ccc0c485bb3bb47082138ff28bc33cd49897f
 
-PODFILE CHECKSUM: 9496cc15e37d596b1737f1f8a2d3cb42daf623b3
+PODFILE CHECKSUM: c29178f0b0b3c6a88dbcab6680fd5b64aab13d43
 
 COCOAPODS: 1.15.2

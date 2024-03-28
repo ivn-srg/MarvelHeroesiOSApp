@@ -8,6 +8,7 @@ target 'MarvelHeroesApp' do
   # Pods for MarvelHeroesApp
   pod 'SnapKit'
   pod 'TinyConstraints'
-  pod 'Kingfisher', '~> 7.0'
+  pod 'Kingfisher'
+  pod 'Alamofire'
 
 end
