@@ -89,7 +89,7 @@ class DetailHeroViewController: UIViewController {
         viewModel.getImageFromNet(imageView: heroImageView)
         
         heroNameText.text = viewModel.heroItem.name
-        heroInfoText.text = viewModel.heroItem.info
+        heroInfoText.text = viewModel.heroItem.description == "" ? "Empty" : viewModel.heroItem.description
         
         view.addSubview(box)
         box.snp.makeConstraints{ (make) -> Void in

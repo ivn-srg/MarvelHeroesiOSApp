@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CommonCrypto
 
 extension UIColor {
    convenience init(red: Int, green: Int, blue: Int) {

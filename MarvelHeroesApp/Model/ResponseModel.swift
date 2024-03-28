@@ -8,19 +8,27 @@
 import Foundation
 
 struct ResponseModel: Codable {
-    let status: Bool
-    let result: ListOfHeroesModel
+    let code: Int
+    let status: String
+    let data: ListOfHeroesModel
 }
 
 struct ListOfHeroesModel: Codable {
-    let totalCount: Int
-    let entities: [HeroModel]
+    let offset: Int
+    let limit: Int
+    let total: Int
+    let count: Int
+    let results: [HeroModel]
 }
 
 struct HeroModel: Codable {
+    let id: Int
     let name: String
-    let info: String
-    let imageName: String
-    let color: Int
-    let urlImage: String
+    let description: String
+    let thumbnail: ThumbnailModel
+}
+
+struct ThumbnailModel: Codable {
+    let path: String
+    let `extension`: String
 }

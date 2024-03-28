@@ -20,6 +20,9 @@
 		934B93882BA0716B005FA6D6 /* DetailHeroViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934B93872BA0716B005FA6D6 /* DetailHeroViewModel.swift */; };
 		934D36282B983C00004CDDE0 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 934D36272B983C00004CDDE0 /* .gitignore */; };
 		934D362B2B983F1C004CDDE0 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 934D362A2B983F1C004CDDE0 /* Localizable.xcstrings */; };
+		9369AD1B2BB5C3B400DA5460 /* HeroCollectionViewCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9369AD1A2BB5C3B400DA5460 /* HeroCollectionViewCellViewModel.swift */; };
+		9369AD1D2BB5D26000DA5460 /* LoaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9369AD1C2BB5D26000DA5460 /* LoaderView.swift */; };
+		9369AD1F2BB5D6C200DA5460 /* ResponseFailureModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9369AD1E2BB5D6C200DA5460 /* ResponseFailureModel.swift */; };
 		937BF6D12BA97525007087A4 /* RoundRectButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937BF6D02BA97525007087A4 /* RoundRectButton.swift */; };
 		939E7F822B947AEF00BEE787 /* PagingCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939E7F812B947AEE00BEE787 /* PagingCollectionViewLayout.swift */; };
 		939E7F842B9486D200BEE787 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939E7F832B9486D200BEE787 /* Constants.swift */; };
@@ -46,6 +49,9 @@
 		934B93872BA0716B005FA6D6 /* DetailHeroViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailHeroViewModel.swift; sourceTree = "<group>"; };
 		934D36272B983C00004CDDE0 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		934D362A2B983F1C004CDDE0 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		9369AD1A2BB5C3B400DA5460 /* HeroCollectionViewCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroCollectionViewCellViewModel.swift; sourceTree = "<group>"; };
+		9369AD1C2BB5D26000DA5460 /* LoaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoaderView.swift; sourceTree = "<group>"; };
+		9369AD1E2BB5D6C200DA5460 /* ResponseFailureModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseFailureModel.swift; sourceTree = "<group>"; };
 		937BF6D02BA97525007087A4 /* RoundRectButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundRectButton.swift; sourceTree = "<group>"; };
 		939E7F812B947AEE00BEE787 /* PagingCollectionViewLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingCollectionViewLayout.swift; sourceTree = "<group>"; };
 		939E7F832B9486D200BEE787 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -105,6 +111,7 @@
 				9303D24D2B9210B8003567A5 /* HeroCollectionViewCell.swift */,
 				933B27062B931F1100B5E9B4 /* TriangView.swift */,
 				937BF6D02BA97525007087A4 /* RoundRectButton.swift */,
+				9369AD1C2BB5D26000DA5460 /* LoaderView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -113,6 +120,7 @@
 			isa = PBXGroup;
 			children = (
 				9303D2502B92158F003567A5 /* ResponseModel.swift */,
+				9369AD1E2BB5D6C200DA5460 /* ResponseFailureModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -139,6 +147,7 @@
 			children = (
 				939E7F852B949A9000BEE787 /* HeroListViewModel.swift */,
 				934B93872BA0716B005FA6D6 /* DetailHeroViewModel.swift */,
+				9369AD1A2BB5C3B400DA5460 /* HeroCollectionViewCellViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -340,6 +349,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				9303D24B2B920114003567A5 /* Extensions.swift in Sources */,
+				9369AD1F2BB5D6C200DA5460 /* ResponseFailureModel.swift in Sources */,
+				9369AD1B2BB5C3B400DA5460 /* HeroCollectionViewCellViewModel.swift in Sources */,
 				934B93882BA0716B005FA6D6 /* DetailHeroViewModel.swift in Sources */,
 				934B93862BA06D42005FA6D6 /* DetailHeroViewController.swift in Sources */,
 				933B27032B93002500B5E9B4 /* CustomHeroItemLayer.swift in Sources */,
@@ -352,6 +363,7 @@
 				9303D24E2B9210B8003567A5 /* HeroCollectionViewCell.swift in Sources */,
 				939E7F862B949A9000BEE787 /* HeroListViewModel.swift in Sources */,
 				93CD1EA02B90F16300AD2752 /* SceneDelegate.swift in Sources */,
+				9369AD1D2BB5D26000DA5460 /* LoaderView.swift in Sources */,
 				937BF6D12BA97525007087A4 /* RoundRectButton.swift in Sources */,
 				933B27072B931F1100B5E9B4 /* TriangView.swift in Sources */,
 			);
@@ -376,6 +388,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -439,6 +452,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";

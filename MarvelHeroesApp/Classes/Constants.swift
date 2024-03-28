@@ -26,6 +26,12 @@ let screenHeight = UIScreen.main.bounds.height
 // images
 let Logo = UIImage(named: "marvelLogo")
 let QuestionImage = UIImage(systemName: "questionmark")
+let MockUpImage = UIImage(named: "mockup")
 
 // localizable strings
 let mainScreenTitle = NSLocalizedString("mainScreenTitle", comment: "")
+
+let BASE_URL = "https://gateway.marvel.com"
+
+let API_KEY = "b803ed8710a243c3c7b40aab280b4195"
+let PRIVATE_KEY = "70b08100100ed986893efd5424b60314c084c96a"

@@ -22,6 +22,8 @@ class HeroListViewController: UIViewController {
         screenHeight * 0.57
     }
     
+    var heroesDataSource: [HeroCollectionViewCellViewModel] = []
+    
     // MARK: - UI components
     
     private lazy var box: UIView = {
@@ -69,7 +71,7 @@ class HeroListViewController: UIViewController {
     
     private lazy var triangleView: TriangleView = {
         let tv = TriangleView(
-            colorOfTriangle: viewModel.dataSource[0].color,
+            colorOfTriangle: 0x000000,
             frame: RectForTriagle)
         tv.translatesAutoresizingMaskIntoConstraints = false
         return tv
@@ -89,24 +91,24 @@ class HeroListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupUI()
+        fetchHeroesData()
         
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        if customLayout.currentPage == 0 {
-            let indexPath = IndexPath(item: 0, section: 0)
-            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-            
-            if let cell = collectionView.cellForItem(at: indexPath) {
-                transformCell(cell)
-            }
-        }
-    }
+//    override func viewDidAppear(_ animated: Bool) {
+//        super.viewDidAppear(animated)
+//        
+//        if customLayout.currentPage == 0 {
+//            let indexPath = IndexPath(item: 0, section: 0)
+//            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+//            
+//            if let cell = collectionView.cellForItem(at: indexPath) {
+//                transformCell(cell)
+//            }
+//        }
+//    }
     
     // MARK: - private functions
     
@@ -158,6 +160,32 @@ class HeroListViewController: UIViewController {
             make.bottom.equalTo(box.snp.bottom)
         }
     }
+    
+    // MARK: - Network func
+
+    private func fetchHeroesData() {
+        LoadingIndicator.startLoading()
+        
+        viewModel.fetchHeroesData() { [weak self] (result) in
+            guard let this = self else { return }
+            this.handleResult(result)
+        }
+    }
+    
+    private func handleResult(_ result: Result<ResponseModel, Error>) {
+        switch result {
+        case .success(let model):
+            setupUI()
+            LoadingIndicator.stopLoading()
+        case .failure(let error):
+            handleError(error)
+        }
+    }
+    
+    private func handleError(_ error: Error) {
+        LoadingIndicator.stopLoading()
+        print(error)
+    }
 }
 
 // MARK: - Extensions
@@ -171,7 +199,7 @@ extension HeroListViewController: UICollectionViewDelegate, UICollectionViewData
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HeroCollectionViewCell.identifier, for: indexPath) as? HeroCollectionViewCell else { return UICollectionViewCell() }
         
         let hero = viewModel.dataSource[indexPath.row]
-        cell.configure(with: hero)
+        cell.configure(viewModel: HeroCollectionViewCellViewModel(hero: hero))
         
         return cell
     }
@@ -215,7 +243,7 @@ extension HeroListViewController {
         let hero = viewModel.dataSource[indexPath.row]
         guard let cell = collectionView.cellForItem(at: indexPath) else { return }
         
-        triangleView.colorOfTriangle = hero.color
+        triangleView.colorOfTriangle = 0x000000
         triangleView.setNeedsDisplay()
         transformCell(cell)
     }

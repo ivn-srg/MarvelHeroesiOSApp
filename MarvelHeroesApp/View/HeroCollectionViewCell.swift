@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class HeroCollectionViewCell: UICollectionViewCell {
     
@@ -15,7 +16,7 @@ class HeroCollectionViewCell: UICollectionViewCell {
     
     // MARK: - UI components
     
-    private lazy var imageView: UIImageView = {
+    private lazy var heroImageView: UIImageView = {
         let iv = UIImageView()
         iv.translatesAutoresizingMaskIntoConstraints = false
         iv.contentMode = .scaleAspectFill
@@ -32,21 +33,22 @@ class HeroCollectionViewCell: UICollectionViewCell {
         lbl.font = UIFont(name: Font.InterBold, size: 28)
         lbl.textColor = .white
         lbl.textAlignment = .left
+        lbl.numberOfLines = 2
         return lbl
     }()
     
     // MARK: - Functions
     
-    public func configure(with hero: HeroModel) {
-        self.imageView.image = UIImage(named: hero.imageName)
-        self.nameOfHero.text = hero.name
+    public func configure(viewModel: HeroCollectionViewCellViewModel) {
+        self.nameOfHero.text = viewModel.heroName
+        viewModel.getImageFromNet(imageView: heroImageView)
         
         self.setupUI()
     }
     
     private func setupUI() {
-        self.addSubview(imageView)
-        imageView.snp.makeConstraints{ (make) -> Void in
+        self.addSubview(heroImageView)
+        heroImageView.snp.makeConstraints{ (make) -> Void in
             make.top.equalTo(self.snp.top)
             make.width.equalTo(self.snp.width)
             make.bottom.equalTo(self.snp.bottom)
@@ -54,14 +56,16 @@ class HeroCollectionViewCell: UICollectionViewCell {
         
         self.addSubview(nameOfHero)
         nameOfHero.snp.makeConstraints { make in
-            make.bottom.equalTo(self.snp.bottom).offset(-40)
-            make.leading.equalTo(self.snp.leading).offset(30)
+            make.bottom.equalTo(self.snp.bottom).offset(-30)
+            make.leading.equalTo(self.snp.leading).offset(25)
+            make.trailing.equalTo(self.snp.trailing).offset(-25)
         }
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        self.imageView.image = nil
+        
+        self.heroImageView.image = nil
         self.nameOfHero.text = nil
     }
 }
