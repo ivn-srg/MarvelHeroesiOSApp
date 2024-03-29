@@ -9,13 +9,13 @@ import UIKit
 
 class TriangleView: UIView {
     
-    var colorOfTriangle: Int {
+    var colorOfTriangle: UIColor {
         didSet {
             drawTriangle(with: RectForTriagle, color: colorOfTriangle)
         }
     }
     
-    init(colorOfTriangle: Int, frame: CGRect) {
+    init(colorOfTriangle: UIColor, frame: CGRect) {
         self.colorOfTriangle = colorOfTriangle
         super.init(frame: frame)
     }
@@ -30,13 +30,13 @@ class TriangleView: UIView {
         drawTriangle(with: rect, color: colorOfTriangle)
     }
     
-    func drawTriangle(with rect: CGRect, color: Int) {
+    func drawTriangle(with rect: CGRect, color: UIColor) {
         let trianglePath = UIBezierPath()
         trianglePath.move(to: CGPoint(x: rect.size.width, y: rect.size.height))
         trianglePath.addLine(to: CGPoint(x: 0, y: rect.size.height))
         trianglePath.addLine(to: CGPoint(x: rect.size.width, y: 0))
         
-        let fillColor = UIColor(rgb: color)
+        let fillColor = color
         fillColor.setFill()
         trianglePath.fill()
         trianglePath.stroke()

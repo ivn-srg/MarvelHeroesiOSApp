@@ -20,7 +20,6 @@ final class DetailHeroViewModel {
     }
     
     // MARK: - Network work
-// https://gateway.marvel.com:443/v1/public/characters/1011334
     
     func fetchHeroData(completion: @escaping (Result<ResponseModel, Error>) -> Void) {
             let md5Hash = MD5(string: "\(currentTimeStamp)\(PRIVATE_KEY)\(API_KEY)")
@@ -86,7 +85,7 @@ final class DetailHeroViewModel {
                 print("average color: \(self.getAverageColorOfImage(image: imageView.image))")
                 break
             case .failure(let error):
-                imageView.image = QuestionImage
+                imageView.image = MockUpImage
                 print("Error loading image: \(error)")
                 break
             }

@@ -8,11 +8,17 @@
 import UIKit
 import Kingfisher
 
+protocol MyCellDelegate: AnyObject {
+    func changeTriangleViewColor(color: UIColor)
+}
+
 class HeroCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Variables
     
     static let identifier = "CollectionViewCellId"
+    var heroImage: UIImage = UIImage()
+    weak var delegate: MyCellDelegate?
     
     // MARK: - UI components
     

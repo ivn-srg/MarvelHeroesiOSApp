@@ -34,8 +34,8 @@ final class HeroCollectionViewCellViewModel {
         imageView.kf.setImage(with: url, options: [.processor(processor), .transition(.fade(0.2))]){ result in
             switch result {
             case .success:
-                
                 print("Loading image was success")
+                
                 break
             case .failure(let error):
                 imageView.image = MockUpImage

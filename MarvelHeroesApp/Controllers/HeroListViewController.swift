@@ -69,7 +69,7 @@ class HeroListViewController: UIViewController {
     
     private lazy var triangleView: TriangleView = {
         let tv = TriangleView(
-            colorOfTriangle: 0x000000,
+            colorOfTriangle: .black,
             frame: RectForTriagle)
         tv.translatesAutoresizingMaskIntoConstraints = false
         return tv
@@ -85,11 +85,14 @@ class HeroListViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    override func loadView() {
+        super.loadView()
+        
+        fetchHeroesData()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        fetchHeroesData()
         
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
@@ -97,7 +100,7 @@ class HeroListViewController: UIViewController {
     
 //    override func viewDidAppear(_ animated: Bool) {
 //        super.viewDidAppear(animated)
-//        
+//
 //        if customLayout.currentPage == 0 {
 //            let indexPath = IndexPath(item: 0, section: 0)
 //            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
@@ -108,7 +111,7 @@ class HeroListViewController: UIViewController {
 //        }
 //    }
     
-    // MARK: - private functions
+    // MARK: - UI functions
     
     private func setupUI() {
         
@@ -159,6 +162,17 @@ class HeroListViewController: UIViewController {
         }
     }
     
+    private func moveFocusOnFirstItem() {
+        if customLayout.currentPage == 0 {
+            let indexPath = IndexPath(item: 0, section: 0)
+            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+            
+            if let cell = collectionView.cellForItem(at: indexPath) {
+                transformCell(cell)
+            }
+        }
+    }
+    
     // MARK: - Network func
 
     private func fetchHeroesData() {
@@ -167,22 +181,18 @@ class HeroListViewController: UIViewController {
         viewModel.fetchHeroesData() { [weak self] (result) in
             guard let this = self else { return }
             this.handleResult(result)
+            self?.setupUI()
         }
     }
     
     private func handleResult(_ result: Result<ResponseModel, Error>) {
         switch result {
-        case .success(let model):
-            setupUI()
+        case .success:
             LoadingIndicator.stopLoading()
         case .failure(let error):
-            handleError(error)
+            LoadingIndicator.stopLoading()
+            print(error)
         }
-    }
-    
-    private func handleError(_ error: Error) {
-        LoadingIndicator.stopLoading()
-        print(error)
     }
 }
 
@@ -198,6 +208,8 @@ extension HeroListViewController: UICollectionViewDelegate, UICollectionViewData
         
         let hero = viewModel.dataSource[indexPath.row]
         cell.configure(viewModel: HeroCollectionViewCellViewModel(hero: hero))
+        
+        moveFocusOnFirstItem()
         
         return cell
     }
@@ -238,11 +250,9 @@ extension HeroListViewController {
     
     private func setupCell() {
         let indexPath = IndexPath(item: customLayout.currentPage, section: 0)
-        let hero = viewModel.dataSource[indexPath.row]
-        guard let cell = collectionView.cellForItem(at: indexPath) else { return }
-        
-        triangleView.colorOfTriangle = 0x000000
-        triangleView.setNeedsDisplay()
+        guard let cell = collectionView.cellForItem(at: indexPath) as? HeroCollectionViewCell else { return }
+
+        changeTriangleViewColor(color: cell.heroImage.averageColor() ?? .systemBlue)
         transformCell(cell)
     }
     
@@ -267,3 +277,12 @@ extension HeroListViewController {
         }
     }
 }
+
+extension HeroListViewController: MyCellDelegate {
+    
+    func changeTriangleViewColor(color: UIColor) {
+        triangleView.colorOfTriangle = color
+        triangleView.setNeedsDisplay()
+    }
+}
+

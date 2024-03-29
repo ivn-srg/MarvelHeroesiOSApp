@@ -8,7 +8,7 @@
 import UIKit
 import Kingfisher
 
-class DetailHeroViewController: UIViewController {
+class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
     
     // MARK: - Fields
     
@@ -63,24 +63,23 @@ class DetailHeroViewController: UIViewController {
     
     // MARK: - Lifecycle
     
-    override func loadView() {
-        super.loadView()
-        
-        fetchHeroesData()
-    }
-    
     init(hero: HeroModel) {
         self.hero = hero
         self.viewModel = DetailHeroViewModel(hero: hero)
         super.init(nibName: nil, bundle: nil)
-        
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - private functions
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        fetchHeroesData()
+    }
+    
+    // MARK: - UI functions
     
     private func setupView() {
 
@@ -97,6 +96,7 @@ class DetailHeroViewController: UIViewController {
             make.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom)
             make.leading.equalTo(self.view.safeAreaLayoutGuide.snp.leading)
             make.trailing.equalTo(self.view.safeAreaLayoutGuide.snp.trailing)
+            make.width.equalTo(self.view.safeAreaLayoutGuide.snp.width)
         }
         
         box.addSubview(heroImageView)
@@ -128,6 +128,16 @@ class DetailHeroViewController: UIViewController {
         }
     }
     
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView.contentOffset.y < 0 {
+            scrollView.contentInset = UIEdgeInsets(top: 40 - scrollView.contentOffset.y, left: 0, bottom: 0, right: 0)
+        } else {
+            scrollView.contentInset = UIEdgeInsets(top: 40, left: 0, bottom: 0, right: 0)
+        }
+    }
+    
+    // MARK: - Network func
+    
     private func fetchHeroesData() {
         LoadingIndicator.startLoading()
         
@@ -140,19 +150,25 @@ class DetailHeroViewController: UIViewController {
     
     private func handleResult(_ result: Result<ResponseModel, Error>) {
         switch result {
-        case .success(let model):
+        case .success:
             LoadingIndicator.stopLoading()
         case .failure(let error):
             LoadingIndicator.stopLoading()
+            print(error)
         }
     }
     
-    private func handleError(_ error: Error) {
-        LoadingIndicator.stopLoading()
-        print(error)
-    }
+    // MARK: - @objc func
     
     @objc func backButtonPressed() {
         self.navigationController?.popViewController(animated: true)
+    }
+    
+    @objc func refreshData() {
+        print("swipe")
+        fetchHeroesData()
+        setupView()
+        
+//        refreshControll.endRefreshing()
     }
 }
