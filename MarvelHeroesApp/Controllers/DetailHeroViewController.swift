@@ -66,7 +66,7 @@ class DetailHeroViewController: UIViewController {
     override func loadView() {
         super.loadView()
         
-        setupView()
+        fetchHeroesData()
     }
     
     init(hero: HeroModel) {
@@ -126,6 +126,30 @@ class DetailHeroViewController: UIViewController {
             make.leading.equalTo(heroInfoText.snp.leading)
             make.trailing.equalTo(heroInfoText.snp.trailing)
         }
+    }
+    
+    private func fetchHeroesData() {
+        LoadingIndicator.startLoading()
+        
+        viewModel.fetchHeroData() { [weak self] (result) in
+            guard let this = self else { return }
+            this.handleResult(result)
+            self?.setupView()
+        }
+    }
+    
+    private func handleResult(_ result: Result<ResponseModel, Error>) {
+        switch result {
+        case .success(let model):
+            LoadingIndicator.stopLoading()
+        case .failure(let error):
+            LoadingIndicator.stopLoading()
+        }
+    }
+    
+    private func handleError(_ error: Error) {
+        LoadingIndicator.stopLoading()
+        print(error)
     }
     
     @objc func backButtonPressed() {

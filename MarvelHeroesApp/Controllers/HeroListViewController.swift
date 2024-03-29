@@ -22,8 +22,6 @@ class HeroListViewController: UIViewController {
         screenHeight * 0.57
     }
     
-    var heroesDataSource: [HeroCollectionViewCellViewModel] = []
-    
     // MARK: - UI components
     
     private lazy var box: UIView = {
