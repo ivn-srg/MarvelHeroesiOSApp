@@ -19,9 +19,9 @@ class LoadingIndicator {
     
     private let activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .large)
-        indicator.color = .white
+        indicator.color = loaderColor
         indicator.layer.cornerRadius = 12
-        indicator.backgroundColor = bgColor
+        indicator.backgroundColor = .clear
         indicator.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
         return indicator
     }()

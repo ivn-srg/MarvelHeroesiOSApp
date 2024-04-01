@@ -8,7 +8,7 @@
 import UIKit
 import Kingfisher
 
-class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
+final class DetailHeroViewController: UIViewController {
     
     // MARK: - Fields
     
@@ -33,7 +33,7 @@ class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
         button.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         return button
     }()
-
+    
     private lazy var heroImageView: UIImageView = {
         let iv = UIImageView()
         iv.translatesAutoresizingMaskIntoConstraints = false
@@ -41,6 +41,7 @@ class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
         iv.tintColor = .white
         iv.clipsToBounds = true
         iv.layer.cornerRadius = 25
+        iv.image = MockUpImage
         return iv
     }()
     
@@ -61,7 +62,19 @@ class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
         return txt
     }()
     
-    private lazy var panRecognize = UIPanGestureRecognizer(target: self, action: #selector(pull2refresh))
+    private lazy var panRecognize: UIPanGestureRecognizer = {
+        let gestureRecognizer = UIPanGestureRecognizer()
+        gestureRecognizer.addTarget(self, action: #selector(pull2refresh))
+        return gestureRecognizer
+    }()
+    
+    private let activityIndicator: UIActivityIndicatorView = {
+        let activityIndicator = UIActivityIndicatorView(style: .medium)
+        activityIndicator.isHidden = false
+        activityIndicator.color = loaderColor
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        return activityIndicator
+    }()
     
     // MARK: - Lifecycle
     
@@ -78,7 +91,8 @@ class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        fetchHeroesData()
+        setupView()
+        fetchHeroData()
     }
     
     // MARK: - UI functions
@@ -86,13 +100,12 @@ class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
     private func setupView() {
         
         view.addGestureRecognizer(panRecognize)
-
-//        box.backgroundColor = bgColor
         
-        viewModel.getImageFromNet(imageView: heroImageView)
-        
-        heroNameText.text = viewModel.heroItem.name
-        heroInfoText.text = viewModel.heroItem.description == "" ? "Empty" : viewModel.heroItem.description
+        view.addSubview(activityIndicator)
+        activityIndicator.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(view.frame.height * 0.05)
+            make.centerX.equalTo(view.safeAreaLayoutGuide.snp.centerX)
+        }
         
         view.addSubview(box)
         box.snp.makeConstraints{ (make) -> Void in
@@ -132,23 +145,21 @@ class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView.contentOffset.y < 0 {
-            scrollView.contentInset = UIEdgeInsets(top: 40 - scrollView.contentOffset.y, left: 0, bottom: 0, right: 0)
-        } else {
-            scrollView.contentInset = UIEdgeInsets(top: 40, left: 0, bottom: 0, right: 0)
-        }
+    private func updateView() {
+        viewModel.getImageFromNet(imageView: heroImageView)
+        
+        heroNameText.text = viewModel.heroItem.name
+        heroInfoText.text = viewModel.heroItem.description == "" ? "Empty" : viewModel.heroItem.description
     }
     
     // MARK: - Network func
     
-    private func fetchHeroesData() {
+    private func fetchHeroData() {
         LoadingIndicator.startLoading()
         
         viewModel.fetchHeroData() { [weak self] (result) in
             guard let this = self else { return }
             this.handleResult(result)
-            self?.setupView()
         }
     }
     
@@ -156,6 +167,7 @@ class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
         switch result {
         case .success:
             LoadingIndicator.stopLoading()
+            self.updateView()
         case .failure(let error):
             LoadingIndicator.stopLoading()
             print(error)
@@ -170,20 +182,26 @@ class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
     
     @objc func pull2refresh(_ gesture: UIPanGestureRecognizer) {
         
-        let translation = gesture.translation(in: view)
+        let translation = gesture.translation(in: box)
+        let newY = max(translation.y, 0)
+        let maxPullDownDistance = self.box.frame.height * 0.2
         
-        // Смещаем экран по вертикали на значение смещения жеста
-        view.frame.origin.y = max(translation.y, 0)
+        if newY <= maxPullDownDistance {
+            box.frame.origin.y = newY + 20
+        }
+        
+        if gesture.state == .began {
+            activityIndicator.startAnimating()
+        }
         
         if gesture.state == .ended {
-            // Если жест закончился, возвращаем экран в исходное положение
+            if newY > maxPullDownDistance {
+                fetchHeroData()
+            }
             UIView.animate(withDuration: 0.3) {
                 self.view.frame.origin.y = 0
+                self.activityIndicator.stopAnimating()
             }
-            
-            print("swipe")
-            fetchHeroesData()
-            setupView()
         }
     }
 }
