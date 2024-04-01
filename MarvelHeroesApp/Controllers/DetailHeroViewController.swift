@@ -61,6 +61,8 @@ class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
         return txt
     }()
     
+    private lazy var panRecognize = UIPanGestureRecognizer(target: self, action: #selector(pull2refresh))
+    
     // MARK: - Lifecycle
     
     init(hero: HeroModel) {
@@ -82,8 +84,10 @@ class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
     // MARK: - UI functions
     
     private func setupView() {
+        
+        view.addGestureRecognizer(panRecognize)
 
-        box.backgroundColor = bgColor
+//        box.backgroundColor = bgColor
         
         viewModel.getImageFromNet(imageView: heroImageView)
         
@@ -164,11 +168,22 @@ class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
         self.navigationController?.popViewController(animated: true)
     }
     
-    @objc func refreshData() {
-        print("swipe")
-        fetchHeroesData()
-        setupView()
+    @objc func pull2refresh(_ gesture: UIPanGestureRecognizer) {
         
-//        refreshControll.endRefreshing()
+        let translation = gesture.translation(in: view)
+        
+        // Смещаем экран по вертикали на значение смещения жеста
+        view.frame.origin.y = max(translation.y, 0)
+        
+        if gesture.state == .ended {
+            // Если жест закончился, возвращаем экран в исходное положение
+            UIView.animate(withDuration: 0.3) {
+                self.view.frame.origin.y = 0
+            }
+            
+            print("swipe")
+            fetchHeroesData()
+            setupView()
+        }
     }
 }
