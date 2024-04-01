@@ -75,6 +75,20 @@ class HeroListViewController: UIViewController {
         return tv
     }()
     
+    private lazy var panRecognize: UIPanGestureRecognizer = {
+        let gestureRecognizer = UIPanGestureRecognizer()
+        gestureRecognizer.addTarget(self, action: #selector(pull2refresh))
+        return gestureRecognizer
+    }()
+    
+    private let activityIndicator: UIActivityIndicatorView = {
+        let activityIndicator = UIActivityIndicatorView(style: .medium)
+        activityIndicator.isHidden = false
+        activityIndicator.color = loaderColor
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        return activityIndicator
+    }()
+    
     // MARK: - lifecycle
     
     init(vm: HeroListViewModel) {
@@ -85,31 +99,16 @@ class HeroListViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    override func loadView() {
-        super.loadView()
-        
-        fetchHeroesData()
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setupUI()
+        fetchHeroesData()
+        
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
     }
-    
-//    override func viewDidAppear(_ animated: Bool) {
-//        super.viewDidAppear(animated)
-//
-//        if customLayout.currentPage == 0 {
-//            let indexPath = IndexPath(item: 0, section: 0)
-//            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-//            
-//            if let cell = collectionView.cellForItem(at: indexPath) {
-//                transformCell(cell)
-//            }
-//        }
-//    }
     
     // MARK: - UI functions
     
@@ -122,6 +121,14 @@ class HeroListViewController: UIViewController {
         marvelLogo.image = Logo
         
         chooseHeroText.text = mainScreenTitle
+        
+        view.addGestureRecognizer(panRecognize)
+        
+        view.addSubview(activityIndicator)
+        activityIndicator.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(view.frame.height * 0.05)
+            make.centerX.equalTo(view.safeAreaLayoutGuide.snp.centerX)
+        }
         
         view.addSubview(box)
         box.snp.makeConstraints{ (make) -> Void in
@@ -142,15 +149,15 @@ class HeroListViewController: UIViewController {
         
         box.addSubview(marvelLogo)
         marvelLogo.snp.makeConstraints{ (make) -> Void in
-            make.top.equalTo(self.box.snp.top).offset(25)
-            make.width.equalTo(self.box.snp.width).multipliedBy(0.5)
-            make.height.equalTo(self.box.snp.height).multipliedBy(0.1)
+            make.top.equalTo(self.box.snp.top).offset(20)
+            make.width.equalTo(self.box.snp.width).multipliedBy(0.4)
+            make.height.equalTo(self.box.snp.height).multipliedBy(0.09)
             make.centerX.equalTo(self.box.snp.centerX)
         }
         
         box.addSubview(chooseHeroText)
         chooseHeroText.snp.makeConstraints{ (make) -> Void in
-            make.top.equalTo(self.marvelLogo.snp.bottom).offset(25)
+            make.top.equalTo(self.marvelLogo.snp.bottom).offset(20)
             make.width.equalTo(self.box.snp.width)
         }
         
@@ -173,6 +180,31 @@ class HeroListViewController: UIViewController {
         }
     }
     
+    @objc func pull2refresh(_ gesture: UIPanGestureRecognizer) {
+        
+        let translation = gesture.translation(in: box)
+        let newY = max(translation.y, 0)
+        let maxPullDownDistance = self.box.frame.height * 0.2
+        
+        if newY <= maxPullDownDistance {
+            box.transform = CGAffineTransform(translationX: 0, y: newY)
+        }
+        
+        if gesture.state == .began {
+            activityIndicator.startAnimating()
+        }
+        
+        if gesture.state == .ended {
+            if newY > maxPullDownDistance {
+                fetchHeroesData()
+            }
+            UIView.animate(withDuration: 0.3) {
+                self.box.transform = CGAffineTransform.identity
+                self.activityIndicator.stopAnimating()
+            }
+        }
+    }
+    
     // MARK: - Network func
 
     private func fetchHeroesData() {
@@ -181,7 +213,6 @@ class HeroListViewController: UIViewController {
         viewModel.fetchHeroesData() { [weak self] (result) in
             guard let this = self else { return }
             this.handleResult(result)
-            self?.setupUI()
         }
     }
     
@@ -189,6 +220,7 @@ class HeroListViewController: UIViewController {
         switch result {
         case .success:
             LoadingIndicator.stopLoading()
+            collectionView.reloadData()
         case .failure(let error):
             LoadingIndicator.stopLoading()
             print(error)

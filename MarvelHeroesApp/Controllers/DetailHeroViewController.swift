@@ -187,7 +187,7 @@ final class DetailHeroViewController: UIViewController {
         let maxPullDownDistance = self.box.frame.height * 0.2
         
         if newY <= maxPullDownDistance {
-            box.frame.origin.y = newY + 20
+            box.transform = CGAffineTransform(translationX: 0, y: newY)
         }
         
         if gesture.state == .began {
@@ -199,7 +199,7 @@ final class DetailHeroViewController: UIViewController {
                 fetchHeroData()
             }
             UIView.animate(withDuration: 0.3) {
-                self.view.frame.origin.y = 0
+                self.box.transform = CGAffineTransform.identity
                 self.activityIndicator.stopAnimating()
             }
         }
