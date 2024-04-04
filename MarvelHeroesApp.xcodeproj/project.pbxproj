@@ -32,6 +32,8 @@
 		93CD1EA22B90F16300AD2752 /* HeroListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93CD1EA12B90F16300AD2752 /* HeroListViewController.swift */; };
 		93CD1EA72B90F16600AD2752 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 93CD1EA62B90F16600AD2752 /* Assets.xcassets */; };
 		93CD1EAA2B90F16600AD2752 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 93CD1EA82B90F16600AD2752 /* LaunchScreen.storyboard */; };
+		93E449042BBC7D4B00BAA1EE /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E449032BBC7D4B00BAA1EE /* APIManager.swift */; };
+		93E449062BBC7E2C00BAA1EE /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E449052BBC7E2C00BAA1EE /* Keychain.swift */; };
 		B935D7FD8766EFCEAAFA481B /* Pods_MarvelHeroesApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BAFC2A3A755927D5BB49A12F /* Pods_MarvelHeroesApp.framework */; };
 /* End PBXBuildFile section */
 
@@ -63,6 +65,8 @@
 		93CD1EA62B90F16600AD2752 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		93CD1EA92B90F16600AD2752 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		93CD1EAB2B90F16600AD2752 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		93E449032BBC7D4B00BAA1EE /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
+		93E449052BBC7E2C00BAA1EE /* Keychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
 		BAFC2A3A755927D5BB49A12F /* Pods_MarvelHeroesApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MarvelHeroesApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E07F09D586592427FABAC2B5 /* Pods-MarvelHeroesApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MarvelHeroesApp.release.xcconfig"; path = "Target Support Files/Pods-MarvelHeroesApp/Pods-MarvelHeroesApp.release.xcconfig"; sourceTree = "<group>"; };
 		FBD5D5CF1A5BC340AAAE5C51 /* Pods-MarvelHeroesApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MarvelHeroesApp.debug.xcconfig"; path = "Target Support Files/Pods-MarvelHeroesApp/Pods-MarvelHeroesApp.debug.xcconfig"; sourceTree = "<group>"; };
@@ -116,13 +120,14 @@
 			path = View;
 			sourceTree = "<group>";
 		};
-		9303D24F2B92157A003567A5 /* Model */ = {
+		9303D24F2B92157A003567A5 /* API */ = {
 			isa = PBXGroup;
 			children = (
-				9303D2502B92158F003567A5 /* ResponseModel.swift */,
-				9369AD1E2BB5D6C200DA5460 /* ResponseFailureModel.swift */,
+				93E449022BBC7D1A00BAA1EE /* Services */,
+				93E449012BBC7D0D00BAA1EE /* Models */,
+				93E449052BBC7E2C00BAA1EE /* Keychain.swift */,
 			);
-			path = Model;
+			path = API;
 			sourceTree = "<group>";
 		};
 		933B27012B93000D00B5E9B4 /* Layers */ = {
@@ -216,7 +221,7 @@
 				933B27052B93155600B5E9B4 /* ViewModel */,
 				933B27042B93154000B5E9B4 /* Controllers */,
 				933B27012B93000D00B5E9B4 /* Layers */,
-				9303D24F2B92157A003567A5 /* Model */,
+				9303D24F2B92157A003567A5 /* API */,
 				9303D24C2B92108D003567A5 /* View */,
 				9303D2492B9200F6003567A5 /* Extensions */,
 				936DBDA22B91F8A60098E9C6 /* Libraries */,
@@ -226,6 +231,23 @@
 				93CD1EAB2B90F16600AD2752 /* Info.plist */,
 			);
 			path = MarvelHeroesApp;
+			sourceTree = "<group>";
+		};
+		93E449012BBC7D0D00BAA1EE /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				9303D2502B92158F003567A5 /* ResponseModel.swift */,
+				9369AD1E2BB5D6C200DA5460 /* ResponseFailureModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		93E449022BBC7D1A00BAA1EE /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				93E449032BBC7D4B00BAA1EE /* APIManager.swift */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -349,6 +371,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9303D24B2B920114003567A5 /* Extensions.swift in Sources */,
+				93E449042BBC7D4B00BAA1EE /* APIManager.swift in Sources */,
 				9369AD1F2BB5D6C200DA5460 /* ResponseFailureModel.swift in Sources */,
 				9369AD1B2BB5C3B400DA5460 /* HeroCollectionViewCellViewModel.swift in Sources */,
 				934B93882BA0716B005FA6D6 /* DetailHeroViewModel.swift in Sources */,
@@ -356,6 +379,7 @@
 				933B27032B93002500B5E9B4 /* CustomHeroItemLayer.swift in Sources */,
 				939E7F822B947AEF00BEE787 /* PagingCollectionViewLayout.swift in Sources */,
 				93CD1EA22B90F16300AD2752 /* HeroListViewController.swift in Sources */,
+				93E449062BBC7E2C00BAA1EE /* Keychain.swift in Sources */,
 				9338E9032B95B8DE00533C80 /* Fonts.swift in Sources */,
 				93CD1E9E2B90F16300AD2752 /* AppDelegate.swift in Sources */,
 				939E7F842B9486D200BEE787 /* Constants.swift in Sources */,

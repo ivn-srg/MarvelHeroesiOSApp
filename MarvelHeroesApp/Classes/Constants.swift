@@ -34,11 +34,5 @@ let MockUpImage = UIImage(named: "mockup")
 // localizable strings
 let mainScreenTitle = NSLocalizedString("mainScreenTitle", comment: "")
 
-// network constants
-let BASE_URL = "https://gateway.marvel.com"
-
-let API_KEY = "b803ed8710a243c3c7b40aab280b4195"
-let PRIVATE_KEY = "70b08100100ed986893efd5424b60314c084c96a"
-
 // mockUpData
 let mockUpHeroData = HeroModel(id: 1, name: "Unknown hero", description: "", thumbnail: ThumbnailModel(path: "", extension: ""))

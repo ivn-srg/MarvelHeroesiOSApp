@@ -32,3 +32,5 @@ struct ThumbnailModel: Codable {
     let path: String
     let `extension`: String
 }
+
+typealias Heroes = [HeroModel]

@@ -92,7 +92,8 @@ final class DetailHeroViewController: UIViewController {
         super.viewDidLoad()
         
         setupView()
-        fetchHeroData()
+        viewModel.fetchHeroData()
+        self.updateView()
     }
     
     // MARK: - UI functions
@@ -146,33 +147,13 @@ final class DetailHeroViewController: UIViewController {
     }
     
     private func updateView() {
-        viewModel.getImageFromNet(imageView: heroImageView)
+        APIManager.shared.getImageFromNet(heroItem: viewModel.heroItem, imageView: heroImageView)
         
         heroNameText.text = viewModel.heroItem.name
         heroInfoText.text = viewModel.heroItem.description == "" ? "Empty" : viewModel.heroItem.description
     }
     
     // MARK: - Network func
-    
-    private func fetchHeroData() {
-        LoadingIndicator.startLoading()
-        
-        viewModel.fetchHeroData() { [weak self] (result) in
-            guard let this = self else { return }
-            this.handleResult(result)
-        }
-    }
-    
-    private func handleResult(_ result: Result<ResponseModel, Error>) {
-        switch result {
-        case .success:
-            LoadingIndicator.stopLoading()
-            self.updateView()
-        case .failure(let error):
-            LoadingIndicator.stopLoading()
-            print(error)
-        }
-    }
     
     // MARK: - @objc func
     
@@ -196,7 +177,8 @@ final class DetailHeroViewController: UIViewController {
         
         if gesture.state == .ended {
             if newY > maxPullDownDistance {
-                fetchHeroData()
+                viewModel.fetchHeroData()
+                self.updateView()
             }
             UIView.animate(withDuration: 0.3) {
                 self.box.transform = CGAffineTransform.identity

@@ -104,7 +104,7 @@ class HeroListViewController: UIViewController {
         super.viewDidLoad()
         
         setupUI()
-        fetchHeroesData()
+        viewModel.fetchHeroesData(into: collectionView)
         
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
@@ -196,34 +196,12 @@ class HeroListViewController: UIViewController {
         
         if gesture.state == .ended {
             if newY > maxPullDownDistance {
-                fetchHeroesData()
+                viewModel.fetchHeroesData(into: collectionView)
             }
             UIView.animate(withDuration: 0.3) {
                 self.box.transform = CGAffineTransform.identity
                 self.activityIndicator.stopAnimating()
             }
-        }
-    }
-    
-    // MARK: - Network func
-
-    private func fetchHeroesData() {
-        LoadingIndicator.startLoading()
-        
-        viewModel.fetchHeroesData() { [weak self] (result) in
-            guard let this = self else { return }
-            this.handleResult(result)
-        }
-    }
-    
-    private func handleResult(_ result: Result<ResponseModel, Error>) {
-        switch result {
-        case .success:
-            LoadingIndicator.stopLoading()
-            collectionView.reloadData()
-        case .failure(let error):
-            LoadingIndicator.stopLoading()
-            print(error)
         }
     }
 }
