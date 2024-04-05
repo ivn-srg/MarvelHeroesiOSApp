@@ -8,17 +8,13 @@
 import UIKit
 import Kingfisher
 
-protocol MyCellDelegate: AnyObject {
-    func changeTriangleViewColor(color: UIColor)
-}
-
-class HeroCollectionViewCell: UICollectionViewCell {
+final class HeroCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Variables
     
     static let identifier = "CollectionViewCellId"
+    weak var delegate: UpdateTriangleViewColorProtocol?
     var heroImage: UIImage = UIImage()
-    weak var delegate: MyCellDelegate?
     
     // MARK: - UI components
     
@@ -46,8 +42,11 @@ class HeroCollectionViewCell: UICollectionViewCell {
     // MARK: - Functions
     
     public func configure(viewModel: HeroCollectionViewCellViewModel) {
-        self.nameOfHero.text = viewModel.heroName
-        viewModel.getImageFromNet(imageView: heroImageView)
+        self.nameOfHero.text = viewModel.heroItem.name
+        
+        APIManager.shared.getImageFromNet(heroItem: viewModel.heroItem, imageView: heroImageView)
+        
+        heroImageView.addObserver(self, forKeyPath: "image", options: [.new], context: nil)
         
         self.setupUI()
     }
@@ -73,5 +72,15 @@ class HeroCollectionViewCell: UICollectionViewCell {
         
         self.heroImageView.image = nil
         self.nameOfHero.text = nil
+    }
+    
+    // MARK: - KVO
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == "image" {
+            guard let delegate = delegate, let img = heroImageView.image else { return }
+            let avgColor = img.averageColor()
+            delegate.updateTriangleViewColor(color: avgColor)
+        }
     }
 }

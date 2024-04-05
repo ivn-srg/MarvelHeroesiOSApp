@@ -16,21 +16,27 @@ final class HeroListViewModel {
     
     func fetchHeroesData(into collectionView: UICollectionView) {
         LoadingIndicator.startLoading()
-        APIManager.shared.fetchHeroesData() { [weak self] (result) in
-            guard self != nil else { return }
-            
-            switch result {
-            case .success(let heroes):
-                LoadingIndicator.stopLoading()
-                self?.dataSource = heroes
-                collectionView.reloadData()
-            case .failure(let error):
-                LoadingIndicator.stopLoading()
-                print(error)
+        DispatchQueue.global().async {
+            APIManager.shared.fetchHeroesData() { [weak self] (result) in
+                guard self != nil else { return }
+                
+                switch result {
+                case .success(let heroes):
+                    self?.dataSource = heroes
+                    DispatchQueue.main.async {
+                        LoadingIndicator.stopLoading()
+                        collectionView.reloadData()
+                    }
+                    
+                case .failure(let error):
+                    DispatchQueue.main.async {
+                        LoadingIndicator.stopLoading()
+                        print(error)
+                    }
+                }
             }
         }
     }
-
     
     // MARK: - VC func
     

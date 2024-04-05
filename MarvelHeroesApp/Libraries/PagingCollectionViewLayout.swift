@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PagingCollectionViewLayout: UICollectionViewFlowLayout {
+final class PagingCollectionViewLayout: UICollectionViewFlowLayout {
     
     var velocityThresholdPerPage: CGFloat = 2
     var numberOfItemsPerPage: CGFloat = 1

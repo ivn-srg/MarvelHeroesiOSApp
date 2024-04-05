@@ -24,13 +24,17 @@ final class DetailHeroViewModel {
         LoadingIndicator.startLoading()
         
         APIManager.shared.fetchHeroData(heroItem: heroItem) { [weak self] (result) in
-            guard let this = self else { return }
+            guard self != nil else { return }
             
             switch result {
             case .success:
-                LoadingIndicator.stopLoading()
+                DispatchQueue.main.async {
+                    LoadingIndicator.stopLoading()
+                }
             case .failure(let error):
-                LoadingIndicator.stopLoading()
+                DispatchQueue.main.async {
+                    LoadingIndicator.stopLoading()
+                }
                 print(error)
             }
         }

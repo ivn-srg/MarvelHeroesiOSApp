@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-class HeroListViewController: UIViewController {
+final class HeroListViewController: UIViewController {
     
     // MARK: - Fields
     
@@ -18,9 +18,11 @@ class HeroListViewController: UIViewController {
         screenWidth * 0.7
     }
     
-    var itemH: CGFloat {
+    private var itemH: CGFloat {
         screenHeight * 0.57
     }
+    
+    var heroColorsList: [UIColor] = []
     
     // MARK: - UI components
     
@@ -217,6 +219,7 @@ extension HeroListViewController: UICollectionViewDelegate, UICollectionViewData
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HeroCollectionViewCell.identifier, for: indexPath) as? HeroCollectionViewCell else { return UICollectionViewCell() }
         
         let hero = viewModel.dataSource[indexPath.row]
+        cell.delegate = self
         cell.configure(viewModel: HeroCollectionViewCellViewModel(hero: hero))
         
         moveFocusOnFirstItem()
@@ -262,7 +265,6 @@ extension HeroListViewController {
         let indexPath = IndexPath(item: customLayout.currentPage, section: 0)
         guard let cell = collectionView.cellForItem(at: indexPath) as? HeroCollectionViewCell else { return }
 
-        changeTriangleViewColor(color: cell.heroImage.averageColor() ?? .systemBlue)
         transformCell(cell)
     }
     
@@ -288,11 +290,14 @@ extension HeroListViewController {
     }
 }
 
-extension HeroListViewController: MyCellDelegate {
-    
-    func changeTriangleViewColor(color: UIColor) {
+extension HeroListViewController: UpdateTriangleViewColorProtocol {
+    func updateTriangleViewColor(color: UIColor) {
         triangleView.colorOfTriangle = color
         triangleView.setNeedsDisplay()
     }
 }
 
+protocol UpdateTriangleViewColorProtocol: AnyObject {
+    var heroColorsList: [UIColor] { get set }
+    func updateTriangleViewColor(color: UIColor)
+}

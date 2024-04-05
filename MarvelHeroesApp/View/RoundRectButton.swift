@@ -9,7 +9,7 @@ import UIKit
 
 /// UIButton subclass that draws a rounded rectangle in its background.
 
-public class RoundRectButton: UIButton {
+public final class RoundRectButton: UIButton {
 
     // MARK: Public interface
 

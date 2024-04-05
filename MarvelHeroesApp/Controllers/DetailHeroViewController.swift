@@ -153,8 +153,6 @@ final class DetailHeroViewController: UIViewController {
         heroInfoText.text = viewModel.heroItem.description == "" ? "Empty" : viewModel.heroItem.description
     }
     
-    // MARK: - Network func
-    
     // MARK: - @objc func
     
     @objc func backButtonPressed() {

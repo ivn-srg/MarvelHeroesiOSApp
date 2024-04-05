@@ -66,14 +66,13 @@ final class APIManager {
         
         AF.request(urlString)
             .validate()
-            .responseDecodable(of: ResponseModel.self, queue: .main, decoder: JSONDecoder()) { (response) in
+            .responseDecodable(of: ResponseModel.self, queue: .global(), decoder: JSONDecoder()) { (response) in
                 switch response.result {
                 case .success(let heroesData):
                     completion(.success(heroesData.data.results))
                     
                 case .failure(let error):
                     print(error)
-                    print(urlString)
                     if let err = self.getHeroError(error: error, data: response.data) {
                         completion(.failure(err))
                     } else {
@@ -91,7 +90,7 @@ final class APIManager {
         
         AF.request(urlString)
             .validate()
-            .responseDecodable(of: ResponseModel.self, queue: .main, decoder: JSONDecoder()) { (response) in
+            .responseDecodable(of: ResponseModel.self, queue: .global(), decoder: JSONDecoder()) { (response) in
                 switch response.result {
                 case .success(let heroesData):
                     let model = heroesData.data.results.first ?? mockUpHeroData
@@ -140,7 +139,6 @@ final class APIManager {
         imageView.kf.setImage(with: url, options: [.processor(processor), .transition(.fade(0.2))]){ result in
             switch result {
             case .success:
-                print("average color: \(self.getAverageColorOfImage(image: imageView.image))")
                 break
             case .failure(let error):
                 imageView.image = MockUpImage
@@ -148,11 +146,5 @@ final class APIManager {
                 break
             }
         }
-    }
-    
-    func getAverageColorOfImage(image: UIImage?) -> UIColor {
-        guard let image = image, let avgColoer = image.averageColor() else { return .systemBlue }
-        
-        return avgColoer
     }
 }

@@ -7,7 +7,7 @@
 
 import UIKit
 
-class TriangleView: UIView {
+final class TriangleView: UIView {
     
     var colorOfTriangle: UIColor {
         didSet {

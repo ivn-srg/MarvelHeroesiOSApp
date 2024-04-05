@@ -9,29 +9,26 @@ import UIKit
 import CommonCrypto
 
 extension UIColor {
-   convenience init(red: Int, green: Int, blue: Int) {
-       assert(red >= 0 && red <= 255, "Invalid red component")
-       assert(green >= 0 && green <= 255, "Invalid green component")
-       assert(blue >= 0 && blue <= 255, "Invalid blue component")
-       self.init(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: 1.0)
-   }
-   convenience init(rgb: Int) {
-       self.init(
-           red: (rgb >> 16) & 0xFF,
-           green: (rgb >> 8) & 0xFF,
-           blue: rgb & 0xFF
-       )
-   }
+    convenience init(red: Int, green: Int, blue: Int) {
+        assert(red >= 0 && red <= 255, "Invalid red component")
+        assert(green >= 0 && green <= 255, "Invalid green component")
+        assert(blue >= 0 && blue <= 255, "Invalid blue component")
+        self.init(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: 1.0)
+    }
+    convenience init(rgb: Int) {
+        self.init(
+            red: (rgb >> 16) & 0xFF,
+            green: (rgb >> 8) & 0xFF,
+            blue: rgb & 0xFF
+        )
+    }
 }
 
 extension UIImage {
-
-    /// Возвращает средний цвет изображения
-    /// 
     /// - Возвращает: UIColor, представляющий средний цвет изображения.
-    func averageColor() -> UIColor? {
+    func averageColor() -> UIColor {
         guard let cgImage = self.cgImage else {
-            return nil
+            return loaderColor
         }
         
         let width = cgImage.width
@@ -74,6 +71,6 @@ extension UIImage {
         let averageBlue = blue / totalPixels
         let averageAlpha = alpha / totalPixels
         
-        return UIColor(red: CGFloat(averageRed), green: CGFloat(averageGreen), blue: CGFloat(averageBlue), alpha: CGFloat(averageAlpha))
+        return UIColor(red: CGFloat(averageRed) / 255, green: CGFloat(averageGreen) / 255, blue: CGFloat(averageBlue) / 255, alpha: CGFloat(averageAlpha))
     }
 }

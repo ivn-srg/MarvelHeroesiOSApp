@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CustomHeroItemLayer: UICollectionViewFlowLayout {
+final class CustomHeroItemLayer: UICollectionViewFlowLayout {
     
     var previousOffset: CGFloat = 0.0
     var currentPage = 0
