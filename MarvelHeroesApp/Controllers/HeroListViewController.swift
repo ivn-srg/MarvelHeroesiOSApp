@@ -22,8 +22,6 @@ final class HeroListViewController: UIViewController {
         screenHeight * 0.57
     }
     
-    var heroColorsList: [UIColor] = []
-    
     // MARK: - UI components
     
     private lazy var box: UIView = {
@@ -298,6 +296,5 @@ extension HeroListViewController: UpdateTriangleViewColorProtocol {
 }
 
 protocol UpdateTriangleViewColorProtocol: AnyObject {
-    var heroColorsList: [UIColor] { get set }
     func updateTriangleViewColor(color: UIColor)
 }
