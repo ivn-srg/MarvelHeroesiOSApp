@@ -61,7 +61,9 @@ final class APIManager {
     
     func fetchHeroesData(completion: @escaping (Result<Heroes, Error>) -> Void) {
         let md5Hash = MD5(string: "\(currentTimeStamp)\(PRIVATE_KEY)\(API_KEY)")
-        let path = "\(APIType.getHeroes.request)?ts=\(currentTimeStamp)&apikey=\(API_KEY)&hash=\(md5Hash)"
+        let limit = 30
+        let offset = 0
+        let path = "\(APIType.getHeroes.request)?limit=\(limit)&offset=\(offset)&ts=\(currentTimeStamp)&apikey=\(API_KEY)&hash=\(md5Hash)"
         let urlString = String(format: path)
         
         AF.request(urlString)
@@ -125,9 +127,9 @@ final class APIManager {
         }.joined()
     }
     
-    func getImageFromNet(heroItem: HeroModel, imageView: UIImageView) {
+    func getImageFromNet(url: String, imageView: UIImageView) {
         
-        let url = URL(string: "\(heroItem.thumbnail.path).\(heroItem.thumbnail.extension)")
+        let url = URL(string: url)
         let processor = RoundCornerImageProcessor(cornerRadius: 20)
         let indicatorStyle = UIActivityIndicatorView.Style.large
         let indicator = UIActivityIndicatorView(style: indicatorStyle)

@@ -22,7 +22,8 @@ final class HeroListViewModel {
                 
                 switch result {
                 case .success(let heroes):
-                    self?.dataSource = heroes
+                    let filteredHeroes = heroes.filter { $0.thumbnail.path != heroImageNotAvailable }
+                    self?.dataSource = filteredHeroes
                     DispatchQueue.main.async {
                         LoadingIndicator.stopLoading()
                         collectionView.reloadData()

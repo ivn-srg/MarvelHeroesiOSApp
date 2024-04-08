@@ -204,6 +204,13 @@ final class HeroListViewController: UIViewController {
             }
         }
     }
+    
+    private func updateTrinagleViewColor(didLoadImage: UIImage?) {
+        guard let image = didLoadImage else { return }
+        let averageColor = image.averageColor()
+        triangleView.colorOfTriangle = averageColor
+        triangleView.setNeedsDisplay()
+    }
 }
 
 // MARK: - Extensions
@@ -215,9 +222,8 @@ extension HeroListViewController: UICollectionViewDelegate, UICollectionViewData
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HeroCollectionViewCell.identifier, for: indexPath) as? HeroCollectionViewCell else { return UICollectionViewCell() }
-        
         let hero = viewModel.dataSource[indexPath.row]
-        cell.delegate = self
+        
         cell.configure(viewModel: HeroCollectionViewCellViewModel(hero: hero))
         
         moveFocusOnFirstItem()
@@ -263,6 +269,7 @@ extension HeroListViewController {
         let indexPath = IndexPath(item: customLayout.currentPage, section: 0)
         guard let cell = collectionView.cellForItem(at: indexPath) as? HeroCollectionViewCell else { return }
 
+        updateTrinagleViewColor(didLoadImage: cell.heroImage)
         transformCell(cell)
     }
     
@@ -286,15 +293,4 @@ extension HeroListViewController {
             }
         }
     }
-}
-
-extension HeroListViewController: UpdateTriangleViewColorProtocol {
-    func updateTriangleViewColor(color: UIColor) {
-        triangleView.colorOfTriangle = color
-        triangleView.setNeedsDisplay()
-    }
-}
-
-protocol UpdateTriangleViewColorProtocol: AnyObject {
-    func updateTriangleViewColor(color: UIColor)
 }

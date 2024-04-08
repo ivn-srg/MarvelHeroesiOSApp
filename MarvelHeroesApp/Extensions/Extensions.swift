@@ -28,7 +28,7 @@ extension UIImage {
     /// - Возвращает: UIColor, представляющий средний цвет изображения.
     func averageColor() -> UIColor {
         guard let cgImage = self.cgImage else {
-            return loaderColor
+            return .clear
         }
         
         let width = cgImage.width

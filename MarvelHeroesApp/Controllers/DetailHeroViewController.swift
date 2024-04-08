@@ -13,7 +13,6 @@ final class DetailHeroViewController: UIViewController {
     // MARK: - Fields
     
     let viewModel: DetailHeroViewModel
-    var hero: HeroModel
     
     // MARK: - UI Components
     
@@ -79,7 +78,6 @@ final class DetailHeroViewController: UIViewController {
     // MARK: - Lifecycle
     
     init(hero: HeroModel) {
-        self.hero = hero
         self.viewModel = DetailHeroViewModel(hero: hero)
         super.init(nibName: nil, bundle: nil)
     }
@@ -147,10 +145,11 @@ final class DetailHeroViewController: UIViewController {
     }
     
     private func updateView() {
-        APIManager.shared.getImageFromNet(heroItem: viewModel.heroItem, imageView: heroImageView)
+        let url = "\(viewModel.heroItem.thumbnail.path).\(viewModel.heroItem.thumbnail.extension)"
+        APIManager.shared.getImageFromNet(url: url, imageView: heroImageView)
         
         heroNameText.text = viewModel.heroItem.name
-        heroInfoText.text = viewModel.heroItem.description == "" ? "Empty" : viewModel.heroItem.description
+        heroInfoText.text = viewModel.heroItem.description == "" ? "Just a cool marvel hero" : viewModel.heroItem.description
     }
     
     // MARK: - @objc func

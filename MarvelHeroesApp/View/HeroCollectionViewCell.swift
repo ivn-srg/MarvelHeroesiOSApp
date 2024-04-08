@@ -13,7 +13,6 @@ final class HeroCollectionViewCell: UICollectionViewCell {
     // MARK: - Variables
     
     static let identifier = "CollectionViewCellId"
-    weak var delegate: UpdateTriangleViewColorProtocol?
     var heroImage: UIImage = UIImage()
     
     // MARK: - UI components
@@ -42,13 +41,13 @@ final class HeroCollectionViewCell: UICollectionViewCell {
     // MARK: - Functions
     
     public func configure(viewModel: HeroCollectionViewCellViewModel) {
-        self.nameOfHero.text = viewModel.heroItem.name
+        setupUI()
         
-        APIManager.shared.getImageFromNet(heroItem: viewModel.heroItem, imageView: heroImageView)
+        APIManager.shared.getImageFromNet(url: viewModel.heroImageUrlString, imageView: heroImageView)
+        
+        nameOfHero.text = viewModel.heroItem.name
         
         heroImageView.addObserver(self, forKeyPath: "image", options: [.new], context: nil)
-        
-        self.setupUI()
     }
     
     private func setupUI() {
@@ -78,9 +77,8 @@ final class HeroCollectionViewCell: UICollectionViewCell {
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == "image" {
-            guard let delegate = delegate, let img = heroImageView.image else { return }
-            let avgColor = img.averageColor()
-            delegate.updateTriangleViewColor(color: avgColor)
+            guard let img = heroImageView.image else { return }
+            heroImage = img
         }
     }
 }
