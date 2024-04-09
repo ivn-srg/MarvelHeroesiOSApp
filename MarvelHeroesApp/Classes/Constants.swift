@@ -12,13 +12,6 @@ let windowScene = UIApplication.shared.connectedScenes.first(where: { $0.activat
 let window = windowScene?.windows.first(where: { $0.isKeyWindow })
 let safeArea = UIScreen.main.bounds.inset(by: window?.safeAreaInsets ?? UIEdgeInsets.zero)
 
-let RectForTriagle = CGRect(
-    x: 0,
-    y: safeArea.height * 0.3,
-    width: safeArea.width,
-    height: safeArea.height * 0.59
-)
-
 // color
 let bgColor = UIColor(rgb: 0x2b272b)
 let loaderColor = UIColor(rgb: 0xF31B2A)

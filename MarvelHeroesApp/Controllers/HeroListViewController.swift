@@ -69,8 +69,8 @@ final class HeroListViewController: UIViewController {
     
     private lazy var triangleView: TriangleView = {
         let tv = TriangleView(
-            colorOfTriangle: .black,
-            frame: RectForTriagle)
+            colorOfTriangle: .brown,
+            frame: view.bounds.inset(by: view.safeAreaInsets))
         tv.translatesAutoresizingMaskIntoConstraints = false
         return tv
     }()
@@ -83,7 +83,7 @@ final class HeroListViewController: UIViewController {
     
     private let activityIndicator: UIActivityIndicatorView = {
         let activityIndicator = UIActivityIndicatorView(style: .medium)
-        activityIndicator.isHidden = false
+        activityIndicator.hidesWhenStopped = true
         activityIndicator.color = loaderColor
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         return activityIndicator
@@ -174,9 +174,7 @@ final class HeroListViewController: UIViewController {
             let indexPath = IndexPath(item: 0, section: 0)
             collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
             
-            if let cell = collectionView.cellForItem(at: indexPath) {
-                transformCell(cell)
-            }
+            setupCell()
         }
     }
     
