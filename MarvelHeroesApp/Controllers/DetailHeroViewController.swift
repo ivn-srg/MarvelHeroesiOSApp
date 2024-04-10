@@ -49,6 +49,7 @@ final class DetailHeroViewController: UIViewController {
         txt.translatesAutoresizingMaskIntoConstraints = false
         txt.font = UIFont(name: Font.InterBold, size: 34)
         txt.textColor = .white
+        txt.numberOfLines = 2
         return txt
     }()
     
@@ -69,7 +70,7 @@ final class DetailHeroViewController: UIViewController {
     
     private let activityIndicator: UIActivityIndicatorView = {
         let activityIndicator = UIActivityIndicatorView(style: .medium)
-        activityIndicator.isHidden = false
+        activityIndicator.hidesWhenStopped = true
         activityIndicator.color = loaderColor
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         return activityIndicator
@@ -150,6 +151,14 @@ final class DetailHeroViewController: UIViewController {
         
         heroNameText.text = viewModel.heroItem.name
         heroInfoText.text = viewModel.heroItem.description == "" ? "Just a cool marvel hero" : viewModel.heroItem.description
+        
+        guard let imgCIColor = heroImageView.image?.averageColor().cgColor.components else { return }
+        
+        if imgCIColor[0] > 0.5 && imgCIColor[1] > 0.5 && imgCIColor[2] > 0.5 {
+            heroNameText.textColor = .systemGray5
+            heroInfoText.textColor = .systemGray5
+            backButton.imageView?.tintColor = .systemGray5
+        }
     }
     
     // MARK: - @objc func

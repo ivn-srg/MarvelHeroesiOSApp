@@ -207,7 +207,7 @@ final class HeroListViewController: UIViewController {
         guard let image = didLoadImage else { return }
         let averageColor = image.averageColor()
         triangleView.colorOfTriangle = averageColor
-        triangleView.setNeedsDisplay()
+        triangleView.setNeedsDisplay(triangleView.frame)
     }
 }
 
