@@ -9,12 +9,6 @@ import UIKit
 
 final class TriangleView: UIView {
     
-    var colorOfTriangle: UIColor {
-        didSet {
-            shapeLayer.fillColor = colorOfTriangle.cgColor
-        }
-    }
-    
     private let shapeLayer: CAShapeLayer = {
         let layer = CAShapeLayer()
         layer.strokeColor = UIColor.clear.cgColor
@@ -22,8 +16,7 @@ final class TriangleView: UIView {
         return layer
     }()
     
-    init(colorOfTriangle: UIColor, frame: CGRect) {
-        self.colorOfTriangle = colorOfTriangle
+    override init(frame: CGRect) {
         super.init(frame: frame)
         setupLayer()
     }
@@ -40,10 +33,15 @@ final class TriangleView: UIView {
     
     private func createTrianglePath() -> UIBezierPath {
         let trianglePath = UIBezierPath()
-        trianglePath.move(to: CGPoint(x: frame.size.width, y: frame.height * 0.64))
-        trianglePath.addLine(to: CGPoint(x: 0, y: frame.size.height * 0.64))
-        trianglePath.addLine(to: CGPoint(x: frame.size.width, y: 0))
+        let heightMultiplier = 0.64
+        trianglePath.move(to: CGPoint(x: bounds.width, y: bounds.height * heightMultiplier))
+        trianglePath.addLine(to: CGPoint(x: 0, y: bounds.height * heightMultiplier))
+        trianglePath.addLine(to: CGPoint(x: bounds.size.width, y: 0))
         trianglePath.close()
         return trianglePath
+    }
+    
+    func updateTriangleColor(_ color: UIColor) {
+        shapeLayer.fillColor = color.cgColor
     }
 }

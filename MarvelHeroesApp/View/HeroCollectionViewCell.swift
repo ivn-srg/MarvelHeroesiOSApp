@@ -22,7 +22,7 @@ final class HeroCollectionViewCell: UICollectionViewCell {
         let iv = UIImageView()
         iv.translatesAutoresizingMaskIntoConstraints = false
         iv.contentMode = .scaleAspectFill
-        iv.image = QuestionImage
+        iv.image = MockUpImage
         iv.tintColor = .white
         iv.clipsToBounds = true
         iv.layer.cornerRadius = 20
