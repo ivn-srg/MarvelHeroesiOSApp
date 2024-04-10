@@ -79,12 +79,8 @@ final class HeroCollectionViewCell: UICollectionViewCell {
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == "image" {
             guard let img = heroImageView.image else { return }
-            guard let imgCIColor = img.averageColor().cgColor.components else { return }
             
             heroImage = img
-            if imgCIColor[0] > 0.5 && imgCIColor[1] > 0.5 && imgCIColor[2] > 0.5 {
-                nameOfHero.textColor = .systemGray5
-            }
         }
     }
 }
