@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-class HeroListViewController: UIViewController {
+final class HeroListViewController: UIViewController {
     
     // MARK: - Fields
     
@@ -18,7 +18,7 @@ class HeroListViewController: UIViewController {
         screenWidth * 0.7
     }
     
-    var itemH: CGFloat {
+    private var itemH: CGFloat {
         screenHeight * 0.57
     }
     
@@ -68,11 +68,23 @@ class HeroListViewController: UIViewController {
     }()
     
     private lazy var triangleView: TriangleView = {
-        let tv = TriangleView(
-            colorOfTriangle: viewModel.dataSource[0].color,
-            frame: RectForTriagle)
+        let tv = TriangleView(frame: view.bounds)
         tv.translatesAutoresizingMaskIntoConstraints = false
         return tv
+    }()
+    
+    private lazy var panRecognize: UIPanGestureRecognizer = {
+        let gestureRecognizer = UIPanGestureRecognizer()
+        gestureRecognizer.addTarget(self, action: #selector(pull2refresh))
+        return gestureRecognizer
+    }()
+    
+    private let activityIndicator: UIActivityIndicatorView = {
+        let activityIndicator = UIActivityIndicatorView(style: .medium)
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.color = loaderColor
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        return activityIndicator
     }()
     
     // MARK: - lifecycle
@@ -90,25 +102,13 @@ class HeroListViewController: UIViewController {
         super.viewDidLoad()
         
         setupUI()
+        viewModel.fetchHeroesData(into: collectionView)
         
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        if customLayout.currentPage == 0 {
-            let indexPath = IndexPath(item: 0, section: 0)
-            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-            
-            if let cell = collectionView.cellForItem(at: indexPath) {
-                transformCell(cell)
-            }
-        }
-    }
-    
-    // MARK: - private functions
+    // MARK: - UI functions
     
     private func setupUI() {
         
@@ -119,6 +119,14 @@ class HeroListViewController: UIViewController {
         marvelLogo.image = Logo
         
         chooseHeroText.text = mainScreenTitle
+        
+        view.addGestureRecognizer(panRecognize)
+        
+        view.addSubview(activityIndicator)
+        activityIndicator.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(view.frame.height * 0.05)
+            make.centerX.equalTo(view.safeAreaLayoutGuide.snp.centerX)
+        }
         
         view.addSubview(box)
         box.snp.makeConstraints{ (make) -> Void in
@@ -139,15 +147,15 @@ class HeroListViewController: UIViewController {
         
         box.addSubview(marvelLogo)
         marvelLogo.snp.makeConstraints{ (make) -> Void in
-            make.top.equalTo(self.box.snp.top).offset(25)
-            make.width.equalTo(self.box.snp.width).multipliedBy(0.5)
-            make.height.equalTo(self.box.snp.height).multipliedBy(0.1)
+            make.top.equalTo(self.box.snp.top).offset(20)
+            make.width.equalTo(self.box.snp.width).multipliedBy(0.4)
+            make.height.equalTo(self.box.snp.height).multipliedBy(0.09)
             make.centerX.equalTo(self.box.snp.centerX)
         }
         
         box.addSubview(chooseHeroText)
         chooseHeroText.snp.makeConstraints{ (make) -> Void in
-            make.top.equalTo(self.marvelLogo.snp.bottom).offset(25)
+            make.top.equalTo(self.marvelLogo.snp.bottom).offset(20)
             make.width.equalTo(self.box.snp.width)
         }
         
@@ -157,6 +165,46 @@ class HeroListViewController: UIViewController {
             make.width.equalTo(box.snp.width)
             make.bottom.equalTo(box.snp.bottom)
         }
+    }
+    
+    private func moveFocusOnFirstItem() {
+        if customLayout.currentPage == 0 {
+            let indexPath = IndexPath(item: 0, section: 0)
+            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+            
+            setupCell()
+        }
+    }
+    
+    @objc func pull2refresh(_ gesture: UIPanGestureRecognizer) {
+        
+        let translation = gesture.translation(in: box)
+        let newY = max(translation.y, 0)
+        let maxPullDownDistance = self.box.frame.height * 0.2
+        
+        if newY <= maxPullDownDistance {
+            box.transform = CGAffineTransform(translationX: 0, y: newY)
+        }
+        
+        if gesture.state == .began {
+            activityIndicator.startAnimating()
+        }
+        
+        if gesture.state == .ended {
+            if newY > maxPullDownDistance {
+                viewModel.fetchHeroesData(into: collectionView)
+            }
+            UIView.animate(withDuration: 0.3) {
+                self.box.transform = CGAffineTransform.identity
+                self.activityIndicator.stopAnimating()
+            }
+        }
+    }
+    
+    private func updateTrinagleViewColor(didLoadImage: UIImage?) {
+        guard let image = didLoadImage else { return }
+        let averageColor = image.averageColor()
+        triangleView.updateTriangleColor(averageColor)
     }
 }
 
@@ -169,9 +217,11 @@ extension HeroListViewController: UICollectionViewDelegate, UICollectionViewData
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HeroCollectionViewCell.identifier, for: indexPath) as? HeroCollectionViewCell else { return UICollectionViewCell() }
-        
         let hero = viewModel.dataSource[indexPath.row]
-        cell.configure(with: hero)
+        
+        cell.configure(viewModel: HeroCollectionViewCellViewModel(hero: hero))
+        
+        moveFocusOnFirstItem()
         
         return cell
     }
@@ -196,7 +246,7 @@ extension HeroListViewController: UICollectionViewDelegate, UICollectionViewData
 extension HeroListViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
+
         CGSize(
             width: collectionView.frame.width * 0.7,
             height: collectionView.frame.height * 0.75
@@ -212,11 +262,9 @@ extension HeroListViewController {
     
     private func setupCell() {
         let indexPath = IndexPath(item: customLayout.currentPage, section: 0)
-        let hero = viewModel.dataSource[indexPath.row]
-        guard let cell = collectionView.cellForItem(at: indexPath) else { return }
-        
-        triangleView.colorOfTriangle = hero.color
-        triangleView.setNeedsDisplay()
+        guard let cell = collectionView.cellForItem(at: indexPath) as? HeroCollectionViewCell else { return }
+
+        updateTrinagleViewColor(didLoadImage: cell.heroImage)
         transformCell(cell)
     }
     

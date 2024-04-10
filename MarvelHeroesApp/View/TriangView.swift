@@ -7,39 +7,41 @@
 
 import UIKit
 
-class TriangleView: UIView {
+final class TriangleView: UIView {
     
-    var colorOfTriangle: Int {
-        didSet {
-            drawTriangle(with: RectForTriagle, color: colorOfTriangle)
-        }
-    }
+    private let shapeLayer: CAShapeLayer = {
+        let layer = CAShapeLayer()
+        layer.strokeColor = UIColor.clear.cgColor
+        layer.fillColor = UIColor.clear.cgColor
+        return layer
+    }()
     
-    init(colorOfTriangle: Int, frame: CGRect) {
-        self.colorOfTriangle = colorOfTriangle
+    override init(frame: CGRect) {
         super.init(frame: frame)
+        setupLayer()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func draw(_ rect: CGRect) {
-        super.draw(rect)
-        
-        drawTriangle(with: rect, color: colorOfTriangle)
+    private func setupLayer() {
+        layer.addSublayer(shapeLayer)
+        shapeLayer.frame = bounds
+        shapeLayer.path = createTrianglePath().cgPath
     }
     
-    func drawTriangle(with rect: CGRect, color: Int) {
+    private func createTrianglePath() -> UIBezierPath {
         let trianglePath = UIBezierPath()
-        trianglePath.move(to: CGPoint(x: rect.size.width, y: rect.size.height))
-        trianglePath.addLine(to: CGPoint(x: 0, y: rect.size.height))
-        trianglePath.addLine(to: CGPoint(x: rect.size.width, y: 0))
-        
-        let fillColor = UIColor(rgb: color)
-        fillColor.setFill()
-        trianglePath.fill()
-        trianglePath.stroke()
+        let heightMultiplier = 0.64
+        trianglePath.move(to: CGPoint(x: bounds.width, y: bounds.height * heightMultiplier))
+        trianglePath.addLine(to: CGPoint(x: 0, y: bounds.height * heightMultiplier))
+        trianglePath.addLine(to: CGPoint(x: bounds.size.width, y: 0))
+        trianglePath.close()
+        return trianglePath
+    }
+    
+    func updateTriangleColor(_ color: UIColor) {
+        shapeLayer.fillColor = color.cgColor
     }
 }
-

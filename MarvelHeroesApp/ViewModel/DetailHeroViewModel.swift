@@ -7,10 +7,12 @@
 
 import UIKit
 import Kingfisher
+import Alamofire
+import CryptoKit
 
-class DetailHeroViewModel {
+final class DetailHeroViewModel {
     
-    let heroItem: HeroModel
+    var heroItem: HeroModel
     
     init(hero: HeroModel) {
         self.heroItem = hero
@@ -18,39 +20,23 @@ class DetailHeroViewModel {
     
     // MARK: - Network work
 
-    func getImageFromNet(imageView: UIImageView) {
+    func fetchHeroData() {
+        LoadingIndicator.startLoading()
         
-        let url = URL(string: heroItem.urlImage)
-        let processor = RoundCornerImageProcessor(cornerRadius: 20)
-        let indicatorStyle = UIActivityIndicatorView.Style.large
-        let indicator = UIActivityIndicatorView(style: indicatorStyle)
-        
-        indicator.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        imageView.kf.indicatorType = .activity
-        (imageView.kf.indicator?.view as? UIActivityIndicatorView)?.color = .white
-
-        imageView.kf.setImage(with: url, options: [.processor(processor), .transition(.fade(0.2))]){ result in
+        APIManager.shared.fetchHeroData(heroItem: heroItem) { [weak self] (result) in
+            guard self != nil else { return }
+            
             switch result {
             case .success:
-                print("average color: \(self.getAverageColorOfImage(image: imageView.image))")
-                break
-            case .failure(let error):
-                if let image = UIImage(named: self.heroItem.imageName) {
-                    imageView.image = image
+                DispatchQueue.main.async {
+                    LoadingIndicator.stopLoading()
                 }
-                print("Error loading image: \(error)")
-                break
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    LoadingIndicator.stopLoading()
+                }
+                print(error)
             }
         }
-
-    }
-        
-    
-    // MARK: - VC func
-    
-    func getAverageColorOfImage(image: UIImage?) -> UIColor {
-        guard let image = image, let avgColoer = image.averageColor() else { return .systemBlue }
-        
-        return avgColoer
     }
 }

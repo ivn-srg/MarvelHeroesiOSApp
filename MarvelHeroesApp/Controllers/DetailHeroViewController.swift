@@ -8,12 +8,11 @@
 import UIKit
 import Kingfisher
 
-class DetailHeroViewController: UIViewController {
+final class DetailHeroViewController: UIViewController {
     
     // MARK: - Fields
     
     let viewModel: DetailHeroViewModel
-    var hero: HeroModel
     
     // MARK: - UI Components
     
@@ -33,7 +32,7 @@ class DetailHeroViewController: UIViewController {
         button.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         return button
     }()
-
+    
     private lazy var heroImageView: UIImageView = {
         let iv = UIImageView()
         iv.translatesAutoresizingMaskIntoConstraints = false
@@ -41,6 +40,7 @@ class DetailHeroViewController: UIViewController {
         iv.tintColor = .white
         iv.clipsToBounds = true
         iv.layer.cornerRadius = 25
+        iv.image = MockUpImage
         return iv
     }()
     
@@ -49,6 +49,7 @@ class DetailHeroViewController: UIViewController {
         txt.translatesAutoresizingMaskIntoConstraints = false
         txt.font = UIFont(name: Font.InterBold, size: 34)
         txt.textColor = .white
+        txt.numberOfLines = 2
         return txt
     }()
     
@@ -61,35 +62,50 @@ class DetailHeroViewController: UIViewController {
         return txt
     }()
     
+    private lazy var panRecognize: UIPanGestureRecognizer = {
+        let gestureRecognizer = UIPanGestureRecognizer()
+        gestureRecognizer.addTarget(self, action: #selector(pull2refresh))
+        return gestureRecognizer
+    }()
+    
+    private let activityIndicator: UIActivityIndicatorView = {
+        let activityIndicator = UIActivityIndicatorView(style: .medium)
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.color = loaderColor
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        return activityIndicator
+    }()
+    
     // MARK: - Lifecycle
     
-    override func loadView() {
-        super.loadView()
-        
-        setupView()
-    }
-    
     init(hero: HeroModel) {
-        self.hero = hero
         self.viewModel = DetailHeroViewModel(hero: hero)
         super.init(nibName: nil, bundle: nil)
-        
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - private functions
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        setupView()
+        viewModel.fetchHeroData()
+        self.updateView()
+    }
+    
+    // MARK: - UI functions
     
     private func setupView() {
-
-        box.backgroundColor = bgColor
         
-        viewModel.getImageFromNet(imageView: heroImageView)
+        view.addGestureRecognizer(panRecognize)
         
-        heroNameText.text = viewModel.heroItem.name
-        heroInfoText.text = viewModel.heroItem.info
+        view.addSubview(activityIndicator)
+        activityIndicator.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(view.frame.height * 0.05)
+            make.centerX.equalTo(view.safeAreaLayoutGuide.snp.centerX)
+        }
         
         view.addSubview(box)
         box.snp.makeConstraints{ (make) -> Void in
@@ -97,6 +113,7 @@ class DetailHeroViewController: UIViewController {
             make.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom)
             make.leading.equalTo(self.view.safeAreaLayoutGuide.snp.leading)
             make.trailing.equalTo(self.view.safeAreaLayoutGuide.snp.trailing)
+            make.width.equalTo(self.view.safeAreaLayoutGuide.snp.width)
         }
         
         box.addSubview(heroImageView)
@@ -128,7 +145,43 @@ class DetailHeroViewController: UIViewController {
         }
     }
     
+    private func updateView() {
+        let url = "\(viewModel.heroItem.thumbnail.path).\(viewModel.heroItem.thumbnail.extension)"
+        APIManager.shared.getImageFromNet(url: url, imageView: heroImageView)
+        
+        heroNameText.text = viewModel.heroItem.name
+        heroInfoText.text = viewModel.heroItem.description == "" ? "Just a cool marvel hero" : viewModel.heroItem.description
+    }
+    
+    // MARK: - @objc func
+    
     @objc func backButtonPressed() {
         self.navigationController?.popViewController(animated: true)
+    }
+    
+    @objc func pull2refresh(_ gesture: UIPanGestureRecognizer) {
+        
+        let translation = gesture.translation(in: box)
+        let newY = max(translation.y, 0)
+        let maxPullDownDistance = self.box.frame.height * 0.2
+        
+        if newY <= maxPullDownDistance {
+            box.transform = CGAffineTransform(translationX: 0, y: newY)
+        }
+        
+        if gesture.state == .began {
+            activityIndicator.startAnimating()
+        }
+        
+        if gesture.state == .ended {
+            if newY > maxPullDownDistance {
+                viewModel.fetchHeroData()
+                self.updateView()
+            }
+            UIView.animate(withDuration: 0.3) {
+                self.box.transform = CGAffineTransform.identity
+                self.activityIndicator.stopAnimating()
+            }
+        }
     }
 }

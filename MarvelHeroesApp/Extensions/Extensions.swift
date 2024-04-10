@@ -6,73 +6,37 @@
 //
 
 import UIKit
+import CommonCrypto
 
 extension UIColor {
-   convenience init(red: Int, green: Int, blue: Int) {
-       assert(red >= 0 && red <= 255, "Invalid red component")
-       assert(green >= 0 && green <= 255, "Invalid green component")
-       assert(blue >= 0 && blue <= 255, "Invalid blue component")
-       self.init(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: 1.0)
-   }
-   convenience init(rgb: Int) {
-       self.init(
-           red: (rgb >> 16) & 0xFF,
-           green: (rgb >> 8) & 0xFF,
-           blue: rgb & 0xFF
-       )
-   }
+    convenience init(red: Int, green: Int, blue: Int) {
+        assert(red >= 0 && red <= 255, "Invalid red component")
+        assert(green >= 0 && green <= 255, "Invalid green component")
+        assert(blue >= 0 && blue <= 255, "Invalid blue component")
+        self.init(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: 1.0)
+    }
+    convenience init(rgb: Int) {
+        self.init(
+            red: (rgb >> 16) & 0xFF,
+            green: (rgb >> 8) & 0xFF,
+            blue: rgb & 0xFF
+        )
+    }
 }
 
 extension UIImage {
-
-    /// Возвращает средний цвет изображения
-    /// 
     /// - Возвращает: UIColor, представляющий средний цвет изображения.
-    func averageColor() -> UIColor? {
-        guard let cgImage = self.cgImage else {
-            return nil
-        }
+    func averageColor() -> UIColor {
+        guard let inputImage = CIImage(image: self) else { return .clear }
+        let extentVector = CIVector(x: inputImage.extent.origin.x, y: inputImage.extent.origin.y  + (inputImage.extent.size.height * 0.7), z: inputImage.extent.size.width, w: inputImage.extent.size.height * 0.3)
         
-        let width = cgImage.width
-        let height = cgImage.height
-        let bytesPerPixel = 4
-        let bytesPerRow = bytesPerPixel * width
-        let bitmapData = UnsafeMutablePointer<UInt8>.allocate(capacity: bytesPerRow * height)
+        guard let filter = CIFilter(name: "CIAreaAverage", parameters: [kCIInputImageKey: inputImage, kCIInputExtentKey: extentVector]) else { return .clear }
+        guard let outputImage = filter.outputImage else { return .clear }
         
-        let colorSpace = CGColorSpaceCreateDeviceRGB()
-        let context = CGContext(data: bitmapData, width: width, height: height, bitsPerComponent: 8, bytesPerRow: bytesPerRow, space: colorSpace, bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)
+        var bitmap = [UInt8](repeating: 0, count: 4)
+        let context = CIContext(options: [.workingColorSpace: kCFNull as Any])
+        context.render(outputImage, toBitmap: &bitmap, rowBytes: 4, bounds: CGRect(x: 0, y: 0, width: 1, height: 1), format: .RGBA8, colorSpace: nil)
         
-        context?.draw(cgImage, in: CGRect(x: 0, y: 0, width: width, height: height))
-        
-        var red = 0.0
-        var green = 0.0
-        var blue = 0.0
-        var alpha = 0.0
-        
-        for i in 0..<height {
-            for j in 0..<width {
-                let pixelIndex = (i * bytesPerRow) + (j * bytesPerPixel)
-                
-                let r = Double(bitmapData[pixelIndex])
-                let g = Double(bitmapData[pixelIndex + 1])
-                let b = Double(bitmapData[pixelIndex + 2])
-                let a = Double(bitmapData[pixelIndex + 3])
-                
-                red += r
-                green += g
-                blue += b
-                alpha += a
-            }
-        }
-        
-        bitmapData.deallocate()
-        
-        let totalPixels = Double(width * height)
-        let averageRed = red / totalPixels
-        let averageGreen = green / totalPixels
-        let averageBlue = blue / totalPixels
-        let averageAlpha = alpha / totalPixels
-        
-        return UIColor(red: CGFloat(averageRed), green: CGFloat(averageGreen), blue: CGFloat(averageBlue), alpha: CGFloat(averageAlpha))
+        return UIColor(red: CGFloat(bitmap[0]) / 255, green: CGFloat(bitmap[1]) / 255, blue: CGFloat(bitmap[2]) / 255, alpha: CGFloat(bitmap[3]) / 255)
     }
 }
