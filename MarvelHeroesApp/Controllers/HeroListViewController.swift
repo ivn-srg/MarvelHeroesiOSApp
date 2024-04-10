@@ -68,9 +68,7 @@ final class HeroListViewController: UIViewController {
     }()
     
     private lazy var triangleView: TriangleView = {
-        let tv = TriangleView(
-            colorOfTriangle: .brown,
-            frame: view.bounds.inset(by: view.safeAreaInsets))
+        let tv = TriangleView(frame: view.bounds)
         tv.translatesAutoresizingMaskIntoConstraints = false
         return tv
     }()
@@ -206,8 +204,7 @@ final class HeroListViewController: UIViewController {
     private func updateTrinagleViewColor(didLoadImage: UIImage?) {
         guard let image = didLoadImage else { return }
         let averageColor = image.averageColor()
-        triangleView.colorOfTriangle = averageColor
-        triangleView.setNeedsDisplay(triangleView.frame)
+        triangleView.updateTriangleColor(averageColor)
     }
 }
 
@@ -249,7 +246,7 @@ extension HeroListViewController: UICollectionViewDelegate, UICollectionViewData
 extension HeroListViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
+
         CGSize(
             width: collectionView.frame.width * 0.7,
             height: collectionView.frame.height * 0.75
