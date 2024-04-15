@@ -1,12 +1,18 @@
 PODS:
-  - Alamofire (5.9.0)
+  - Alamofire (5.9.1)
   - Kingfisher (7.11.0)
+  - Realm (10.49.1):
+    - Realm/Headers (= 10.49.1)
+  - Realm/Headers (10.49.1)
+  - RealmSwift (10.49.1):
+    - Realm (= 10.49.1)
   - SnapKit (5.7.1)
   - TinyConstraints (4.0.2)
 
 DEPENDENCIES:
   - Alamofire
   - Kingfisher
+  - RealmSwift
   - SnapKit
   - TinyConstraints
 
@@ -14,15 +20,19 @@ SPEC REPOS:
   trunk:
     - Alamofire
     - Kingfisher
+    - Realm
+    - RealmSwift
     - SnapKit
     - TinyConstraints
 
 SPEC CHECKSUMS:
-  Alamofire: 02b772c9910e8eba1a079227c32fbd9e46c90a24
+  Alamofire: f36a35757af4587d8e4f4bfa223ad10be2422b8c
   Kingfisher: b9c985d864d43515f404f1ef4a8ce7d802ace3ac
+  Realm: 1fab4a224fd7a294eca142a0efe8b54546290fbf
+  RealmSwift: 7c3a9c001161eb01b96b171ad965a9c498b962b0
   SnapKit: d612e99e678a2d3b95bf60b0705ed0a35c03484a
   TinyConstraints: 7b7ccc0c485bb3bb47082138ff28bc33cd49897f
 
-PODFILE CHECKSUM: c29178f0b0b3c6a88dbcab6680fd5b64aab13d43
+PODFILE CHECKSUM: 16727a4c031ab9d124b2122fdfd178c6a4e41dac
 
 COCOAPODS: 1.15.2

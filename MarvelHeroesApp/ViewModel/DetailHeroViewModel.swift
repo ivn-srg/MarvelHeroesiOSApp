@@ -12,9 +12,9 @@ import CryptoKit
 
 final class DetailHeroViewModel {
     
-    var heroItem: HeroModel
+    var heroItem: HeroRO
     
-    init(hero: HeroModel) {
+    init(hero: HeroRO) {
         self.heroItem = hero
     }
     

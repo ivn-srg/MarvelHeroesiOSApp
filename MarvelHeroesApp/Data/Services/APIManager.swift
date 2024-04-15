@@ -58,10 +58,12 @@ final class APIManager {
     var currentTimeStamp: Int {
         Int(Date().timeIntervalSince1970)
     }
+    var md5Hash: String {
+        MD5(string: "\(currentTimeStamp)\(PRIVATE_KEY)\(API_KEY)")
+    }
     
     func fetchHeroesData(completion: @escaping (Result<Heroes, Error>) -> Void) {
-        let md5Hash = MD5(string: "\(currentTimeStamp)\(PRIVATE_KEY)\(API_KEY)")
-        let limit = 30
+        let limit = 2
         let offset = 0
         let path = "\(APIType.getHeroes.request)?limit=\(limit)&offset=\(offset)&ts=\(currentTimeStamp)&apikey=\(API_KEY)&hash=\(md5Hash)"
         let urlString = String(format: path)
@@ -73,20 +75,27 @@ final class APIManager {
                 case .success(let heroesData):
                     completion(.success(heroesData.data.results))
                     
+                    if heroesData.data.results.count > 0 {
+                        let status = RealmDB.shared.saveHeroes(heroes: heroesData.data.results)
+                        print(status)
+                    }
+                    
                 case .failure(let error):
-                    print(error)
+                    let heroesLocal = RealmDB.shared.getHeroes()
+                    completion(.success(heroesLocal))
+                    
                     if let err = self.getHeroError(error: error, data: response.data) {
                         completion(.failure(err))
                     } else {
                         completion(.failure(error))
                     }
+                    
                     break
                 }
             }
     }
     
-    func fetchHeroData(heroItem: HeroModel, completion: @escaping (Result<HeroModel, Error>) -> Void) {
-        let md5Hash = MD5(string: "\(currentTimeStamp)\(PRIVATE_KEY)\(API_KEY)")
+    func fetchHeroData(heroItem: HeroRO, completion: @escaping (Result<HeroModel, Error>) -> Void) {
         let path = "\(APIType.getHero.request)/\(heroItem.id)?ts=\(currentTimeStamp)&apikey=\(API_KEY)&hash=\(md5Hash)"
         let urlString = String(format: path)
         
@@ -145,6 +154,10 @@ final class APIManager {
             case .failure(let error):
                 imageView.image = MockUpImage
                 print("Error loading image: \(error)")
+                
+                DispatchQueue.main.async {
+                    LoadingIndicator.stopLoading()
+                }
                 break
             }
         }

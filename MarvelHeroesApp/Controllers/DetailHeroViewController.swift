@@ -78,7 +78,7 @@ final class DetailHeroViewController: UIViewController {
     
     // MARK: - Lifecycle
     
-    init(hero: HeroModel) {
+    init(hero: HeroRO) {
         self.viewModel = DetailHeroViewModel(hero: hero)
         super.init(nibName: nil, bundle: nil)
     }
@@ -146,11 +146,13 @@ final class DetailHeroViewController: UIViewController {
     }
     
     private func updateView() {
-        let url = "\(viewModel.heroItem.thumbnail.path).\(viewModel.heroItem.thumbnail.extension)"
-        APIManager.shared.getImageFromNet(url: url, imageView: heroImageView)
+        if let imgLink = viewModel.heroItem.thumbnail {
+            let url = "\(imgLink.path).\(imgLink.extension)"
+            APIManager.shared.getImageFromNet(url: url, imageView: heroImageView)
+        }
         
         heroNameText.text = viewModel.heroItem.name
-        heroInfoText.text = viewModel.heroItem.description == "" ? "Just a cool marvel hero" : viewModel.heroItem.description
+        heroInfoText.text = viewModel.heroItem.heroDescription == "" ? "Just a cool marvel hero" : viewModel.heroItem.heroDescription
     }
     
     // MARK: - @objc func
