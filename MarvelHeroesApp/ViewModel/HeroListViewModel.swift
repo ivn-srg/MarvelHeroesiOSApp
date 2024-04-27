@@ -29,7 +29,7 @@ final class HeroListViewModel {
                     switch result {
                     case .success(let heroes):
                         let filteredHeroes = heroes.filter { $0.thumbnail.path != heroImageNotAvailable }
-                        let heroesRO = ListOfHeroesRO(heroesData: filteredHeroes)
+                        let heroesRO = filteredHeroes.map { HeroRO(heroData: $0) }
                         let realm = try! Realm()
                         
                         do {
@@ -59,7 +59,7 @@ final class HeroListViewModel {
     // MARK: - VC func
     
     func countOfRow() -> Int {
-        dataSource.count
+        dataSource.count != 0 ? dataSource.count : 0
     }
 }
 

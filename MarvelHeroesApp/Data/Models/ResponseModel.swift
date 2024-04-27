@@ -52,7 +52,7 @@ extension HeroModel {
         self.id = heroRO.id
         self.name = heroRO.name
         self.heroDescription = heroRO.heroDescription
-        self.thumbnail = ThumbnailModel(thumbRO: heroRO.thumbnail)
+        self.thumbnail = ThumbnailModel(thumbRO: heroRO.thumbnail ?? ThumbnailRO())
     }
 }
 
