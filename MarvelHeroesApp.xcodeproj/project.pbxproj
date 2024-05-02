@@ -12,7 +12,6 @@
 		9303D2512B92158F003567A5 /* ResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9303D2502B92158F003567A5 /* ResponseModel.swift */; };
 		932F961C2BC7E4C6001409A5 /* EntitiesRO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932F961B2BC7E4C6001409A5 /* EntitiesRO.swift */; };
 		93370BE72BC8660D00B65C4C /* RealmDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93370BE62BC8660D00B65C4C /* RealmDB.swift */; };
-		93370BE92BC8665800B65C4C /* HeroDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93370BE82BC8665800B65C4C /* HeroDAO.swift */; };
 		9338E9032B95B8DE00533C80 /* Fonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9338E9022B95B8DE00533C80 /* Fonts.swift */; };
 		9338E9072B95BA6C00533C80 /* Inter-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9338E9042B95BA6C00533C80 /* Inter-Regular.otf */; };
 		9338E9082B95BA6C00533C80 /* Inter-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9338E9052B95BA6C00533C80 /* Inter-Bold.otf */; };
@@ -46,7 +45,6 @@
 		9303D2502B92158F003567A5 /* ResponseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseModel.swift; sourceTree = "<group>"; };
 		932F961B2BC7E4C6001409A5 /* EntitiesRO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntitiesRO.swift; sourceTree = "<group>"; };
 		93370BE62BC8660D00B65C4C /* RealmDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmDB.swift; sourceTree = "<group>"; };
-		93370BE82BC8665800B65C4C /* HeroDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroDAO.swift; sourceTree = "<group>"; };
 		9338E9022B95B8DE00533C80 /* Fonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fonts.swift; sourceTree = "<group>"; };
 		9338E9042B95BA6C00533C80 /* Inter-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Regular.otf"; sourceTree = "<group>"; };
 		9338E9052B95BA6C00533C80 /* Inter-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Bold.otf"; sourceTree = "<group>"; };
@@ -142,7 +140,6 @@
 			children = (
 				932F961B2BC7E4C6001409A5 /* EntitiesRO.swift */,
 				93370BE62BC8660D00B65C4C /* RealmDB.swift */,
-				93370BE82BC8665800B65C4C /* HeroDAO.swift */,
 			);
 			path = Database;
 			sourceTree = "<group>";
@@ -399,7 +396,6 @@
 				93CD1EA22B90F16300AD2752 /* HeroListViewController.swift in Sources */,
 				93F98D912BC6BFCE0050B9AB /* Keychain.swift in Sources */,
 				9338E9032B95B8DE00533C80 /* Fonts.swift in Sources */,
-				93370BE92BC8665800B65C4C /* HeroDAO.swift in Sources */,
 				93CD1E9E2B90F16300AD2752 /* AppDelegate.swift in Sources */,
 				932F961C2BC7E4C6001409A5 /* EntitiesRO.swift in Sources */,
 				939E7F842B9486D200BEE787 /* Constants.swift in Sources */,

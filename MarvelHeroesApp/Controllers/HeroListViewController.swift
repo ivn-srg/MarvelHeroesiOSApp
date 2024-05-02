@@ -219,7 +219,7 @@ extension HeroListViewController: UICollectionViewDelegate, UICollectionViewData
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HeroCollectionViewCell.identifier, for: indexPath) as? HeroCollectionViewCell else { return UICollectionViewCell() }
         let hero = viewModel.dataSource[indexPath.row]
         
-        cell.configure(viewModel: HeroCollectionViewCellViewModel(hero: hero))
+        cell.configure(viewModel: HeroCollectionViewCellViewModel(hero: HeroRO(heroData: hero)))
         
         moveFocusOnFirstItem()
         
@@ -231,7 +231,7 @@ extension HeroListViewController: UICollectionViewDelegate, UICollectionViewData
         let hero = viewModel.dataSource[indexPath.row]
         
         if indexPath.item == customLayout.currentPage {
-            let vc = DetailHeroViewController(hero: hero)
+            let vc = DetailHeroViewController(hero: HeroRO(heroData: hero))
             self.navigationController?.pushViewController(vc, animated: true)
         } else {
             collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)

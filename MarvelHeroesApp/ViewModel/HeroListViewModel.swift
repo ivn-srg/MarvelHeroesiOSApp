@@ -10,16 +10,16 @@ import UIKit
 
 final class HeroListViewModel {
     
-    var dataSource: Results<HeroRO>!
+    var dataSource: [HeroModel] = []
+    var realmDb = RealmDB.shared
     
     // MARK: - Network work
     
     func fetchHeroesData(into collectionView: UICollectionView) {
-        let realm = try! Realm()
         
         LoadingIndicator.startLoading()
         
-        dataSource = realm.objects(HeroRO.self)
+        dataSource = realmDb.getHeroes()
         
         if dataSource.isEmpty {
             DispatchQueue.global().async {
@@ -29,17 +29,11 @@ final class HeroListViewModel {
                     switch result {
                     case .success(let heroes):
                         let filteredHeroes = heroes.filter { $0.thumbnail.path != heroImageNotAvailable }
-                        let heroesRO = filteredHeroes.map { HeroRO(heroData: $0) }
-                        let realm = try! Realm()
+//                        let heroesRO = filteredHeroes.map { HeroRO(heroData: $0) }
                         
-                        do {
-                            try realm.write({
-                                realm.add(heroesRO)
-                            })
-                        } catch {
-                            print(error)
+                        if let resultOfSaving = self?.realmDb.saveHeroes(heroes: filteredHeroes) {
+                            self?.dataSource = self?.realmDb.getHeroes() ?? [mockUpHeroData]
                         }
-                        self?.dataSource = realm.objects(HeroRO.self)
                         
                         DispatchQueue.main.async {
                             LoadingIndicator.stopLoading()

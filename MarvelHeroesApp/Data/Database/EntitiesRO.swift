@@ -22,10 +22,16 @@ import RealmSwift
 //}
 
 class HeroRO: Object {
-    @Persisted var id: Int
+    @Persisted var id: Int = 0
     @Persisted var name: String = ""
     @Persisted var heroDescription: String = ""
     @Persisted var thumbnail: ThumbnailRO?
+    
+    // MARK: Primary Key
+    
+    override public static func primaryKey() -> String? {
+        "id"
+    }
     
     convenience init(heroData: HeroModel) {
         self.init()

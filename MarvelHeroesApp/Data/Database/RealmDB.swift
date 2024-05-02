@@ -8,6 +8,11 @@
 import Foundation
 import RealmSwift
 
+protocol HeroDAO {
+    func saveHeroes(heroes: [HeroModel]) -> (Bool)
+    func getHeroes()-> [HeroModel]
+}
+
 class RealmDB {
     
     static let shared : RealmDB = RealmDB()
