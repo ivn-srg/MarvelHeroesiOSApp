@@ -28,10 +28,11 @@ final class HeroListViewModel {
                     
                     switch result {
                     case .success(let heroes):
+                        print(heroes)
                         let filteredHeroes = heroes.filter { $0.thumbnail.path != heroImageNotAvailable }
 //                        let heroesRO = filteredHeroes.map { HeroRO(heroData: $0) }
-                        
-                        if let resultOfSaving = self?.realmDb.saveHeroes(heroes: filteredHeroes) {
+                        if filteredHeroes.count > 0 {
+                            let statusOfSaving = self?.realmDb.saveHeroes(heroes: filteredHeroes)
                             self?.dataSource = self?.realmDb.getHeroes() ?? [mockUpHeroData]
                         }
                         
@@ -40,6 +41,8 @@ final class HeroListViewModel {
                             collectionView.reloadData()
                         }
                     case .failure(let error):
+                        self?.dataSource = self?.realmDb.getHeroes() ?? [mockUpHeroData]
+                        
                         DispatchQueue.main.async {
                             LoadingIndicator.stopLoading()
                             print(error)
@@ -53,7 +56,8 @@ final class HeroListViewModel {
     // MARK: - VC func
     
     func countOfRow() -> Int {
-        dataSource.count != 0 ? dataSource.count : 0
+        print(dataSource)
+        return dataSource.count != 0 ? dataSource.count : 0
     }
 }
 

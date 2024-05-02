@@ -63,7 +63,7 @@ final class APIManager {
     }
     
     func fetchHeroesData(completion: @escaping (Result<Heroes, Error>) -> Void) {
-        let limit = 2
+        let limit = 5
         let offset = 0
         let path = "\(APIType.getHeroes.request)?limit=\(limit)&offset=\(offset)&ts=\(currentTimeStamp)&apikey=\(API_KEY)&hash=\(md5Hash)"
         let urlString = String(format: path)
@@ -74,15 +74,8 @@ final class APIManager {
                 switch response.result {
                 case .success(let heroesData):
                     completion(.success(heroesData.data.results))
-                    
-                    if heroesData.data.results.count > 0 {
-                        let status = RealmDB.shared.saveHeroes(heroes: heroesData.data.results)
-                        print(status)
-                    }
-                    
+                    break
                 case .failure(let error):
-                    let heroesLocal = RealmDB.shared.getHeroes()
-                    completion(.success(heroesLocal))
                     
                     if let err = self.getHeroError(error: error, data: response.data) {
                         completion(.failure(err))
@@ -106,6 +99,7 @@ final class APIManager {
                 case .success(let heroesData):
                     let model = heroesData.data.results.first ?? mockUpHeroData
                     completion(.success(model))
+                    break
                 case .failure(let error):
                     print(error)
                     print(urlString)
