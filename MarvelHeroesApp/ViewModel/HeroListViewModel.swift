@@ -15,15 +15,16 @@ final class HeroListViewModel {
     
     // MARK: - Network work
     
-    func fetchHeroesData(into collectionView: UICollectionView, needRefresh: Bool = false) {
+    func fetchHeroesData(needsLoadMore: Bool = false, into collectionView: UICollectionView, needRefresh: Bool = false) {
         
         LoadingIndicator.startLoading()
         
-        dataSource = realmDb.getHeroes()
+        dataSource.append(contentsOf: realmDb.getHeroes())
         
-        if dataSource.isEmpty || needRefresh {
+        if dataSource.isEmpty || needRefresh || needsLoadMore {
+            let offset = needsLoadMore ? countOfRow() : 0
             DispatchQueue.global().async {
-                APIManager.shared.fetchHeroesData() { [weak self] (result) in
+                APIManager.shared.fetchHeroesData(from: offset) { [weak self] (result) in
                     guard self != nil else { return }
                     
                     switch result {
@@ -58,7 +59,7 @@ final class HeroListViewModel {
     // MARK: - VC func
     
     func countOfRow() -> Int {
-        dataSource.count != 0 ? dataSource.count : 0
+        dataSource.count
     }
 }
 

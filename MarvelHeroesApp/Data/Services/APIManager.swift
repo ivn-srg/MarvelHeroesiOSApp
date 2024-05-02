@@ -63,9 +63,8 @@ final class APIManager {
         MD5(string: "\(currentTimeStamp)\(PRIVATE_KEY)\(API_KEY)")
     }
     
-    func fetchHeroesData(completion: @escaping (Result<Heroes, Error>) -> Void) {
+    func fetchHeroesData(from offset: Int, completion: @escaping (Result<Heroes, Error>) -> Void) {
         let limit = 30
-        let offset = 0
         let path = "\(APIType.getHeroes.request)?limit=\(limit)&offset=\(offset)&ts=\(currentTimeStamp)&apikey=\(API_KEY)&hash=\(md5Hash)"
         let urlString = String(format: path)
         
@@ -138,7 +137,6 @@ final class APIManager {
         if let cachedImage = cachedImage {
             if let imageData = cachedImage.imageData, let image = UIImage(data: imageData) {
                 imageView.image = image
-                print("Loaded image from cache for \(url)")
                 return
             } else {
                 print("Cached image data found for \(url), but failed to decode")

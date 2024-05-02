@@ -260,6 +260,19 @@ extension HeroListViewController {
         setupCell()
     }
     
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        let lastRow = indexPath.row
+        if lastRow == viewModel.countOfRow() - 1 {
+            let totalRows = collectionView.numberOfItems(inSection: indexPath.section)
+            
+            if lastRow >= totalRows - 1 {
+                if collectionView.contentOffset.x > 0 {
+                    viewModel.fetchHeroesData(needsLoadMore: true, into: collectionView)
+                }
+            }
+        }
+    }
+    
     private func setupCell() {
         let indexPath = IndexPath(item: customLayout.currentPage, section: 0)
         guard let cell = collectionView.cellForItem(at: indexPath) as? HeroCollectionViewCell else { return }
