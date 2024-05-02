@@ -19,7 +19,7 @@ class RealmDB {
 }
 
 // MARK: - Hero
-extension RealmDB : HeroDAO {
+extension RealmDB: HeroDAO {
     
     func saveHeroes(heroes: [HeroModel]) -> (Bool) {
         let realm = try! Realm()

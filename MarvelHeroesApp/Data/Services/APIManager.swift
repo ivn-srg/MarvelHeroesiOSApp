@@ -9,6 +9,7 @@ import Foundation
 import Alamofire
 import CryptoKit
 import Kingfisher
+import RealmSwift
 
 enum APIType {
     
@@ -63,7 +64,7 @@ final class APIManager {
     }
     
     func fetchHeroesData(completion: @escaping (Result<Heroes, Error>) -> Void) {
-        let limit = 5
+        let limit = 30
         let offset = 0
         let path = "\(APIType.getHeroes.request)?limit=\(limit)&offset=\(offset)&ts=\(currentTimeStamp)&apikey=\(API_KEY)&hash=\(md5Hash)"
         let urlString = String(format: path)
@@ -130,8 +131,21 @@ final class APIManager {
         }.joined()
     }
     
-    func getImageFromNet(url: String, imageView: UIImageView) {
+    func getImageForHero(url: String, imageView: UIImageView) {
+        let realm = try! Realm()
+        let cachedImage = realm.objects(CachedImageData.self).filter { $0.url == url }.first
         
+        if let cachedImage = cachedImage {
+            if let imageData = cachedImage.imageData, let image = UIImage(data: imageData) {
+                imageView.image = image
+                print("Loaded image from cache for \(url)")
+                return
+            } else {
+                print("Cached image data found for \(url), but failed to decode")
+            }
+        } else {
+            print("Image not found in cache for \(url)")
+        }
         let url = URL(string: url)
         let processor = RoundCornerImageProcessor(cornerRadius: 20)
         let indicatorStyle = UIActivityIndicatorView.Style.large
@@ -143,7 +157,22 @@ final class APIManager {
         
         imageView.kf.setImage(with: url, options: [.processor(processor), .transition(.fade(0.2))]){ result in
             switch result {
-            case .success:
+            case .success(let imageResult):
+                imageView.image = imageResult.image
+                
+                let cachedImageData = CachedImageData(
+                    url: url?.absoluteString ?? "", 
+                    imageData: imageResult.image.pngData()
+                )
+                
+                do {
+                    try realm.write {
+                        realm.add(cachedImageData, update: .modified)
+                    }
+                    print("Downloaded and cached image for \(String(describing: url))")
+                } catch {
+                    print("Error saving image to Realm cache: \(error)")
+                }
                 break
             case .failure(let error):
                 imageView.image = MockUpImage

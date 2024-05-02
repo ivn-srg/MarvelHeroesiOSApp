@@ -44,7 +44,7 @@ final class HeroCollectionViewCell: UICollectionViewCell {
     public func configure(viewModel: HeroCollectionViewCellViewModel) {
         setupUI()
         
-        APIManager.shared.getImageFromNet(url: viewModel.heroImageUrlString, imageView: heroImageView)
+        APIManager.shared.getImageForHero(url: viewModel.heroImageUrlString, imageView: heroImageView)
         
         nameOfHero.text = viewModel.heroItem.name
         

@@ -148,7 +148,7 @@ final class DetailHeroViewController: UIViewController {
     private func updateView() {
         if let imgLink = viewModel.heroItem.thumbnail {
             let url = "\(imgLink.path).\(imgLink.extension)"
-            APIManager.shared.getImageFromNet(url: url, imageView: heroImageView)
+            APIManager.shared.getImageForHero(url: url, imageView: heroImageView)
         }
         
         heroNameText.text = viewModel.heroItem.name

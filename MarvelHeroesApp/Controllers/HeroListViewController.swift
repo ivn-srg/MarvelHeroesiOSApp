@@ -192,7 +192,7 @@ final class HeroListViewController: UIViewController {
         
         if gesture.state == .ended {
             if newY > maxPullDownDistance {
-                viewModel.fetchHeroesData(into: collectionView)
+                viewModel.fetchHeroesData(into: collectionView, needRefresh: true)
             }
             UIView.animate(withDuration: 0.3) {
                 self.box.transform = CGAffineTransform.identity

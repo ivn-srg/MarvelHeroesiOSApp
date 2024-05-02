@@ -15,25 +15,25 @@ final class HeroListViewModel {
     
     // MARK: - Network work
     
-    func fetchHeroesData(into collectionView: UICollectionView) {
+    func fetchHeroesData(into collectionView: UICollectionView, needRefresh: Bool = false) {
         
         LoadingIndicator.startLoading()
         
         dataSource = realmDb.getHeroes()
         
-        if dataSource.isEmpty {
+        if dataSource.isEmpty || needRefresh {
             DispatchQueue.global().async {
                 APIManager.shared.fetchHeroesData() { [weak self] (result) in
                     guard self != nil else { return }
                     
                     switch result {
                     case .success(let heroes):
-                        print(heroes)
                         let filteredHeroes = heroes.filter { $0.thumbnail.path != heroImageNotAvailable }
-//                        let heroesRO = filteredHeroes.map { HeroRO(heroData: $0) }
+                        
                         if filteredHeroes.count > 0 {
                             let statusOfSaving = self?.realmDb.saveHeroes(heroes: filteredHeroes)
                             self?.dataSource = self?.realmDb.getHeroes() ?? [mockUpHeroData]
+                            print("Saving status \(statusOfSaving ?? false)")
                         }
                         
                         DispatchQueue.main.async {
@@ -50,14 +50,15 @@ final class HeroListViewModel {
                     }
                 }
             }
+        } else {
+            LoadingIndicator.stopLoading()
         }
     }
     
     // MARK: - VC func
     
     func countOfRow() -> Int {
-        print(dataSource)
-        return dataSource.count != 0 ? dataSource.count : 0
+        dataSource.count != 0 ? dataSource.count : 0
     }
 }
 

@@ -27,8 +27,6 @@ class HeroRO: Object {
     @Persisted var heroDescription: String = ""
     @Persisted var thumbnail: ThumbnailRO?
     
-    // MARK: Primary Key
-    
     override public static func primaryKey() -> String? {
         "id"
     }
@@ -51,5 +49,23 @@ class ThumbnailRO: EmbeddedObject {
         
         self.path = heroImageData.path
         self.extension = heroImageData.extension
+    }
+}
+
+class CachedImageData: Object {
+    @Persisted var id: String = ""
+    @Persisted var url: String = ""
+    @Persisted var imageData: Data? = nil
+    
+    override public static func primaryKey() -> String? {
+        "id"
+    }
+    
+    convenience init(url: String, imageData: Data?) {
+        self.init()
+        
+        self.id = UUID().uuidString
+        self.url = url
+        self.imageData = imageData
     }
 }
