@@ -9,6 +9,7 @@ import Foundation
 import Alamofire
 import CryptoKit
 import Kingfisher
+import RealmSwift
 
 enum APIType {
     
@@ -58,11 +59,12 @@ final class APIManager {
     var currentTimeStamp: Int {
         Int(Date().timeIntervalSince1970)
     }
+    var md5Hash: String {
+        MD5(string: "\(currentTimeStamp)\(PRIVATE_KEY)\(API_KEY)")
+    }
     
-    func fetchHeroesData(completion: @escaping (Result<Heroes, Error>) -> Void) {
-        let md5Hash = MD5(string: "\(currentTimeStamp)\(PRIVATE_KEY)\(API_KEY)")
+    func fetchHeroesData(from offset: Int, completion: @escaping (Result<Heroes, Error>) -> Void) {
         let limit = 30
-        let offset = 0
         let path = "\(APIType.getHeroes.request)?limit=\(limit)&offset=\(offset)&ts=\(currentTimeStamp)&apikey=\(API_KEY)&hash=\(md5Hash)"
         let urlString = String(format: path)
         
@@ -72,21 +74,21 @@ final class APIManager {
                 switch response.result {
                 case .success(let heroesData):
                     completion(.success(heroesData.data.results))
-                    
+                    break
                 case .failure(let error):
-                    print(error)
+                    
                     if let err = self.getHeroError(error: error, data: response.data) {
                         completion(.failure(err))
                     } else {
                         completion(.failure(error))
                     }
+                    
                     break
                 }
             }
     }
     
-    func fetchHeroData(heroItem: HeroModel, completion: @escaping (Result<HeroModel, Error>) -> Void) {
-        let md5Hash = MD5(string: "\(currentTimeStamp)\(PRIVATE_KEY)\(API_KEY)")
+    func fetchHeroData(heroItem: HeroRO, completion: @escaping (Result<HeroModel, Error>) -> Void) {
         let path = "\(APIType.getHero.request)/\(heroItem.id)?ts=\(currentTimeStamp)&apikey=\(API_KEY)&hash=\(md5Hash)"
         let urlString = String(format: path)
         
@@ -97,6 +99,7 @@ final class APIManager {
                 case .success(let heroesData):
                     let model = heroesData.data.results.first ?? mockUpHeroData
                     completion(.success(model))
+                    break
                 case .failure(let error):
                     print(error)
                     print(urlString)
@@ -108,6 +111,69 @@ final class APIManager {
                     break
                 }
             }
+    }
+    
+    func getImageForHero(url: String, imageView: UIImageView) {
+        do {
+            let realm = try Realm()
+            let cachedImage = realm.objects(CachedImageData.self).filter { $0.url == url }.first
+            
+            if let cachedImage = cachedImage, let imageData = cachedImage.imageData, let image = UIImage(data: imageData) {
+                imageView.image = image
+                return
+            }
+        } catch {
+            print("Error saving image to Realm cache: \(error)")
+            imageView.image = MockUpImage
+        }
+        
+        // if image isn't cached
+        getImageForHeroFromNet(url: url, imageView: imageView)
+    }
+    
+    // MARK: - private func
+    
+    private func getImageForHeroFromNet(url: String, imageView: UIImageView) {
+        let url = URL(string: url)
+        let processor = RoundCornerImageProcessor(cornerRadius: 20)
+        let indicatorStyle = UIActivityIndicatorView.Style.large
+        let indicator = UIActivityIndicatorView(style: indicatorStyle)
+        
+        indicator.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        imageView.kf.indicatorType = .activity
+        (imageView.kf.indicator?.view as? UIActivityIndicatorView)?.color = .white
+        
+        imageView.kf.setImage(with: url, options: [.processor(processor), .transition(.fade(0.2))]){ result in
+            switch result {
+            case .success(let imageResult):
+                imageView.image = imageResult.image
+                
+                let cachedImageData = CachedImageData(
+                    url: url?.absoluteString ?? "",
+                    imageData: imageResult.image.pngData()
+                )
+                
+                do {
+                    let realm = try Realm()
+                    
+                    try realm.write {
+                        realm.add(cachedImageData, update: .modified)
+                    }
+                    print("Downloaded and cached image for \(String(describing: url))")
+                } catch {
+                    print("Error saving image to Realm cache: \(error)")
+                }
+                break
+            case .failure(let error):
+                imageView.image = MockUpImage
+                print("Error loading image: \(error)")
+                
+                DispatchQueue.main.async {
+                    LoadingIndicator.stopLoading()
+                }
+                break
+            }
+        }
     }
     
     private func getHeroError(error: AFError, data: Data?) -> Error? {
@@ -125,28 +191,5 @@ final class APIManager {
         return digest.map {
             String(format: "%02hhx", $0)
         }.joined()
-    }
-    
-    func getImageFromNet(url: String, imageView: UIImageView) {
-        
-        let url = URL(string: url)
-        let processor = RoundCornerImageProcessor(cornerRadius: 20)
-        let indicatorStyle = UIActivityIndicatorView.Style.large
-        let indicator = UIActivityIndicatorView(style: indicatorStyle)
-        
-        indicator.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        imageView.kf.indicatorType = .activity
-        (imageView.kf.indicator?.view as? UIActivityIndicatorView)?.color = .white
-        
-        imageView.kf.setImage(with: url, options: [.processor(processor), .transition(.fade(0.2))]){ result in
-            switch result {
-            case .success:
-                break
-            case .failure(let error):
-                imageView.image = MockUpImage
-                print("Error loading image: \(error)")
-                break
-            }
-        }
     }
 }

@@ -10,11 +10,16 @@ import Kingfisher
 
 final class HeroCollectionViewCellViewModel {
     
-    let heroItem: HeroModel
+    let heroItem: HeroRO
     let heroImageUrlString: String
     
-    init(hero: HeroModel) {
+    init(hero: HeroRO) {
         self.heroItem = hero
-        self.heroImageUrlString = "\(hero.thumbnail.path).\(hero.thumbnail.extension)"
+        
+        if let heroImageLink = hero.thumbnail {
+            self.heroImageUrlString = "\(heroImageLink.path).\(heroImageLink.extension)"
+        } else {
+            self.heroImageUrlString = ""
+        }
     }
 }

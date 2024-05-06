@@ -192,7 +192,7 @@ final class HeroListViewController: UIViewController {
         
         if gesture.state == .ended {
             if newY > maxPullDownDistance {
-                viewModel.fetchHeroesData(into: collectionView)
+                viewModel.fetchHeroesData(into: collectionView, needRefresh: true)
             }
             UIView.animate(withDuration: 0.3) {
                 self.box.transform = CGAffineTransform.identity
@@ -219,7 +219,7 @@ extension HeroListViewController: UICollectionViewDelegate, UICollectionViewData
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HeroCollectionViewCell.identifier, for: indexPath) as? HeroCollectionViewCell else { return UICollectionViewCell() }
         let hero = viewModel.dataSource[indexPath.row]
         
-        cell.configure(viewModel: HeroCollectionViewCellViewModel(hero: hero))
+        cell.configure(viewModel: HeroCollectionViewCellViewModel(hero: HeroRO(heroData: hero)))
         
         moveFocusOnFirstItem()
         
@@ -231,7 +231,7 @@ extension HeroListViewController: UICollectionViewDelegate, UICollectionViewData
         let hero = viewModel.dataSource[indexPath.row]
         
         if indexPath.item == customLayout.currentPage {
-            let vc = DetailHeroViewController(hero: hero)
+            let vc = DetailHeroViewController(hero: HeroRO(heroData: hero))
             self.navigationController?.pushViewController(vc, animated: true)
         } else {
             collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
@@ -258,6 +258,19 @@ extension HeroListViewController {
 
     func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
         setupCell()
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        let lastRow = indexPath.row
+        if lastRow == viewModel.countOfRow() - 1 {
+            let totalRows = collectionView.numberOfItems(inSection: indexPath.section)
+            
+            if lastRow >= totalRows - 1 {
+                if collectionView.contentOffset.x > 0 {
+                    viewModel.fetchHeroesData(into: collectionView, needsLoadMore: true)
+                }
+            }
+        }
     }
     
     private func setupCell() {
