@@ -15,7 +15,7 @@ final class HeroListViewModel {
     
     // MARK: - Network work
     
-    func fetchHeroesData(needsLoadMore: Bool = false, into collectionView: UICollectionView, needRefresh: Bool = false) {
+    func fetchHeroesData(into collectionView: UICollectionView, needRefresh: Bool = false, needsLoadMore: Bool = false) {
         
         LoadingIndicator.startLoading()
         

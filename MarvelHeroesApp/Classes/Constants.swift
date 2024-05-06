@@ -28,7 +28,7 @@ let MockUpImage = UIImage(named: "mockup")
 let mainScreenTitle = NSLocalizedString("mainScreenTitle", comment: "")
 
 // mockUpData
-let mockUpHeroData = HeroModel(id: 0, name: "", heroDescription: "", thumbnail: ThumbnailModel(path: "", extension: ""))
+let mockUpHeroData = HeroModel(id: 0, name: "Unknown hero", heroDescription: "", thumbnail: ThumbnailModel(path: "", extension: ""))
 
 // network constants
 let heroImageNotAvailable = "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available"

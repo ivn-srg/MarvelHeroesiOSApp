@@ -22,9 +22,9 @@ class RealmDB {
 extension RealmDB: HeroDAO {
     
     func saveHeroes(heroes: [HeroModel]) -> (Bool) {
-        let realm = try! Realm()
-        
         do {
+            let realm = try Realm()
+            
             for item in heroes {
                 try realm.write {
                     realm.add(HeroRO(heroData: item), update: .all)
@@ -37,14 +37,18 @@ extension RealmDB: HeroDAO {
     }
     
     func getHeroes() -> [HeroModel] {
-        let realm = try! Realm()
-        
-        var heroes: [HeroModel] = []
-        let realmObject = realm.objects(HeroRO.self)
-        
-        for item in realmObject {
-            heroes.append(HeroModel(heroRO: item))
+        do {
+            let realm = try Realm()
+            
+            var heroes: [HeroModel] = []
+            let realmObject = realm.objects(HeroRO.self)
+            
+            for item in realmObject {
+                heroes.append(HeroModel(heroRO: item))
+            }
+            return heroes
+        } catch {
+            return []
         }
-        return heroes
     }
 }

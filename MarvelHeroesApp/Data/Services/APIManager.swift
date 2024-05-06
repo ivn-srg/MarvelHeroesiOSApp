@@ -113,37 +113,27 @@ final class APIManager {
             }
     }
     
-    private func getHeroError(error: AFError, data: Data?) -> Error? {
-        if let data = data,
-           let failure = try? JSONDecoder().decode(ResponseFailureModel.self, from: data) {
-            let message = failure.message
-            return HeroError.custom(description: message)
-        } else {
-            return nil
-        }
-    }
-    
-    private func MD5(string: String) -> String {
-        let digest = Insecure.MD5.hash(data: string.data(using: .utf8) ?? Data())
-        return digest.map {
-            String(format: "%02hhx", $0)
-        }.joined()
-    }
-    
     func getImageForHero(url: String, imageView: UIImageView) {
-        let realm = try! Realm()
-        let cachedImage = realm.objects(CachedImageData.self).filter { $0.url == url }.first
-        
-        if let cachedImage = cachedImage {
-            if let imageData = cachedImage.imageData, let image = UIImage(data: imageData) {
+        do {
+            let realm = try Realm()
+            let cachedImage = realm.objects(CachedImageData.self).filter { $0.url == url }.first
+            
+            if let cachedImage = cachedImage, let imageData = cachedImage.imageData, let image = UIImage(data: imageData) {
                 imageView.image = image
                 return
-            } else {
-                print("Cached image data found for \(url), but failed to decode")
             }
-        } else {
-            print("Image not found in cache for \(url)")
+        } catch {
+            print("Error saving image to Realm cache: \(error)")
+            imageView.image = MockUpImage
         }
+        
+        // if image isn't cached
+        getImageForHeroFromNet(url: url, imageView: imageView)
+    }
+    
+    // MARK: - private func
+    
+    private func getImageForHeroFromNet(url: String, imageView: UIImageView) {
         let url = URL(string: url)
         let processor = RoundCornerImageProcessor(cornerRadius: 20)
         let indicatorStyle = UIActivityIndicatorView.Style.large
@@ -159,11 +149,13 @@ final class APIManager {
                 imageView.image = imageResult.image
                 
                 let cachedImageData = CachedImageData(
-                    url: url?.absoluteString ?? "", 
+                    url: url?.absoluteString ?? "",
                     imageData: imageResult.image.pngData()
                 )
                 
                 do {
+                    let realm = try Realm()
+                    
                     try realm.write {
                         realm.add(cachedImageData, update: .modified)
                     }
@@ -182,5 +174,22 @@ final class APIManager {
                 break
             }
         }
+    }
+    
+    private func getHeroError(error: AFError, data: Data?) -> Error? {
+        if let data = data,
+           let failure = try? JSONDecoder().decode(ResponseFailureModel.self, from: data) {
+            let message = failure.message
+            return HeroError.custom(description: message)
+        } else {
+            return nil
+        }
+    }
+    
+    private func MD5(string: String) -> String {
+        let digest = Insecure.MD5.hash(data: string.data(using: .utf8) ?? Data())
+        return digest.map {
+            String(format: "%02hhx", $0)
+        }.joined()
     }
 }

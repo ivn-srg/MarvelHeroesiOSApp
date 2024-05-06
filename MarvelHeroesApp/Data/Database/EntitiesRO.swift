@@ -8,19 +8,6 @@
 import Foundation
 import RealmSwift
 
-//class ListOfHeroesRO: Object {
-//    @Persisted(primaryKey: true) var _id: ObjectId
-//    @Persisted var results: List<HeroRO>
-//    
-//    convenience init(heroesData: [HeroModel]) {
-//        self.init()
-//        
-//        heroesData.forEach({ hero in
-//            self.results.append(HeroRO(heroData: hero))
-//        })
-//    }
-//}
-
 class HeroRO: Object {
     @Persisted var id: Int = 0
     @Persisted var name: String = ""

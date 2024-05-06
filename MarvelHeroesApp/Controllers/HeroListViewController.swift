@@ -267,7 +267,7 @@ extension HeroListViewController {
             
             if lastRow >= totalRows - 1 {
                 if collectionView.contentOffset.x > 0 {
-                    viewModel.fetchHeroesData(needsLoadMore: true, into: collectionView)
+                    viewModel.fetchHeroesData(into: collectionView, needsLoadMore: true)
                 }
             }
         }
