@@ -110,7 +110,7 @@ final class APIManager {
                     }
                     break
                 }
-            }
+        }
     }
     
     func getImageForHero(url: String, imageView: UIImageView) {
