@@ -64,6 +64,7 @@ final class HeroListViewController: UIViewController {
         collectionView.contentInset = UIEdgeInsets(top: 0, left: itemW * 0.25, bottom: 0, right: itemW * 0.25)
         collectionView.alwaysBounceHorizontal = true
         collectionView.showsHorizontalScrollIndicator = false
+        collectionView.accessibilityIdentifier = "heroCollection"
         return collectionView
     }()
     

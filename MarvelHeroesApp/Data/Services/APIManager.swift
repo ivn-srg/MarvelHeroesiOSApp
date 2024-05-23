@@ -11,6 +11,12 @@ import CryptoKit
 import Kingfisher
 import RealmSwift
 
+protocol APIServicing {
+    func fetchHeroesData(from offset: Int, completion: @escaping (Result<Heroes, Error>) -> Void)
+    func fetchHeroData(heroItem: HeroRO, completion: @escaping (Result<HeroModel, Error>) -> Void)
+    func getImageForHero(url: String, imageView: UIImageView)
+}
+
 enum APIType {
     
     case getHeroes
@@ -53,7 +59,7 @@ enum HeroError: Error, LocalizedError {
     }
 }
 
-final class APIManager {
+final class APIManager: APIServicing {
     
     static let shared = APIManager()
     var currentTimeStamp: Int {
@@ -192,4 +198,31 @@ final class APIManager {
             String(format: "%02hhx", $0)
         }.joined()
     }
+}
+
+final class APIMockManager: APIServicing {
+    func fetchHeroesData(from offset: Int, completion: @escaping (Result<Heroes, any Error>) -> Void) {
+        let response = [
+            HeroModel(id: 1, name: "Deadpool", heroDescription: "This is the craziest hero in Marvel spacs!", thumbnail: ThumbnailModel(path: "Deadpool", extension: "")),
+            HeroModel(id: 2, name: "Iron Man", heroDescription: "Robert is a clever guy", thumbnail: ThumbnailModel(path: "Iron Man", extension: ""))
+        ]
+        completion(.success(response))
+    }
+    
+    func fetchHeroData(heroItem: HeroRO, completion: @escaping (Result<HeroModel, any Error>) -> Void) {
+        let heroInfo = HeroModel(id: heroItem.id, name: heroItem.name, heroDescription: heroItem.heroDescription, thumbnail: ThumbnailModel(thumbRO: heroItem.thumbnail ?? ThumbnailRO()))
+        completion(.success(heroInfo))
+    }
+    
+    func getImageForHero(url: String, imageView: UIImageView) {
+        if url == "Deadpool" {
+            imageView.image = UIImage(named: "deadPool")
+        } else if url == "Iron Man" {
+            imageView.image = UIImage(named: "ironMan")
+        } else {
+            imageView.image = UIImage(named: "mockup")
+        }
+    }
+    
+    
 }

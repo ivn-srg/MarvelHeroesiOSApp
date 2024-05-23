@@ -41,10 +41,8 @@ final class MarvelHeroesAppTests: XCTestCase {
     }
 
     func testPerformanceExample() throws {
-        // This is an example of a performance test case.
         measure {
             testedImage?.averageColor()
         }
     }
-
 }
