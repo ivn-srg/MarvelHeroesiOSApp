@@ -2,7 +2,7 @@
 //  MarvelHeroesAppUITestsLaunchTests.swift
 //  MarvelHeroesAppUITests
 //
-//  Created by Sergey Ivanov on 23.05.2024.
+//  Created by Sergey Ivanov on 29.05.2024.
 //
 
 import XCTest

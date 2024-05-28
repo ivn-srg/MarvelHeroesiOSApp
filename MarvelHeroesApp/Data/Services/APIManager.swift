@@ -11,7 +11,7 @@ import CryptoKit
 import Kingfisher
 import RealmSwift
 
-protocol APIServicing {
+protocol APIServicing: AnyObject {
     func fetchHeroesData(from offset: Int, completion: @escaping (Result<Heroes, Error>) -> Void)
     func fetchHeroData(heroItem: HeroRO, completion: @escaping (Result<HeroModel, Error>) -> Void)
     func getImageForHero(url: String, imageView: UIImageView)
@@ -201,6 +201,9 @@ final class APIManager: APIServicing {
 }
 
 final class APIMockManager: APIServicing {
+    
+    public static let shared = APIMockManager()
+    
     func fetchHeroesData(from offset: Int, completion: @escaping (Result<Heroes, any Error>) -> Void) {
         let response = [
             HeroModel(id: 1, name: "Deadpool", heroDescription: "This is the craziest hero in Marvel spacs!", thumbnail: ThumbnailModel(path: "Deadpool", extension: "")),

@@ -13,9 +13,11 @@ import CryptoKit
 final class DetailHeroViewModel {
     
     var heroItem: HeroRO
+    private let networkService: APIServicing
     
-    init(hero: HeroRO) {
+    init(hero: HeroRO, networkService: APIServicing = APIManager.shared) {
         self.heroItem = hero
+        self.networkService = networkService
     }
     
     // MARK: - Network work
@@ -23,7 +25,7 @@ final class DetailHeroViewModel {
     func fetchHeroData() {
         LoadingIndicator.startLoading()
         
-        APIManager.shared.fetchHeroData(heroItem: heroItem) { [weak self] (result) in
+        networkService.fetchHeroData(heroItem: heroItem) { [weak self] (result) in
             guard self != nil else { return }
             
             switch result {

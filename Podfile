@@ -11,4 +11,11 @@ target 'MarvelHeroesApp' do
   pod 'Kingfisher'
   pod 'Alamofire'
   pod 'RealmSwift'
+  
+  target 'MarvelHeroesAppTests' do
+    inherit! :search_paths
+  end
+	
+  target 'MarvelHeroesAppUITests' do
+  end
 end
