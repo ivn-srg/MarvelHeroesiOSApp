@@ -30,6 +30,7 @@ final class DetailHeroViewController: UIViewController {
         configuration.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20)
         let button = UIButton(configuration: configuration)
         button.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
+        button.accessibilityIdentifier = "backButton"
         return button
     }()
     
@@ -50,6 +51,7 @@ final class DetailHeroViewController: UIViewController {
         txt.font = UIFont(name: Font.InterBold, size: 34)
         txt.textColor = .white
         txt.numberOfLines = 2
+        txt.accessibilityIdentifier = "heroName"
         return txt
     }()
     
@@ -59,6 +61,7 @@ final class DetailHeroViewController: UIViewController {
         txt.font = UIFont(name: Font.InterBold, size: 24)
         txt.textColor = .white
         txt.numberOfLines = 3
+        txt.accessibilityIdentifier = "heroInfo"
         return txt
     }()
     
@@ -148,7 +151,7 @@ final class DetailHeroViewController: UIViewController {
     private func updateView() {
         if let imgLink = viewModel.heroItem.thumbnail {
             let url = "\(imgLink.path).\(imgLink.extension)"
-            APIManager.shared.getImageForHero(url: url, imageView: heroImageView)
+            viewModel.getHeroImage(from: url, to: heroImageView)
         }
         
         heroNameText.text = viewModel.heroItem.name

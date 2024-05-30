@@ -15,6 +15,7 @@ final class HeroCollectionViewCell: UICollectionViewCell {
     static let identifier = "CollectionViewCellId"
     var avgColorOfImage: UIColor = UIColor()
     var heroImage: UIImage = UIImage()
+    var apiService: APIServicing = APIManager.shared
     
     // MARK: - UI components
     
@@ -36,6 +37,7 @@ final class HeroCollectionViewCell: UICollectionViewCell {
         lbl.textColor = .white
         lbl.textAlignment = .left
         lbl.numberOfLines = 2
+        lbl.accessibilityIdentifier = "heroCellName"
         return lbl
     }()
     
@@ -44,7 +46,7 @@ final class HeroCollectionViewCell: UICollectionViewCell {
     public func configure(viewModel: HeroCollectionViewCellViewModel) {
         setupUI()
         
-        APIManager.shared.getImageForHero(url: viewModel.heroImageUrlString, imageView: heroImageView)
+        apiService.getImageForHero(url: viewModel.heroImageUrlString, imageView: heroImageView)
         
         nameOfHero.text = viewModel.heroItem.name
         

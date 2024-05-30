@@ -54,8 +54,6 @@
 		9381AE0E2C065C6200BFE4BF /* LoaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9369AD1C2BB5D26000DA5460 /* LoaderView.swift */; };
 		9381AE0F2C065C6200BFE4BF /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9303D24A2B920114003567A5 /* Extensions.swift */; };
 		9381AE102C065C6200BFE4BF /* PagingCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939E7F812B947AEE00BEE787 /* PagingCollectionViewLayout.swift */; };
-		9381AE112C065C6200BFE4BF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93CD1E9D2B90F16300AD2752 /* AppDelegate.swift */; };
-		9381AE122C065C6200BFE4BF /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93CD1E9F2B90F16300AD2752 /* SceneDelegate.swift */; };
 		939E7F822B947AEF00BEE787 /* PagingCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939E7F812B947AEE00BEE787 /* PagingCollectionViewLayout.swift */; };
 		939E7F842B9486D200BEE787 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939E7F832B9486D200BEE787 /* Constants.swift */; };
 		939E7F862B949A9000BEE787 /* HeroListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939E7F852B949A9000BEE787 /* HeroListViewModel.swift */; };
@@ -641,8 +639,6 @@
 				9381AE0E2C065C6200BFE4BF /* LoaderView.swift in Sources */,
 				9381AE0F2C065C6200BFE4BF /* Extensions.swift in Sources */,
 				9381AE102C065C6200BFE4BF /* PagingCollectionViewLayout.swift in Sources */,
-				9381AE112C065C6200BFE4BF /* AppDelegate.swift in Sources */,
-				9381AE122C065C6200BFE4BF /* SceneDelegate.swift in Sources */,
 				9381ADE62C06576300BFE4BF /* MarvelHeroesAppUITests.swift in Sources */,
 				9381ADE82C06576300BFE4BF /* MarvelHeroesAppUITestsLaunchTests.swift in Sources */,
 			);

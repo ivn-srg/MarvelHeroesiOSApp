@@ -71,6 +71,7 @@ final class HeroListViewController: UIViewController {
     private lazy var triangleView: TriangleView = {
         let tv = TriangleView(frame: view.bounds)
         tv.translatesAutoresizingMaskIntoConstraints = false
+        tv.accessibilityIdentifier = "triangleView"
         return tv
     }()
     
@@ -219,6 +220,10 @@ extension HeroListViewController: UICollectionViewDelegate, UICollectionViewData
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HeroCollectionViewCell.identifier, for: indexPath) as? HeroCollectionViewCell else { return UICollectionViewCell() }
         let hero = viewModel.dataSource[indexPath.row]
+        
+        if CommandLine.arguments.contains("UITests") {
+            cell.apiService = APIMockManager.shared
+        }
         
         cell.configure(viewModel: HeroCollectionViewCellViewModel(hero: HeroRO(heroData: hero)))
         

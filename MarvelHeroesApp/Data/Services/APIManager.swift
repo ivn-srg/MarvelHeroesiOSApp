@@ -218,9 +218,9 @@ final class APIMockManager: APIServicing {
     }
     
     func getImageForHero(url: String, imageView: UIImageView) {
-        if url == "Deadpool" {
+        if url == "Deadpool." {
             imageView.image = UIImage(named: "deadPool")
-        } else if url == "Iron Man" {
+        } else if url == "Iron Man." {
             imageView.image = UIImage(named: "ironMan")
         } else {
             imageView.image = UIImage(named: "mockup")

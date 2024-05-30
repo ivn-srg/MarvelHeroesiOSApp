@@ -11,40 +11,51 @@ import XCTest
 final class MarvelHeroesAppUITests: XCTestCase {
     
     private var app: XCUIApplication!
-    
-    private var mockService: APIMockManager!
-    private var viewModel: HeroListViewModel!
 
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-        mockService = APIMockManager.shared
-        viewModel = HeroListViewModel(networkService: mockService)
-        
-        if let scenes = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
-            scenes.keyWindow?.rootViewController = HeroListViewController(vm: viewModel)
-        } else {
-            print("Ошибка получения сцен")
-        }
-
-        // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
-
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
-        app = XCUIApplication()
-        app.launch()
     }
 
     override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
         app.terminate()
     }
 
     func testExample() throws {
-        // UI tests must launch the application that they test.
-        let collectionView = app.collectionViews["heroCollection"]
-        XCTAssertTrue(collectionView.exists)
         
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+        app = XCUIApplication()
+        app.launchArguments.append("UITests")
+        app.launch()
+        
+        let collectionCells = app.collectionViews["heroCollection"].cells
+        XCTAssertEqual(collectionCells.count, 2, "В collectionView 2 элемента")
+        
+        let firstCell = collectionCells.element(boundBy: 0)
+        let firstCellTitle = firstCell.staticTexts.containing(.staticText, identifier: "heroCellName").element.label
+        let secondCell = collectionCells.element(boundBy: 1)
+        let secondCellTitle = secondCell.staticTexts.containing(.staticText, identifier: "heroCellName").element.label
+        
+        // first test case
+        XCTAssertEqual(firstCellTitle, "Deadpool", "Deadpool's cell not exists")
+        XCTAssertEqual(secondCellTitle, "Iron Man", file: "Iron Man's cell not exists")
+        
+        // second test case
+        firstCell.tap()
+        let detailViewLblName = app.staticTexts.containing(.staticText, identifier: "heroName").element.label
+        let detailViewLblInfo = app.staticTexts.containing(.staticText, identifier: "heroInfo")
+        
+        XCTAssertEqual(firstCellTitle, detailViewLblName, "Имена героя в ячейке и на экране детализации не совпадают")
+        XCTAssertTrue(detailViewLblInfo.element.exists, "Элемент с информацией по герою не существует")
+        
+        app.buttons["backButton"].tap()
+        
+        // third test case
+        let herocollectionCollectionView = app.collectionViews["heroCollection"]
+        let backgroundLayout = app.otherElements["triangleView"].label
+        print(backgroundLayout)
+        
+        herocollectionCollectionView.swipeLeft()
+        herocollectionCollectionView.swipeRight()
+                
     }
 
     func testLaunchPerformance() throws {

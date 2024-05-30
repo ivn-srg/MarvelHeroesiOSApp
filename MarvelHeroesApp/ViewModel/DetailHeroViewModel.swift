@@ -17,7 +17,12 @@ final class DetailHeroViewModel {
     
     init(hero: HeroRO, networkService: APIServicing = APIManager.shared) {
         self.heroItem = hero
-        self.networkService = networkService
+        
+        if CommandLine.arguments.contains("UITests") {
+            self.networkService = APIMockManager.shared
+        } else {
+            self.networkService = networkService
+        }
     }
     
     // MARK: - Network work
@@ -40,5 +45,9 @@ final class DetailHeroViewModel {
                 print(error)
             }
         }
+    }
+    
+    func getHeroImage(from url: String, to heroImageView: UIImageView) {
+        networkService.getImageForHero(url: url, imageView: heroImageView)
     }
 }

@@ -12,7 +12,7 @@ final class HeroListViewModel {
     
     var dataSource: [HeroModel] = []
     var realmDb = RealmDB.shared
-    private let networkService: APIServicing
+    let networkService: APIServicing
     
     init(networkService: APIServicing = APIManager.shared) {
         self.networkService = networkService

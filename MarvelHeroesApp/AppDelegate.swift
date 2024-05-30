@@ -11,11 +11,17 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    var apiService: APIServicing = APIManager.shared
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         window = UIWindow()
-        let mainVC = HeroListViewController(vm: HeroListViewModel())
+        
+        if CommandLine.arguments.contains("UITests") {
+            apiService = APIMockManager.shared
+        }
+        
+        let mainVC = HeroListViewController(vm: HeroListViewModel(networkService: apiService))
         let navigationController = UINavigationController(rootViewController: mainVC)
         
         window?.rootViewController = navigationController
