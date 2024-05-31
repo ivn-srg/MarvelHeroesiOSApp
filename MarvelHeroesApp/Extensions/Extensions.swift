@@ -40,3 +40,37 @@ extension UIImage {
         return UIColor(red: CGFloat(bitmap[0]) / 255, green: CGFloat(bitmap[1]) / 255, blue: CGFloat(bitmap[2]) / 255, alpha: CGFloat(bitmap[3]) / 255)
     }
 }
+
+extension CGColor {
+    func toString() -> String? {
+        guard let components = self.components else {
+            return nil
+        }
+        switch components.count {
+        case 2:
+            let red = components[0]
+            let green = components[1]
+            
+            return String(format: "r:%.2f g:%.2f", red, green)
+        case 3:
+            let red = components[0]
+            let green = components[1]
+            let blue = components[2]
+            
+            return String(format: "r:%.2f g:%.2f b:%.2f", red, green, blue)
+        case 4:
+            let red = components[0]
+            let green = components[1]
+            let blue = components[2]
+            let alpha = components[3]
+            
+            return String(format: "r:%.2f g:%.2f b:%.2f a:%.2f", red, green, blue, alpha)
+        default:
+            var tempStr = ""
+            components.forEach { component in
+                tempStr.append("\(component.description) ")
+            }
+            return tempStr
+        }
+    }
+}

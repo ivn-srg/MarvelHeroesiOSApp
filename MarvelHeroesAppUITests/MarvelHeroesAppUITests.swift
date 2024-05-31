@@ -50,12 +50,24 @@ final class MarvelHeroesAppUITests: XCTestCase {
         
         // third test case
         let herocollectionCollectionView = app.collectionViews["heroCollection"]
-        let backgroundLayout = app.otherElements["triangleView"].label
-        print(backgroundLayout)
+        let backgroundLayout = app.otherElements["triangleView"]
+        backgroundLayout.waitForExistence(timeout: 5)
+        print("Здесь цвет должен быть \(backgroundLayout.label)")
         
         herocollectionCollectionView.swipeLeft()
         herocollectionCollectionView.swipeRight()
-                
+        
+        // fourth test case
+        let element = app.windows.element
+        element.swipeDown()
+        
+        let firstCellAfterRefresh = collectionCells.element(boundBy: 0)
+        let firstCellTitleAfterRefresh = firstCell.staticTexts.containing(.staticText, identifier: "heroCellName").element.label
+        let secondCellAfterRefresh = collectionCells.element(boundBy: 1)
+        let secondCellTitleAfterRefresh = secondCell.staticTexts.containing(.staticText, identifier: "heroCellName").element.label
+        
+        XCTAssertEqual(firstCellTitle, firstCellTitleAfterRefresh, "Имена героя до и после обновления не совпадают")
+        XCTAssertEqual(secondCellTitle, secondCellTitleAfterRefresh, "Имена героя до и после обновления не совпадают")
     }
 
     func testLaunchPerformance() throws {

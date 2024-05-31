@@ -14,7 +14,12 @@ final class HeroCollectionViewCell: UICollectionViewCell {
     
     static let identifier = "CollectionViewCellId"
     var avgColorOfImage: UIColor = UIColor()
-    var heroImage: UIImage = UIImage()
+    var heroImage: UIImage = UIImage() {
+        didSet {
+            delegate?.updateTriangleSublayout()
+        }
+    }
+    var delegate: UpdateTriangleSublayout?
     var apiService: APIServicing = APIManager.shared
     
     // MARK: - UI components

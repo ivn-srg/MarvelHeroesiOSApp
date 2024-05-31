@@ -207,6 +207,7 @@ final class HeroListViewController: UIViewController {
         guard let image = didLoadImage else { return }
         let averageColor = image.averageColor()
         triangleView.updateTriangleColor(averageColor)
+        triangleView.accessibilityLabel = averageColor.cgColor.toString()
     }
 }
 
@@ -225,6 +226,7 @@ extension HeroListViewController: UICollectionViewDelegate, UICollectionViewData
             cell.apiService = APIMockManager.shared
         }
         
+        cell.delegate = triangleView
         cell.configure(viewModel: HeroCollectionViewCellViewModel(hero: HeroRO(heroData: hero)))
         
         moveFocusOnFirstItem()
