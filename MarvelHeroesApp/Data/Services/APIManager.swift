@@ -101,8 +101,6 @@ final class APIManager {
                     completion(.success(model))
                     break
                 case .failure(let error):
-                    print(error)
-                    print(urlString)
                     if let err = self.getHeroError(error: error, data: response.data) {
                         completion(.failure(err))
                     } else {
@@ -110,7 +108,7 @@ final class APIManager {
                     }
                     break
                 }
-        }
+            }
     }
     
     func getImageForHero(url: String, imageView: UIImageView) {
