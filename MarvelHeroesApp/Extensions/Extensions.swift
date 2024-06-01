@@ -42,9 +42,9 @@ extension UIImage {
 }
 
 extension CGColor {
-    func toString() -> String? {
+    func toString() -> String {
         guard let components = self.components else {
-            return nil
+            return "empty color"
         }
         switch components.count {
         case 2:

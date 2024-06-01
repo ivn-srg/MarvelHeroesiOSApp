@@ -7,11 +7,7 @@
 
 import UIKit
 
-protocol UpdateTriangleSublayout: AnyObject {
-    func updateTriangleSublayout()
-}
-
-final class TriangleView: UIView, UpdateTriangleSublayout {
+final class TriangleView: UIView {
     
     private let shapeLayer: CAShapeLayer = {
         let layer = CAShapeLayer()
@@ -47,9 +43,5 @@ final class TriangleView: UIView, UpdateTriangleSublayout {
     
     func updateTriangleColor(_ color: UIColor) {
         shapeLayer.fillColor = color.cgColor
-    }
-    
-    func updateTriangleSublayout() {
-        self.setNeedsLayout()
     }
 }

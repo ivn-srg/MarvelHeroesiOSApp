@@ -35,23 +35,19 @@ struct HeroListScreen: Screen {
     }
     
     func checkLayoutColorAfterSwaping() -> Self {
-        let element = app.windows.element
-        element.swipeDown()
+        let collectionView = app.collectionViews[Identifiers.collectionView]
+        let backgroundLayoutColor = app.otherElements[Identifiers.triangleView].accessibilityValue
         
-        let herocollectionCollectionView = app.collectionViews[Identifiers.collectionView]
-        let backgroundLayout = app.otherElements[Identifiers.triangleView]
+        collectionView.swipeLeft()
         
-        herocollectionCollectionView.swipeLeft()
+        let backgroundLayoutColorAfterSwaping = app.otherElements[Identifiers.triangleView].accessibilityValue
         
-        XCTAssertTrue(backgroundLayout.waitForExistence(timeout: 5))
-        let backgroundLayoutAfterSwaping = app.otherElements[Identifiers.triangleView]
+        XCTAssertNotEqual(backgroundLayoutColor, backgroundLayoutColorAfterSwaping, "Цвета layout после свайпинга равны")
         
-        XCTAssertNotEqual(backgroundLayout.label, backgroundLayoutAfterSwaping.label, "Цвета layout после свайпинга равны")
+        collectionView.swipeRight()
         
-        herocollectionCollectionView.swipeRight()
-        
-        let backgroundLayoutAfterBackSwaping = app.otherElements[Identifiers.triangleView]
-        XCTAssertEqual(backgroundLayout.label, backgroundLayoutAfterBackSwaping.label, "Цвета layout после свайпинга не равны")
+        let backgroundLayoutColorAfterBackSwaping = app.otherElements[Identifiers.triangleView].accessibilityValue
+        XCTAssertEqual(backgroundLayoutColor, backgroundLayoutColorAfterBackSwaping, "Цвета layout после свайпинга не равны")
         return self
     }
     

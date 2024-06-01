@@ -14,12 +14,7 @@ final class HeroCollectionViewCell: UICollectionViewCell {
     
     static let identifier = "CollectionViewCellId"
     var avgColorOfImage: UIColor = UIColor()
-    var heroImage: UIImage = UIImage() {
-        didSet {
-            delegate?.updateTriangleSublayout()
-        }
-    }
-    var delegate: UpdateTriangleSublayout?
+    var heroImage: UIImage = UIImage()
     var apiService: APIServicing = APIManager.shared
     
     // MARK: - UI components
@@ -51,11 +46,10 @@ final class HeroCollectionViewCell: UICollectionViewCell {
     public func configure(viewModel: HeroCollectionViewCellViewModel) {
         setupUI()
         
+        heroImageView.addObserver(self, forKeyPath: "image", options: [.new], context: nil)
         apiService.getImageForHero(url: viewModel.heroImageUrlString, imageView: heroImageView)
         
         nameOfHero.text = viewModel.heroItem.name
-        
-        heroImageView.addObserver(self, forKeyPath: "image", options: [.new], context: nil)
     }
     
     private func setupUI() {
@@ -86,7 +80,6 @@ final class HeroCollectionViewCell: UICollectionViewCell {
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == "image" {
             guard let img = heroImageView.image else { return }
-            
             heroImage = img
         }
     }
