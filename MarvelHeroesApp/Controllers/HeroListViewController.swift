@@ -203,7 +203,7 @@ final class HeroListViewController: UIViewController {
         }
     }
     
-    private func updateTrinagleViewColor(didLoadImage: UIImage?) {
+    private func updateTriangleViewColor(didLoadImage: UIImage?) {
         guard let image = didLoadImage else { return }
         let averageColor = image.averageColor()
         triangleView.updateTriangleColor(averageColor)
@@ -285,7 +285,7 @@ extension HeroListViewController {
         let indexPath = IndexPath(item: customLayout.currentPage, section: 0)
         guard let cell = collectionView.cellForItem(at: indexPath) as? HeroCollectionViewCell else { return }
 
-        updateTrinagleViewColor(didLoadImage: cell.heroImage)
+        updateTriangleViewColor(didLoadImage: cell.heroImage)
         transformCell(cell)
     }
     
