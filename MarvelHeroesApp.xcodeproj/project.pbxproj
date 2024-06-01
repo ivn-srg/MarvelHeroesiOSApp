@@ -25,6 +25,7 @@
 		9369AD1B2BB5C3B400DA5460 /* HeroCollectionViewCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9369AD1A2BB5C3B400DA5460 /* HeroCollectionViewCellViewModel.swift */; };
 		9369AD1D2BB5D26000DA5460 /* LoaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9369AD1C2BB5D26000DA5460 /* LoaderView.swift */; };
 		9369AD1F2BB5D6C200DA5460 /* ResponseFailureModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9369AD1E2BB5D6C200DA5460 /* ResponseFailureModel.swift */; };
+		936FEF432C0AE61300D9441E /* Screens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936FEF422C0AE61300D9441E /* Screens.swift */; };
 		937BF6D12BA97525007087A4 /* RoundRectButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937BF6D02BA97525007087A4 /* RoundRectButton.swift */; };
 		9381ADE62C06576300BFE4BF /* MarvelHeroesAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9381ADE52C06576300BFE4BF /* MarvelHeroesAppUITests.swift */; };
 		9381ADE82C06576300BFE4BF /* MarvelHeroesAppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9381ADE72C06576300BFE4BF /* MarvelHeroesAppUITestsLaunchTests.swift */; };
@@ -113,6 +114,7 @@
 		9369AD1A2BB5C3B400DA5460 /* HeroCollectionViewCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroCollectionViewCellViewModel.swift; sourceTree = "<group>"; };
 		9369AD1C2BB5D26000DA5460 /* LoaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoaderView.swift; sourceTree = "<group>"; };
 		9369AD1E2BB5D6C200DA5460 /* ResponseFailureModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseFailureModel.swift; sourceTree = "<group>"; };
+		936FEF422C0AE61300D9441E /* Screens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screens.swift; sourceTree = "<group>"; };
 		937BF6D02BA97525007087A4 /* RoundRectButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundRectButton.swift; sourceTree = "<group>"; };
 		9381ADE52C06576300BFE4BF /* MarvelHeroesAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarvelHeroesAppUITests.swift; sourceTree = "<group>"; };
 		9381ADE72C06576300BFE4BF /* MarvelHeroesAppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarvelHeroesAppUITestsLaunchTests.swift; sourceTree = "<group>"; };
@@ -278,6 +280,7 @@
 			children = (
 				9381ADE52C06576300BFE4BF /* MarvelHeroesAppUITests.swift */,
 				9381ADE72C06576300BFE4BF /* MarvelHeroesAppUITestsLaunchTests.swift */,
+				936FEF422C0AE61300D9441E /* Screens.swift */,
 			);
 			path = MarvelHeroesAppUITests;
 			sourceTree = "<group>";
@@ -621,6 +624,7 @@
 				9381ADFC2C065C6200BFE4BF /* Localizable.xcstrings in Sources */,
 				9381ADFD2C065C6200BFE4BF /* LaunchScreen.storyboard in Sources */,
 				9381ADFE2C065C6200BFE4BF /* Constants.swift in Sources */,
+				936FEF432C0AE61300D9441E /* Screens.swift in Sources */,
 				9381ADFF2C065C6200BFE4BF /* DetailHeroViewModel.swift in Sources */,
 				9381AE002C065C6200BFE4BF /* HeroListViewModel.swift in Sources */,
 				9381AE012C065C6200BFE4BF /* HeroCollectionViewCellViewModel.swift in Sources */,
