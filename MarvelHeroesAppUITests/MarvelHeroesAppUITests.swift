@@ -11,10 +11,13 @@ import XCTest
 final class MarvelHeroesAppUITests: XCTestCase {
     
     private var app: XCUIApplication! = XCUIApplication()
+    private var heroListScreen: HeroListScreen!
 
     override func setUpWithError() throws {
-        app.launchArguments.append("UITests")
+        ApiServiceConfiguration.shared.setMockingServiceEnabled(true)
         app.launch()
+        
+        heroListScreen = HeroListScreen(app: app)
         
         continueAfterFailure = false
     }
@@ -23,16 +26,20 @@ final class MarvelHeroesAppUITests: XCTestCase {
         app.terminate()
     }
 
-    func testMainFlow() {
-        let collectionCells = app.collectionViews["heroCollection"].cells
-        let firstCell = collectionCells.element(boundBy: 0)
-        let firstCellTitle = firstCell.staticTexts.containing(.staticText, identifier: "heroCellName").element.label
-        
-        HeroListScreen(app: app)
-            .checkTwoHeroCards()
-            .checkHeroNameAfterRegreshing()
-            .checkLayoutColorAfterSwaping()
-            .fallingIntoDetailScreen()
-            .verifyNameIntoCellAndDetailScreen(with: firstCellTitle)
+    func testCheckTwoHeroCards() {
+        heroListScreen.checkTwoHeroCards()
+    }
+    
+    func testCheckHeroNameAfterRefreshing() {
+        heroListScreen.checkHeroNameAfterRefreshing()
+    }
+    
+    func testCheckLayoutColorAfterSwaping() {
+        heroListScreen.checkLayoutColorAfterSwaping()
+    }
+    
+    func testVerifyNameIntoCellAndDetailScreen() {
+        let cellTitle = heroListScreen.firstCellTitle
+        heroListScreen.fallingIntoDetailScreen().verifyNameIntoCellAndDetailScreen(with: cellTitle)
     }
 }

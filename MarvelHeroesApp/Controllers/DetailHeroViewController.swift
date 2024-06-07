@@ -51,7 +51,7 @@ final class DetailHeroViewController: UIViewController {
         txt.font = UIFont(name: Font.InterBold, size: 34)
         txt.textColor = .white
         txt.numberOfLines = 2
-        txt.accessibilityIdentifier = "heroName"
+        txt.accessibilityIdentifier = "heroNameLabel"
         return txt
     }()
     
@@ -61,7 +61,7 @@ final class DetailHeroViewController: UIViewController {
         txt.font = UIFont(name: Font.InterBold, size: 24)
         txt.textColor = .white
         txt.numberOfLines = 3
-        txt.accessibilityIdentifier = "heroInfo"
+        txt.accessibilityIdentifier = "heroInfoLabel"
         return txt
     }()
     

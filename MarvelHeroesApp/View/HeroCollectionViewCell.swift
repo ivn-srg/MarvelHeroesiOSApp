@@ -15,7 +15,7 @@ final class HeroCollectionViewCell: UICollectionViewCell {
     static let identifier = "CollectionViewCellId"
     var avgColorOfImage: UIColor = UIColor()
     var heroImage: UIImage = UIImage()
-    var apiService: APIServicing = APIManager.shared
+    var apiService = ApiServiceConfiguration.shared.apiService
     
     // MARK: - UI components
     
@@ -40,6 +40,12 @@ final class HeroCollectionViewCell: UICollectionViewCell {
         lbl.accessibilityIdentifier = "heroCellName"
         return lbl
     }()
+    
+    // MARK: - Lyfecycle
+    
+    deinit {
+        heroImageView.removeObserver(self, forKeyPath: "image")
+    }
     
     // MARK: - Functions
     

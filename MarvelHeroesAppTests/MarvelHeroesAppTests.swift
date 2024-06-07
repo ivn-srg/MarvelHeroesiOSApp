@@ -23,7 +23,7 @@ final class MarvelHeroesAppTests: XCTestCase {
         try super.tearDownWithError()
     }
 
-    func testExample() throws {
+    func testReturnsCorrectRGBA() throws {
         
         // функция возвращает пустой цвет при передачи пустого UIImage
         testedImage = UIImage()
@@ -34,10 +34,10 @@ final class MarvelHeroesAppTests: XCTestCase {
         testedImage = UIImage(named: "deadPool")
         avgColor = testedImage?.averageColor()
         let components = avgColor.cgColor.components
-        XCTAssertEqual(components![0], 0.216, accuracy: 0.01, "Красный оттенок просчитан ок")
-        XCTAssertEqual(components![1], 0.173, accuracy: 0.01, "Зеленый оттенок просчитан ок")
-        XCTAssertEqual(components![2], 0.173, accuracy: 0.01, "Синий оттенок просчитан ок")
-        XCTAssertEqual(components![3], 1, "Альфа уровень просчитан ок")
+        XCTAssertEqual(components![0], 0.216, accuracy: 0.01, "Красный оттенок просчитан не ок")
+        XCTAssertEqual(components![1], 0.173, accuracy: 0.01, "Зеленый оттенок просчитан не ок")
+        XCTAssertEqual(components![2], 0.173, accuracy: 0.01, "Синий оттенок просчитан не ок")
+        XCTAssertEqual(components![3], 1, "Альфа уровень просчитан не ок")
     }
 
     func testPerformanceExample() throws {

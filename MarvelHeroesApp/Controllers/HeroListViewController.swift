@@ -206,7 +206,7 @@ final class HeroListViewController: UIViewController {
     private func updateTriangleViewColor(didLoadImage: UIImage?) {
         guard let image = didLoadImage else { return }
         let averageColor = image.averageColor()
-        triangleView.accessibilityValue = averageColor.cgColor.toString()
+        triangleView.accessibilityLabel = averageColor.cgColor.toString()
         triangleView.updateTriangleColor(averageColor)
     }
 }
@@ -221,10 +221,6 @@ extension HeroListViewController: UICollectionViewDelegate, UICollectionViewData
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HeroCollectionViewCell.identifier, for: indexPath) as? HeroCollectionViewCell else { return UICollectionViewCell() }
         let hero = viewModel.dataSource[indexPath.row]
-        
-        if CommandLine.arguments.contains("UITests") {
-            cell.apiService = APIMockManager.shared
-        }
         
         cell.configure(viewModel: HeroCollectionViewCellViewModel(hero: HeroRO(heroData: hero)))
         

@@ -11,7 +11,7 @@ import CryptoKit
 import Kingfisher
 import RealmSwift
 
-protocol APIServicing: AnyObject {
+protocol ApiServiceProtocol: AnyObject {
     func fetchHeroesData(from offset: Int, completion: @escaping (Result<Heroes, Error>) -> Void)
     func fetchHeroData(heroItem: HeroRO, completion: @escaping (Result<HeroModel, Error>) -> Void)
     func getImageForHero(url: String, imageView: UIImageView)
@@ -59,7 +59,27 @@ enum HeroError: Error, LocalizedError {
     }
 }
 
-final class APIManager: APIServicing {
+final class ApiServiceConfiguration {
+    static let shared = ApiServiceConfiguration()
+
+    private init() {}
+
+    var apiService: ApiServiceProtocol {
+        if shouldUseMockingService {
+            return APIManager.shared
+        } else {
+            return APIManager.shared
+        }
+    }
+
+    private var shouldUseMockingService: Bool = false
+
+    func setMockingServiceEnabled(_ enabled: Bool) {
+        shouldUseMockingService = enabled
+    }
+}
+
+final class APIManager: ApiServiceProtocol {
     
     static let shared = APIManager()
     var currentTimeStamp: Int {
@@ -200,7 +220,7 @@ final class APIManager: APIServicing {
     }
 }
 
-final class APIMockManager: APIServicing {
+final class APIMockManager: ApiServiceProtocol {
     
     public static let shared = APIMockManager()
     
@@ -226,6 +246,4 @@ final class APIMockManager: APIServicing {
             imageView.image = UIImage(named: "mockup")
         }
     }
-    
-    
 }

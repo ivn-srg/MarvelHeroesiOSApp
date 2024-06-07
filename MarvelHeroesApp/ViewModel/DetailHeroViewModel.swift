@@ -13,16 +13,10 @@ import CryptoKit
 final class DetailHeroViewModel {
     
     var heroItem: HeroRO
-    private let networkService: APIServicing
+    private let networkService = ApiServiceConfiguration.shared.apiService
     
-    init(hero: HeroRO, networkService: APIServicing = APIManager.shared) {
+    init(hero: HeroRO) {
         self.heroItem = hero
-        
-        if CommandLine.arguments.contains("UITests") {
-            self.networkService = APIMockManager.shared
-        } else {
-            self.networkService = networkService
-        }
     }
     
     // MARK: - Network work

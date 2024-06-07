@@ -20,27 +20,49 @@ struct HeroListScreen: Screen {
         static let triangleView = "triangleView"
         static let cellName = "heroCellName"
     }
+    
+    private lazy var collectionCells = {
+        app.collectionViews[Identifiers.collectionView].cells
+    }()
+    
+    private lazy var firstCell = {
+        collectionCells.element(boundBy: 0)
+    }()
+    
+    lazy var firstCellTitle = {
+        firstCell.staticTexts.containing(.staticText, identifier: Identifiers.cellName).element.label
+    }()
+    
+    private lazy var secondCell = {
+        collectionCells.element(boundBy: 1)
+    }()
+    
+    private lazy var secondCellTitle = {
+        secondCell.staticTexts.containing(.staticText, identifier: Identifiers.cellName).element.label
+    }()
+    
+    init(app: XCUIApplication) {
+        self.app = app
+    }
 
-    func checkTwoHeroCards() -> Self {
-        let collectionCells = app.collectionViews[Identifiers.collectionView].cells
-        let firstCell = collectionCells.element(boundBy: 0)
-        let firstCellTitle = firstCell.staticTexts.containing(.staticText, identifier: Identifiers.cellName).element.label
-        let secondCell = collectionCells.element(boundBy: 1)
-        let secondCellTitle = secondCell.staticTexts.containing(.staticText, identifier: Identifiers.cellName).element.label
-        
+    mutating func checkTwoHeroCards() {
         XCTAssertEqual(collectionCells.count, 2, "В collectionView 2 элемента")
-        XCTAssertEqual(firstCellTitle, "Deadpool", "Deadpool's cell not exists")
-        XCTAssertEqual(secondCellTitle, "Iron Man", file: "Iron Man's cell not exists")
-        return self
+        XCTAssertTrue(firstCell.exists, "Deadpool's cell not exists")
+        XCTAssertEqual(firstCellTitle, "Deadpool", "Deadpool's cell title isn't correct")
+        XCTAssertTrue(secondCell.exists, "Iron Man's cell not exists")
+        XCTAssertEqual(secondCellTitle, "Iron Man", file: "Iron Man's cell title isn't correct")
     }
     
-    func checkLayoutColorAfterSwaping() -> Self {
+    mutating func checkLayoutColorAfterSwaping() {
         let collectionView = app.collectionViews[Identifiers.collectionView]
-        let backgroundLayoutColor = app.otherElements[Identifiers.triangleView].accessibilityValue
+        let triangleView = app.otherElements[Identifiers.triangleView]
+        let backgroundLayoutColor = triangleView.accessibilityLabel
+        
+        XCTAssertGreaterThanOrEqual(collectionCells.count, 2, "В collectionView нет карточек/одна карточка")
         
         collectionView.swipeLeft()
         
-        let backgroundLayoutColorAfterSwaping = app.otherElements[Identifiers.triangleView].accessibilityValue
+        let backgroundLayoutColorAfterSwaping = triangleView.accessibilityLabel
         
         XCTAssertNotEqual(backgroundLayoutColor, backgroundLayoutColorAfterSwaping, "Цвета layout после свайпинга равны")
         
@@ -48,33 +70,23 @@ struct HeroListScreen: Screen {
         
         let backgroundLayoutColorAfterBackSwaping = app.otherElements[Identifiers.triangleView].accessibilityValue
         XCTAssertEqual(backgroundLayoutColor, backgroundLayoutColorAfterBackSwaping, "Цвета layout после свайпинга не равны")
-        return self
     }
     
-    func checkHeroNameAfterRegreshing() -> Self {
-        let collectionCells = app.collectionViews[Identifiers.collectionView].cells
-        let firstCell = collectionCells.element(boundBy: 0)
-        let firstCellTitle = firstCell.staticTexts.containing(.staticText, identifier: Identifiers.cellName).element.label
-        let secondCell = collectionCells.element(boundBy: 1)
-        let secondCellTitle = secondCell.staticTexts.containing(.staticText, identifier: Identifiers.cellName).element.label
+    mutating func checkHeroNameAfterRefreshing() {
+        let firstCellTitleBeforeRefresh = firstCellTitle
+        let secondCellTitleBeforeRefresh = secondCellTitle
         let element = app.windows.element
         
         element.swipeDown()
         
-        let firstCellAfterRefresh = collectionCells.element(boundBy: 0)
-        let firstCellTitleAfterRefresh = firstCellAfterRefresh.staticTexts.containing(.staticText, identifier: Identifiers.cellName).element.label
-        let secondCellAfterRefresh = collectionCells.element(boundBy: 1)
-        let secondCellTitleAfterRefresh = secondCellAfterRefresh.staticTexts.containing(.staticText, identifier: Identifiers.cellName).element.label
+        let firstCellTitleAfterRefresh = firstCellTitle
+        let secondCellTitleAfterRefresh = secondCellTitle
         
-        XCTAssertEqual(firstCellTitle, firstCellTitleAfterRefresh, "Имена героя до и после обновления не совпадают")
-        XCTAssertEqual(secondCellTitle, secondCellTitleAfterRefresh, "Имена героя до и после обновления не совпадают")
-        return self
+        XCTAssertEqual(firstCellTitleBeforeRefresh, firstCellTitleAfterRefresh, "Имена героя до и после обновления не совпадают")
+        XCTAssertEqual(secondCellTitleBeforeRefresh, secondCellTitleAfterRefresh, "Имена героя до и после обновления не совпадают")
     }
     
-    func fallingIntoDetailScreen() -> DetailHeroScreen {
-        let collectionCells = app.collectionViews[Identifiers.collectionView].cells
-        let firstCell = collectionCells.element(boundBy: 0)
-        
+    mutating func fallingIntoDetailScreen() -> DetailHeroScreen {
         firstCell.tap()
         
         return DetailHeroScreen(app: app)
@@ -86,8 +98,8 @@ struct DetailHeroScreen: Screen {
     
     private enum Identifiers {
         static let backButton = "backButton"
-        static let heroDetailName = "heroName"
-        static let heroDetailInfo = "heroInfo"
+        static let heroDetailName = "heroNameLabel"
+        static let heroDetailInfo = "heroInfoLabel"
         static let heroCellName = "heroCellName"
     }
     
