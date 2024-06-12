@@ -127,8 +127,6 @@ final class APIManager: ApiServiceProtocol {
                     completion(.success(model))
                     break
                 case .failure(let error):
-                    print(error)
-                    print(urlString)
                     if let err = self.getHeroError(error: error, data: response.data) {
                         completion(.failure(err))
                     } else {

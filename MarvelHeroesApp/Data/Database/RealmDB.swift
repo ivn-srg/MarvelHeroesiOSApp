@@ -27,7 +27,7 @@ extension RealmDB: HeroDAO {
             
             for item in heroes {
                 try realm.write {
-                    realm.add(HeroRO(heroData: item), update: .all)
+                    realm.add(HeroRO(heroData: item), update: .modified)
                 }
             }
         } catch {
@@ -49,6 +49,33 @@ extension RealmDB: HeroDAO {
             return heroes
         } catch {
             return []
+        }
+    }
+    
+    func saveHero(hero: HeroModel) -> (Bool) {
+        do {
+            let realm = try Realm()
+            
+            try realm.write {
+                realm.add(HeroRO(heroData: hero), update: .modified)
+            }
+        } catch {
+            return false
+        }
+        return true
+    }
+    
+    func getHero(by itemId: Int) -> HeroRO? {
+        do {
+            let realm = try Realm()
+            
+            if let realmHeroObject = realm.objects(HeroRO.self).filter("id == %@", itemId).first {
+                return realmHeroObject
+            } else {
+                return nil
+            }
+        } catch {
+            return nil
         }
     }
 }

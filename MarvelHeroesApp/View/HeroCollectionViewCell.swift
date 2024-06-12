@@ -47,6 +47,13 @@ final class HeroCollectionViewCell: UICollectionViewCell {
         heroImageView.removeObserver(self, forKeyPath: "image")
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        self.heroImageView.image = nil
+        self.nameOfHero.text = nil
+    }
+    
     // MARK: - Functions
     
     public func configure(viewModel: HeroCollectionViewCellViewModel) {
@@ -72,13 +79,6 @@ final class HeroCollectionViewCell: UICollectionViewCell {
             make.leading.equalTo(self.snp.leading).offset(25)
             make.trailing.equalTo(self.snp.trailing).offset(-25)
         }
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        
-        self.heroImageView.image = nil
-        self.nameOfHero.text = nil
     }
     
     // MARK: - KVO

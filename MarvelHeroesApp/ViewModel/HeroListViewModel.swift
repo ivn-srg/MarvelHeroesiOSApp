@@ -20,8 +20,6 @@ final class HeroListViewModel {
         
         LoadingIndicator.startLoading()
         
-        dataSource.append(contentsOf: realmDb.getHeroes())
-        
         if dataSource.isEmpty || needRefresh || needsLoadMore {
             let offset = needsLoadMore ? countOfRow() : 0
             DispatchQueue.global().async {
@@ -30,11 +28,9 @@ final class HeroListViewModel {
                     
                     switch result {
                     case .success(let heroes):
-                        let filteredHeroes = heroes.filter { $0.thumbnail.path != heroImageNotAvailable }
-                        
-                        if filteredHeroes.count > 0 {
-                            let statusOfSaving = self?.realmDb.saveHeroes(heroes: filteredHeroes)
-                            self?.dataSource = self?.realmDb.getHeroes() ?? [mockUpHeroData]
+                        if heroes.count > 0 {
+                            let statusOfSaving = self?.realmDb.saveHeroes(heroes: heroes)
+                            self?.dataSource.append(contentsOf: heroes)
                             print("Saving status \(statusOfSaving ?? false)")
                         }
                         
