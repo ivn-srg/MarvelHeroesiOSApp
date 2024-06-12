@@ -12,6 +12,7 @@ final class HeroListViewModel {
     
     var dataSource: [HeroModel] = []
     var realmDb = RealmDB.shared
+    let networkService = ApiServiceConfiguration.shared.apiService
     
     // MARK: - Network work
     
@@ -22,7 +23,7 @@ final class HeroListViewModel {
         if dataSource.isEmpty || needRefresh || needsLoadMore {
             let offset = needsLoadMore ? countOfRow() : 0
             DispatchQueue.global().async {
-                APIManager.shared.fetchHeroesData(from: offset) { [weak self] (result) in
+                self.networkService.fetchHeroesData(from: offset) { [weak self] (result) in
                     guard self != nil else { return }
                     
                     switch result {

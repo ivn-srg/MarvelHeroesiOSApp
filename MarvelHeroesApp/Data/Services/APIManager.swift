@@ -11,16 +11,22 @@ import CryptoKit
 import Kingfisher
 import RealmSwift
 
+protocol ApiServiceProtocol: AnyObject {
+    func fetchHeroesData(from offset: Int, completion: @escaping (Result<Heroes, Error>) -> Void)
+    func fetchHeroData(heroItem: HeroRO, completion: @escaping (Result<HeroModel, Error>) -> Void)
+    func getImageForHero(url: String, imageView: UIImageView)
+}
+
 enum APIType {
     
     case getHeroes
     case getHero
     
-    var baseURL: String {
+    private var baseURL: String {
         "https://gateway.marvel.com/v1/public/"
     }
     
-    var path: String {
+    private var path: String {
         switch self {
         case .getHeroes: "characters"
         case .getHero: "characters"
@@ -53,13 +59,33 @@ enum HeroError: Error, LocalizedError {
     }
 }
 
-final class APIManager {
+final class ApiServiceConfiguration {
+    public static let shared = ApiServiceConfiguration()
+
+    private init() {}
+
+    var apiService: ApiServiceProtocol {
+        if shouldUseMockingService {
+            return APIMockManager.shared
+        } else {
+            return APIManager.shared
+        }
+    }
+
+    private var shouldUseMockingService: Bool = false
+
+    func setMockingServiceEnabled() {
+        shouldUseMockingService = true
+    }
+}
+
+final class APIManager: ApiServiceProtocol {
     
-    static let shared = APIManager()
-    var currentTimeStamp: Int {
+    public static let shared = APIManager()
+    private var currentTimeStamp: Int {
         Int(Date().timeIntervalSince1970)
     }
-    var md5Hash: String {
+    private var md5Hash: String {
         MD5(string: "\(currentTimeStamp)\(PRIVATE_KEY)\(API_KEY)")
     }
     
@@ -189,5 +215,33 @@ final class APIManager {
         return digest.map {
             String(format: "%02hhx", $0)
         }.joined()
+    }
+}
+
+final class APIMockManager: ApiServiceProtocol {
+    
+    public static let shared = APIMockManager()
+    
+    func fetchHeroesData(from offset: Int, completion: @escaping (Result<Heroes, any Error>) -> Void) {
+        let response = [
+            HeroModel(id: 1, name: "Deadpool", heroDescription: "This is the craziest hero in Marvel spacs!", thumbnail: ThumbnailModel(path: "Deadpool", extension: "")),
+            HeroModel(id: 2, name: "Iron Man", heroDescription: "Robert is a clever guy", thumbnail: ThumbnailModel(path: "Iron Man", extension: ""))
+        ]
+        completion(.success(response))
+    }
+    
+    func fetchHeroData(heroItem: HeroRO, completion: @escaping (Result<HeroModel, any Error>) -> Void) {
+        let heroInfo = HeroModel(id: heroItem.id, name: heroItem.name, heroDescription: heroItem.heroDescription, thumbnail: ThumbnailModel(thumbRO: heroItem.thumbnail ?? ThumbnailRO()))
+        completion(.success(heroInfo))
+    }
+    
+    func getImageForHero(url: String, imageView: UIImageView) {
+        if url == "Deadpool." {
+            imageView.image = UIImage(named: "deadPool")
+        } else if url == "Iron Man." {
+            imageView.image = UIImage(named: "ironMan")
+        } else {
+            imageView.image = UIImage(named: "mockup")
+        }
     }
 }

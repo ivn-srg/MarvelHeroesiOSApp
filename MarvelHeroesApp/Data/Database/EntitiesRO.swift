@@ -8,7 +8,7 @@
 import Foundation
 import RealmSwift
 
-class HeroRO: Object {
+final class HeroRO: Object {
     @Persisted var id: Int = 0
     @Persisted var name: String = ""
     @Persisted var heroDescription: String = ""
@@ -27,7 +27,7 @@ class HeroRO: Object {
     }
 }
 
-class ThumbnailRO: EmbeddedObject {
+final class ThumbnailRO: EmbeddedObject {
     @Persisted var path: String
     @Persisted var `extension`: String
     
@@ -39,7 +39,7 @@ class ThumbnailRO: EmbeddedObject {
     }
 }
 
-class CachedImageData: Object {
+final class CachedImageData: Object {
     @Persisted var id: String = ""
     @Persisted var url: String = ""
     @Persisted var imageData: Data? = nil

@@ -64,12 +64,14 @@ final class HeroListViewController: UIViewController {
         collectionView.contentInset = UIEdgeInsets(top: 0, left: itemW * 0.25, bottom: 0, right: itemW * 0.25)
         collectionView.alwaysBounceHorizontal = true
         collectionView.showsHorizontalScrollIndicator = false
+        collectionView.accessibilityIdentifier = "heroCollection"
         return collectionView
     }()
     
     private lazy var triangleView: TriangleView = {
         let tv = TriangleView(frame: view.bounds)
         tv.translatesAutoresizingMaskIntoConstraints = false
+        tv.accessibilityIdentifier = "triangleView"
         return tv
     }()
     
@@ -201,9 +203,10 @@ final class HeroListViewController: UIViewController {
         }
     }
     
-    private func updateTrinagleViewColor(didLoadImage: UIImage?) {
+    private func updateTriangleViewColor(didLoadImage: UIImage?) {
         guard let image = didLoadImage else { return }
         let averageColor = image.averageColor()
+        triangleView.accessibilityLabel = averageColor.cgColor.toString()
         triangleView.updateTriangleColor(averageColor)
     }
 }
@@ -276,8 +279,8 @@ extension HeroListViewController {
     private func setupCell() {
         let indexPath = IndexPath(item: customLayout.currentPage, section: 0)
         guard let cell = collectionView.cellForItem(at: indexPath) as? HeroCollectionViewCell else { return }
-        
-        updateTrinagleViewColor(didLoadImage: cell.heroImage)
+
+        updateTriangleViewColor(didLoadImage: cell.heroImage)
         transformCell(cell)
     }
     

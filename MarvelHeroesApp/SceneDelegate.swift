@@ -17,6 +17,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
+        if CommandLine.arguments.contains("UITests") {
+            // Используем мок сервис в тестовом режиме
+            ApiServiceConfiguration.shared.setMockingServiceEnabled()
+        }
+        
         let mainVC = HeroListViewController(vm: HeroListViewModel())
         let navigationController = UINavigationController(rootViewController: mainVC)
         let window = UIWindow(windowScene: windowScene)

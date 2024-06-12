@@ -13,7 +13,7 @@ import CryptoKit
 final class DetailHeroViewModel {
     
     var heroItem: HeroRO
-    var realmDb = RealmDB.shared
+    private let networkService = ApiServiceConfiguration.shared.apiService
     
     init(hero: HeroRO) {
         self.heroItem = hero
@@ -24,7 +24,7 @@ final class DetailHeroViewModel {
     func fetchHeroData() {
         LoadingIndicator.startLoading()
         
-        APIManager.shared.fetchHeroData(heroItem: heroItem) { [weak self] (result) in
+        networkService.fetchHeroData(heroItem: heroItem) { [weak self] (result) in
             guard self != nil else { return }
             
             switch result {
@@ -48,5 +48,9 @@ final class DetailHeroViewModel {
                 print(error)
             }
         }
+    }
+    
+    func getHeroImage(from url: String, to heroImageView: UIImageView) {
+        networkService.getImageForHero(url: url, imageView: heroImageView)
     }
 }

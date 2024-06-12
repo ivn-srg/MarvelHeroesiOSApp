@@ -15,6 +15,7 @@ final class HeroCollectionViewCell: UICollectionViewCell {
     static let identifier = "CollectionViewCellId"
     var avgColorOfImage: UIColor = UIColor()
     var heroImage: UIImage = UIImage()
+    var apiService = ApiServiceConfiguration.shared.apiService
     
     // MARK: - UI components
     
@@ -36,10 +37,11 @@ final class HeroCollectionViewCell: UICollectionViewCell {
         lbl.textColor = .white
         lbl.textAlignment = .left
         lbl.numberOfLines = 2
+        lbl.accessibilityIdentifier = "heroCellName"
         return lbl
     }()
-    
-    // MARK: - Lifecycle
+
+    // MARK: - Lyfecycle
     
     deinit {
         heroImageView.removeObserver(self, forKeyPath: "image")
@@ -51,17 +53,16 @@ final class HeroCollectionViewCell: UICollectionViewCell {
         self.heroImageView.image = nil
         self.nameOfHero.text = nil
     }
-    
+
     // MARK: - Functions
     
     public func configure(viewModel: HeroCollectionViewCellViewModel) {
         setupUI()
         
-        APIManager.shared.getImageForHero(url: viewModel.heroImageUrlString, imageView: heroImageView)
+        heroImageView.addObserver(self, forKeyPath: "image", options: [.new], context: nil)
+        apiService.getImageForHero(url: viewModel.heroImageUrlString, imageView: heroImageView)
         
         nameOfHero.text = viewModel.heroItem.name
-        
-        heroImageView.addObserver(self, forKeyPath: "image", options: [.new], context: nil)
     }
     
     private func setupUI() {
@@ -85,7 +86,6 @@ final class HeroCollectionViewCell: UICollectionViewCell {
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == "image" {
             guard let img = heroImageView.image else { return }
-            
             heroImage = img
         }
     }
