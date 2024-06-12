@@ -22,11 +22,11 @@ enum APIType {
     case getHeroes
     case getHero
     
-    var baseURL: String {
+    private var baseURL: String {
         "https://gateway.marvel.com/v1/public/"
     }
     
-    var path: String {
+    private var path: String {
         switch self {
         case .getHeroes: "characters"
         case .getHero: "characters"
@@ -60,13 +60,13 @@ enum HeroError: Error, LocalizedError {
 }
 
 final class ApiServiceConfiguration {
-    static let shared = ApiServiceConfiguration()
+    public static let shared = ApiServiceConfiguration()
 
     private init() {}
 
     var apiService: ApiServiceProtocol {
         if shouldUseMockingService {
-            return APIManager.shared
+            return APIMockManager.shared
         } else {
             return APIManager.shared
         }
@@ -74,18 +74,18 @@ final class ApiServiceConfiguration {
 
     private var shouldUseMockingService: Bool = false
 
-    func setMockingServiceEnabled(_ enabled: Bool) {
-        shouldUseMockingService = enabled
+    func setMockingServiceEnabled() {
+        shouldUseMockingService = true
     }
 }
 
 final class APIManager: ApiServiceProtocol {
     
-    static let shared = APIManager()
-    var currentTimeStamp: Int {
+    public static let shared = APIManager()
+    private var currentTimeStamp: Int {
         Int(Date().timeIntervalSince1970)
     }
-    var md5Hash: String {
+    private var md5Hash: String {
         MD5(string: "\(currentTimeStamp)\(PRIVATE_KEY)\(API_KEY)")
     }
     

@@ -16,6 +16,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         window = UIWindow()
         
+        if CommandLine.arguments.contains("UITests") {
+            // Используем мок сервис в тестовом режиме
+            ApiServiceConfiguration.shared.setMockingServiceEnabled()
+        }
+        
         let mainVC = HeroListViewController(vm: HeroListViewModel())
         let navigationController = UINavigationController(rootViewController: mainVC)
         

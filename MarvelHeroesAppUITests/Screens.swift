@@ -46,7 +46,7 @@ struct HeroListScreen: Screen {
     }
 
     mutating func checkTwoHeroCards() {
-        XCTAssertEqual(collectionCells.count, 2, "В collectionView 2 элемента")
+        XCTAssertEqual(collectionCells.count, 2, "В collectionView не 2 элемента")
         XCTAssertTrue(firstCell.exists, "Deadpool's cell not exists")
         XCTAssertEqual(firstCellTitle, "Deadpool", "Deadpool's cell title isn't correct")
         XCTAssertTrue(secondCell.exists, "Iron Man's cell not exists")
@@ -56,20 +56,27 @@ struct HeroListScreen: Screen {
     mutating func checkLayoutColorAfterSwaping() {
         let collectionView = app.collectionViews[Identifiers.collectionView]
         let triangleView = app.otherElements[Identifiers.triangleView]
-        let backgroundLayoutColor = triangleView.accessibilityLabel
+        var screenshot: XCUIScreenshot {
+            XCUIScreen.main.screenshot()
+        }
+        var screenshotPixelColor: UIColor {
+            screenshot.pixelColor(at: triangleView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)))
+        }
         
         XCTAssertGreaterThanOrEqual(collectionCells.count, 2, "В collectionView нет карточек/одна карточка")
         
+        let pixelColor = screenshotPixelColor
+        
         collectionView.swipeLeft()
         
-        let backgroundLayoutColorAfterSwaping = triangleView.accessibilityLabel
+        let pixelColorAfterSwaping = screenshotPixelColor
         
-        XCTAssertNotEqual(backgroundLayoutColor, backgroundLayoutColorAfterSwaping, "Цвета layout после свайпинга равны")
+        XCTAssertNotEqual(pixelColor, pixelColorAfterSwaping, "Цвета layout после свайпинга равны")
         
         collectionView.swipeRight()
         
-        let backgroundLayoutColorAfterBackSwaping = app.otherElements[Identifiers.triangleView].accessibilityValue
-        XCTAssertEqual(backgroundLayoutColor, backgroundLayoutColorAfterBackSwaping, "Цвета layout после свайпинга не равны")
+        let pixelColorAfterBackSwaping = screenshotPixelColor
+        XCTAssertEqual(pixelColor, pixelColorAfterBackSwaping, "Цвета layout после свайпинга не равны")
     }
     
     mutating func checkHeroNameAfterRefreshing() {

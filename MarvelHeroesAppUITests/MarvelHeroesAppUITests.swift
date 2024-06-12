@@ -10,11 +10,12 @@ import XCTest
 
 final class MarvelHeroesAppUITests: XCTestCase {
     
-    private var app: XCUIApplication! = XCUIApplication()
+    private var app: XCUIApplication!
     private var heroListScreen: HeroListScreen!
 
     override func setUpWithError() throws {
-        ApiServiceConfiguration.shared.setMockingServiceEnabled(true)
+        app = XCUIApplication()
+        app.launchArguments.append("UITests")
         app.launch()
         
         heroListScreen = HeroListScreen(app: app)
@@ -26,19 +27,19 @@ final class MarvelHeroesAppUITests: XCTestCase {
         app.terminate()
     }
 
-    func testCheckTwoHeroCards() {
+    func test1CheckTwoHeroCards() {
         heroListScreen.checkTwoHeroCards()
     }
     
-    func testCheckHeroNameAfterRefreshing() {
+    func test2CheckHeroNameAfterRefreshing() {
         heroListScreen.checkHeroNameAfterRefreshing()
     }
     
-    func testCheckLayoutColorAfterSwaping() {
+    func test3CheckLayoutColorAfterSwaping() {
         heroListScreen.checkLayoutColorAfterSwaping()
     }
     
-    func testVerifyNameIntoCellAndDetailScreen() {
+    func test4VerifyNameIntoCellAndDetailScreen() {
         let cellTitle = heroListScreen.firstCellTitle
         heroListScreen.fallingIntoDetailScreen().verifyNameIntoCellAndDetailScreen(with: cellTitle)
     }
