@@ -20,7 +20,7 @@ final class DetailHeroViewModel {
     }
     
     // MARK: - Network work
-
+    
     func fetchHeroData() {
         LoadingIndicator.startLoading()
         
@@ -28,11 +28,20 @@ final class DetailHeroViewModel {
             guard self != nil else { return }
             
             switch result {
-            case .success:
+            case .success(let heroData):
+                let statusOfSaving = self?.realmDb.saveHero(hero: heroData)
+                self?.heroItem = HeroRO(heroData: heroData)
+                
                 DispatchQueue.main.async {
                     LoadingIndicator.stopLoading()
                 }
             case .failure(let error):
+                if let heroId = self?.heroItem.id, let heroData = self?.realmDb.getHero(by: heroId) {
+                    self?.heroItem = heroData
+                } else {
+                    self?.heroItem = HeroRO(heroData: mockUpHeroData)
+                }
+                
                 DispatchQueue.main.async {
                     LoadingIndicator.stopLoading()
                 }
