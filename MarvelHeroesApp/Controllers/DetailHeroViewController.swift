@@ -105,46 +105,37 @@ final class DetailHeroViewController: UIViewController {
         view.addGestureRecognizer(panRecognize)
         
         view.addSubview(activityIndicator)
-        activityIndicator.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(view.frame.height * 0.05)
-            make.centerX.equalTo(view.safeAreaLayoutGuide.snp.centerX)
+        activityIndicator.snp.makeConstraints {
+            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(view.frame.height * 0.05)
+            $0.centerX.equalTo(view.safeAreaLayoutGuide.snp.centerX)
         }
         
         view.addSubview(box)
-        box.snp.makeConstraints{ (make) -> Void in
-            make.top.equalTo(self.view.safeAreaLayoutGuide.snp.top)
-            make.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom)
-            make.leading.equalTo(self.view.safeAreaLayoutGuide.snp.leading)
-            make.trailing.equalTo(self.view.safeAreaLayoutGuide.snp.trailing)
-            make.width.equalTo(self.view.safeAreaLayoutGuide.snp.width)
+        box.snp.makeConstraints{
+            $0.bottom.top.equalTo(self.view.safeAreaLayoutGuide.snp.verticalEdges)
+            $0.horizontalEdges.equalTo(self.view.safeAreaLayoutGuide.snp.horizontalEdges)
         }
         
         box.addSubview(heroImageView)
-        heroImageView.snp.makeConstraints{ (make) -> Void in
-            make.top.equalTo(box.snp.top)
-            make.bottom.equalTo(box.snp.bottom)
-            make.leading.equalTo(box.snp.leading)
-            make.trailing.equalTo(box.snp.trailing)
+        heroImageView.snp.makeConstraints{
+            $0.top.bottom.trailing.leading.equalToSuperview()
         }
         
         box.addSubview(backButton)
-        backButton.snp.makeConstraints { make in
-            make.top.equalTo(self.box.snp.top)
-            make.leading.equalTo(self.box.snp.leading)
+        backButton.snp.makeConstraints {
+            $0.top.leading.equalToSuperview()
         }
         
         box.addSubview(heroInfoText)
-        heroInfoText.snp.makeConstraints { make in
-            make.bottom.equalTo(box.snp.bottom).offset(-30)
-            make.leading.equalTo(box.snp.leading).offset(20)
-            make.trailing.equalTo(box.snp.trailing).offset(-20)
+        heroInfoText.snp.makeConstraints {
+            $0.bottom.equalToSuperview().offset(-30)
+            $0.trailing.leading.equalToSuperview().inset(20)
         }
         
         box.addSubview(heroNameText)
-        heroNameText.snp.makeConstraints { make in
-            make.bottom.equalTo(heroInfoText.snp.top).offset(-8)
-            make.leading.equalTo(heroInfoText.snp.leading)
-            make.trailing.equalTo(heroInfoText.snp.trailing)
+        heroNameText.snp.makeConstraints {
+            $0.bottom.equalTo(heroInfoText.snp.top).offset(-8)
+            $0.horizontalEdges.equalTo(heroInfoText.snp.horizontalEdges)
         }
     }
     

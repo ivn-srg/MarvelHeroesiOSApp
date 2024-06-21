@@ -33,7 +33,7 @@ final class TriangleView: UIView {
     
     private func createTrianglePath() -> UIBezierPath {
         let trianglePath = UIBezierPath()
-        let heightMultiplier = 0.64
+        let heightMultiplier = 0.66
         trianglePath.move(to: CGPoint(x: bounds.width, y: bounds.height * heightMultiplier))
         trianglePath.addLine(to: CGPoint(x: 0, y: bounds.height * heightMultiplier))
         trianglePath.addLine(to: CGPoint(x: bounds.size.width, y: 0))

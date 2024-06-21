@@ -19,7 +19,7 @@ final class HeroListViewController: UIViewController {
     }
     
     private var itemH: CGFloat {
-        screenHeight * 0.57
+        screenHeight * 0.6
     }
     
     // MARK: - UI components
@@ -125,47 +125,42 @@ final class HeroListViewController: UIViewController {
         view.addGestureRecognizer(panRecognize)
         
         view.addSubview(activityIndicator)
-        activityIndicator.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(view.frame.height * 0.05)
-            make.centerX.equalTo(view.safeAreaLayoutGuide.snp.centerX)
+        activityIndicator.snp.makeConstraints {
+            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(view.frame.height * 0.05)
+            $0.centerX.equalTo(view.safeAreaLayoutGuide.snp.centerX)
         }
         
         view.addSubview(box)
-        box.snp.makeConstraints{ (make) -> Void in
-            make.top.equalTo(self.view.safeAreaLayoutGuide.snp.top)
-            make.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom)
-            make.leading.equalTo(self.view.safeAreaLayoutGuide.snp.leading)
-            make.trailing.equalTo(self.view.safeAreaLayoutGuide.snp.trailing)
+        box.snp.makeConstraints{
+            $0.verticalEdges.equalTo(self.view.safeAreaLayoutGuide.snp.verticalEdges)
+            $0.horizontalEdges.equalToSuperview()
         }
         
         triangleView.backgroundColor = .clear
         box.addSubview(triangleView)
-        triangleView.snp.makeConstraints{ (make) -> Void in
-            make.top.equalTo(self.box.snp.top).offset(self.view.frame.height * 0.25)
-            make.leading.equalTo(self.box.snp.leading)
-            make.trailing.equalTo(self.box.snp.trailing)
-            make.bottom.equalTo(self.box.snp.bottom)
+        triangleView.snp.makeConstraints{
+            $0.top.equalTo(self.box.snp.top).offset(self.view.frame.height * 0.25)
+            $0.bottom.horizontalEdges.equalToSuperview()
         }
         
         box.addSubview(marvelLogo)
-        marvelLogo.snp.makeConstraints{ (make) -> Void in
-            make.top.equalTo(self.box.snp.top).offset(20)
-            make.width.equalTo(self.box.snp.width).multipliedBy(0.4)
-            make.height.equalTo(self.box.snp.height).multipliedBy(0.09)
-            make.centerX.equalTo(self.box.snp.centerX)
+        marvelLogo.snp.makeConstraints{
+            $0.top.equalTo(self.box.snp.top).offset(20)
+            $0.width.equalTo(self.box.snp.width).multipliedBy(0.4)
+            $0.height.equalTo(self.box.snp.height).multipliedBy(0.09)
+            $0.centerX.equalToSuperview()
         }
         
         box.addSubview(chooseHeroText)
-        chooseHeroText.snp.makeConstraints{ (make) -> Void in
-            make.top.equalTo(self.marvelLogo.snp.bottom).offset(20)
-            make.width.equalTo(self.box.snp.width)
+        chooseHeroText.snp.makeConstraints{
+            $0.top.equalTo(self.marvelLogo.snp.bottom).offset(20)
+            $0.width.equalToSuperview()
         }
         
         box.addSubview(collectionView)
-        collectionView.snp.makeConstraints{ (make) -> Void in
-            make.top.equalTo(chooseHeroText.snp.bottom)
-            make.width.equalTo(box.snp.width)
-            make.bottom.equalTo(box.snp.bottom)
+        collectionView.snp.makeConstraints{
+            $0.top.equalTo(chooseHeroText.snp.bottom)
+            $0.bottom.width.equalToSuperview()
         }
     }
     

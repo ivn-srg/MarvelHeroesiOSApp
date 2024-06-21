@@ -67,17 +67,14 @@ final class HeroCollectionViewCell: UICollectionViewCell {
     
     private func setupUI() {
         self.addSubview(heroImageView)
-        heroImageView.snp.makeConstraints{ (make) -> Void in
-            make.top.equalTo(self.snp.top)
-            make.width.equalTo(self.snp.width)
-            make.bottom.equalTo(self.snp.bottom)
+        heroImageView.snp.makeConstraints{
+            $0.verticalEdges.width.equalToSuperview()
         }
         
         self.addSubview(nameOfHero)
-        nameOfHero.snp.makeConstraints { make in
-            make.bottom.equalTo(self.snp.bottom).offset(-30)
-            make.leading.equalTo(self.snp.leading).offset(25)
-            make.trailing.equalTo(self.snp.trailing).offset(-25)
+        nameOfHero.snp.makeConstraints {
+            $0.bottom.equalTo(self.snp.bottom).offset(-30)
+            $0.horizontalEdges.equalToSuperview().inset(25)
         }
     }
     
