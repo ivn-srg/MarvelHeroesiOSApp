@@ -40,7 +40,7 @@ final class HeroCollectionViewCell: UICollectionViewCell {
         lbl.accessibilityIdentifier = "heroCellName"
         return lbl
     }()
-    
+
     // MARK: - Lyfecycle
     
     deinit {

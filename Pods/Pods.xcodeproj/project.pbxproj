@@ -542,8 +542,8 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = A6CEC262606E26A9A4D370183283DC78;
-			remoteInfo = "RealmSwift-realm_swift_privacy";
+			remoteGlobalIDString = 782725687624F8665247B84AB581BEB1;
+			remoteInfo = RealmSwift;
 		};
 		D8990D4C37B0AE2502EBFBE9D86215A8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -552,13 +552,15 @@
 			remoteGlobalIDString = E8022D22FAA6690B5E1C379C1BCE1491;
 			remoteInfo = Kingfisher;
 		};
+    
 		DEC2F1AF0B347EF4161C451274A11484 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 9828BBC09E9FB1238624113D7456E59E;
-			remoteInfo = "Kingfisher-Kingfisher";
+			remoteGlobalIDString = 45C4E325E7851DD54CC3AD44C7A71935;
+			remoteInfo = TinyConstraints;
 		};
+
 		E947A51CCF21F0EECF585658D111A9D0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
@@ -566,12 +568,13 @@
 			remoteGlobalIDString = EAAA1AD3A8A1B59AB91319EE40752C6D;
 			remoteInfo = Alamofire;
 		};
+
 		EB7B742E40156266422029D2A0E437AB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 8A8DB685241263AFDF5E6B20FE67B93A;
-			remoteInfo = "SnapKit-SnapKit_Privacy";
+			remoteGlobalIDString = A6CEC262606E26A9A4D370183283DC78;
+			remoteInfo = "RealmSwift-realm_swift_privacy";
 		};
 		EBA9DE152DF213E3BFA55DBAE8EF7A71 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -598,8 +601,15 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 19622742EBA51E823D6DAE3F8CDBFAD4;
-			remoteInfo = SnapKit;
+			remoteGlobalIDString = 68494F30B4A13F8E5E88BCCAEC25B0A4;
+			remoteInfo = Realm;
+		};
+		FB4ADF31F90EB4E186625AD0EEB647C7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 976126A1CE06DC6E162563800E1BDF14;
+			remoteInfo = "Alamofire-Alamofire";
 		};
 		FB4ADF31F90EB4E186625AD0EEB647C7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1646,7 +1656,8 @@
 			children = (
 				6A4BF42309A1BD88F9823305EA55D3BD /* PrivacyInfo.xcprivacy */,
 			);
-			name = Resources;
+			name = "Support Files";
+			path = "../Target Support Files/Kingfisher";
 			sourceTree = "<group>";
 		};
 		C949603B49990B204CA710B6A01C19A8 /* iOS */ = {
@@ -3089,6 +3100,23 @@
 			baseConfigurationReference = 59F285389D0198C124ED10CCB5804C2A /* Realm.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGNING_ALLOWED = NO;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/Kingfisher";
+				IBSC_MODULE = Kingfisher;
+				INFOPLIST_FILE = "Target Support Files/Kingfisher/ResourceBundle-Kingfisher-Kingfisher-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				PRODUCT_NAME = Kingfisher;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Release;
+		};
+		23AB743925047623883AB6E1C157BB14 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 59F285389D0198C124ED10CCB5804C2A /* Realm.debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGNING_ALLOWED = NO;
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/Realm";
 				IBSC_MODULE = Realm;
 				INFOPLIST_FILE = "Target Support Files/Realm/ResourceBundle-realm_objc_privacy-Realm-Info.plist";
@@ -4036,20 +4064,20 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */ = {
+		0378A0EFE207C295B0B802F47747D3DE /* Build configuration list for PBXNativeTarget "Kingfisher-Kingfisher" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				90D4D09BCB6A4660E43ACBE9ECB6FE9A /* Debug */,
-				9553C89E183877A5CB2F3C6801BEC129 /* Release */,
+				44AA16DD5A95C394D6C4211C4FCFAC80 /* Debug */,
+				0706EAB0A5FFDFE1A4068D48411B583F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4C4F25F04C086237315FCAEF7661357E /* Build configuration list for PBXNativeTarget "SnapKit" */ = {
+		094B5CD5E66C67499D3E5DA5A600ABF6 /* Build configuration list for PBXNativeTarget "Realm-realm_objc_privacy" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				9C0B415A54C1C30F674208B8ADAB6C17 /* Debug */,
-				984240AE6A3D535525200348828211E3 /* Release */,
+				23AB743925047623883AB6E1C157BB14 /* Debug */,
+				F0B8E35FE673DBE12E10CCDA6B3838B6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -4066,17 +4094,17 @@
 		5208564FCF8321F270978B7DC8B0A7FB /* Build configuration list for PBXNativeTarget "Kingfisher" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				5EA01C8F2E402725AC281C80AB12CDC0 /* Debug */,
-				D289924F49E290957622EAA7EBE53538 /* Release */,
+				90D4D09BCB6A4660E43ACBE9ECB6FE9A /* Debug */,
+				9553C89E183877A5CB2F3C6801BEC129 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		554E94BA92BFDF8FBD32BF63C27E0C5F /* Build configuration list for PBXNativeTarget "Pods-MarvelHeroesApp" */ = {
+		4C4F25F04C086237315FCAEF7661357E /* Build configuration list for PBXNativeTarget "SnapKit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				4979EEE6543A4A6776121376F667DDF9 /* Debug */,
-				D6F00345B0CB41A0BF1F6E89AF4467F1 /* Release */,
+				9C0B415A54C1C30F674208B8ADAB6C17 /* Debug */,
+				984240AE6A3D535525200348828211E3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -4117,11 +4145,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E0E3A8EAE9F6E827E1A9644643CDD068 /* Build configuration list for PBXNativeTarget "RealmSwift" */ = {
+		DD65E206E82583775DB38F77A4B5E882 /* Build configuration list for PBXNativeTarget "Realm" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				E31F0B9B3143BFA31522416C0570EB2B /* Debug */,
-				6B483FBE093401372B2C3645CB02C8A6 /* Release */,
+				375936EACE7C60A64FC2DA4BD5D289A1 /* Debug */,
+				3893A232B77AE489BF3F8821BA56617C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
