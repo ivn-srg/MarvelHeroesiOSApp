@@ -10,6 +10,7 @@ import Alamofire
 import CryptoKit
 import Kingfisher
 import RealmSwift
+import UIKit
 
 protocol ApiServiceProtocol: AnyObject {
     func fetchHeroesData(from offset: Int, completion: @escaping (Result<Heroes, Error>) -> Void)
@@ -137,7 +138,7 @@ final class APIManager: ApiServiceProtocol {
             }
     }
     
-    func getImageForHero(url: String, imageView: UIImageView) {
+    @MainActor func getImageForHero(url: String, imageView: UIImageView) {
         do {
             let realm = try Realm()
             let cachedImage = realm.objects(CachedImageData.self).filter { $0.url == url }.first
@@ -157,7 +158,7 @@ final class APIManager: ApiServiceProtocol {
     
     // MARK: - private func
     
-    private func getImageForHeroFromNet(url: String, imageView: UIImageView) {
+    @MainActor private func getImageForHeroFromNet(url: String, imageView: UIImageView) {
         let url = URL(string: url)
         let processor = RoundCornerImageProcessor(cornerRadius: 20)
         let indicatorStyle = UIActivityIndicatorView.Style.large
