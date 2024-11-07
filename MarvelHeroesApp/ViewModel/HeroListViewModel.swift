@@ -10,7 +10,7 @@ import UIKit
 
 final class HeroListViewModel {
     
-    var dataSource: [HeroModel] = []
+    var dataSource: [HeroItemModel] = []
     var realmDb = RealmDB.shared
     let networkService = ApiServiceConfiguration.shared.apiService
     

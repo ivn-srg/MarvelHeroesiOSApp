@@ -9,8 +9,8 @@
 /* Begin PBXBuildFile section */
 		9303D24B2B920114003567A5 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9303D24A2B920114003567A5 /* Extensions.swift */; };
 		9303D24E2B9210B8003567A5 /* HeroCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9303D24D2B9210B8003567A5 /* HeroCollectionViewCell.swift */; };
-		9303D2512B92158F003567A5 /* ResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9303D2502B92158F003567A5 /* ResponseModel.swift */; };
-		932F961C2BC7E4C6001409A5 /* EntitiesRO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932F961B2BC7E4C6001409A5 /* EntitiesRO.swift */; };
+		9303D2512B92158F003567A5 /* HeroesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9303D2502B92158F003567A5 /* HeroesModel.swift */; };
+		932F961C2BC7E4C6001409A5 /* HeroRO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932F961B2BC7E4C6001409A5 /* HeroRO.swift */; };
 		93370BE72BC8660D00B65C4C /* RealmDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93370BE62BC8660D00B65C4C /* RealmDB.swift */; };
 		9338E9032B95B8DE00533C80 /* Fonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9338E9022B95B8DE00533C80 /* Fonts.swift */; };
 		9338E9072B95BA6C00533C80 /* Inter-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9338E9042B95BA6C00533C80 /* Inter-Regular.otf */; };
@@ -18,6 +18,14 @@
 		9338E9092B95BA6C00533C80 /* Inter-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9338E9062B95BA6C00533C80 /* Inter-Light.otf */; };
 		933B27032B93002500B5E9B4 /* CustomHeroItemLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 933B27022B93002500B5E9B4 /* CustomHeroItemLayer.swift */; };
 		933B27072B931F1100B5E9B4 /* TriangView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 933B27062B931F1100B5E9B4 /* TriangView.swift */; };
+		933B502C2CDBE4C300F19F45 /* DetailHeroBottomSubview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 933B502B2CDBE4C300F19F45 /* DetailHeroBottomSubview.swift */; };
+		933B502D2CDBE4C300F19F45 /* DetailHeroBottomSubview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 933B502B2CDBE4C300F19F45 /* DetailHeroBottomSubview.swift */; };
+		933B502F2CDBEBE100F19F45 /* ComicsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 933B502E2CDBEBDC00F19F45 /* ComicsModel.swift */; };
+		933B50302CDBEBE100F19F45 /* ComicsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 933B502E2CDBEBDC00F19F45 /* ComicsModel.swift */; };
+		933B50322CDBEC7D00F19F45 /* ShortModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 933B50312CDBEC7600F19F45 /* ShortModels.swift */; };
+		933B50332CDBEC7D00F19F45 /* ShortModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 933B50312CDBEC7600F19F45 /* ShortModels.swift */; };
+		933B50352CDBEDEC00F19F45 /* GenericModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 933B50342CDBEDE300F19F45 /* GenericModel.swift */; };
+		933B50362CDBEDEC00F19F45 /* GenericModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 933B50342CDBEDE300F19F45 /* GenericModel.swift */; };
 		934B93862BA06D42005FA6D6 /* DetailHeroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934B93852BA06D42005FA6D6 /* DetailHeroViewController.swift */; };
 		934B93882BA0716B005FA6D6 /* DetailHeroViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934B93872BA0716B005FA6D6 /* DetailHeroViewModel.swift */; };
 		934D36282B983C00004CDDE0 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 934D36272B983C00004CDDE0 /* .gitignore */; };
@@ -43,10 +51,10 @@
 		9381AE022C065C6200BFE4BF /* DetailHeroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934B93852BA06D42005FA6D6 /* DetailHeroViewController.swift */; };
 		9381AE032C065C6200BFE4BF /* HeroListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93CD1EA12B90F16300AD2752 /* HeroListViewController.swift */; };
 		9381AE042C065C6200BFE4BF /* CustomHeroItemLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 933B27022B93002500B5E9B4 /* CustomHeroItemLayer.swift */; };
-		9381AE052C065C6200BFE4BF /* EntitiesRO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932F961B2BC7E4C6001409A5 /* EntitiesRO.swift */; };
+		9381AE052C065C6200BFE4BF /* HeroRO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932F961B2BC7E4C6001409A5 /* HeroRO.swift */; };
 		9381AE062C065C6200BFE4BF /* RealmDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93370BE62BC8660D00B65C4C /* RealmDB.swift */; };
 		9381AE072C065C6200BFE4BF /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E449032BBC7D4B00BAA1EE /* APIManager.swift */; };
-		9381AE082C065C6200BFE4BF /* ResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9303D2502B92158F003567A5 /* ResponseModel.swift */; };
+		9381AE082C065C6200BFE4BF /* HeroesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9303D2502B92158F003567A5 /* HeroesModel.swift */; };
 		9381AE092C065C6200BFE4BF /* ResponseFailureModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9369AD1E2BB5D6C200DA5460 /* ResponseFailureModel.swift */; };
 		9381AE0A2C065C6200BFE4BF /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93F98D902BC6BFCE0050B9AB /* Keychain.swift */; };
 		9381AE0B2C065C6200BFE4BF /* HeroCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9303D24D2B9210B8003567A5 /* HeroCollectionViewCell.swift */; };
@@ -94,8 +102,8 @@
 /* Begin PBXFileReference section */
 		9303D24A2B920114003567A5 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		9303D24D2B9210B8003567A5 /* HeroCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroCollectionViewCell.swift; sourceTree = "<group>"; };
-		9303D2502B92158F003567A5 /* ResponseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseModel.swift; sourceTree = "<group>"; };
-		932F961B2BC7E4C6001409A5 /* EntitiesRO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntitiesRO.swift; sourceTree = "<group>"; };
+		9303D2502B92158F003567A5 /* HeroesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroesModel.swift; sourceTree = "<group>"; };
+		932F961B2BC7E4C6001409A5 /* HeroRO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroRO.swift; sourceTree = "<group>"; };
 		93370BE62BC8660D00B65C4C /* RealmDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmDB.swift; sourceTree = "<group>"; };
 		9338E9022B95B8DE00533C80 /* Fonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fonts.swift; sourceTree = "<group>"; };
 		9338E9042B95BA6C00533C80 /* Inter-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Regular.otf"; sourceTree = "<group>"; };
@@ -103,6 +111,10 @@
 		9338E9062B95BA6C00533C80 /* Inter-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Light.otf"; sourceTree = "<group>"; };
 		933B27022B93002500B5E9B4 /* CustomHeroItemLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomHeroItemLayer.swift; sourceTree = "<group>"; };
 		933B27062B931F1100B5E9B4 /* TriangView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TriangView.swift; sourceTree = "<group>"; };
+		933B502B2CDBE4C300F19F45 /* DetailHeroBottomSubview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailHeroBottomSubview.swift; sourceTree = "<group>"; };
+		933B502E2CDBEBDC00F19F45 /* ComicsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComicsModel.swift; sourceTree = "<group>"; };
+		933B50312CDBEC7600F19F45 /* ShortModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortModels.swift; sourceTree = "<group>"; };
+		933B50342CDBEDE300F19F45 /* GenericModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericModel.swift; sourceTree = "<group>"; };
 		934B93852BA06D42005FA6D6 /* DetailHeroViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailHeroViewController.swift; sourceTree = "<group>"; };
 		934B93872BA0716B005FA6D6 /* DetailHeroViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailHeroViewModel.swift; sourceTree = "<group>"; };
 		934D36272B983C00004CDDE0 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
@@ -177,6 +189,7 @@
 				933B27062B931F1100B5E9B4 /* TriangView.swift */,
 				937BF6D02BA97525007087A4 /* RoundRectButton.swift */,
 				9369AD1C2BB5D26000DA5460 /* LoaderView.swift */,
+				933B502B2CDBE4C300F19F45 /* DetailHeroBottomSubview.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -195,10 +208,18 @@
 		932F961A2BC7E332001409A5 /* Database */ = {
 			isa = PBXGroup;
 			children = (
-				932F961B2BC7E4C6001409A5 /* EntitiesRO.swift */,
+				9335EEF32CDCFD67003EFC22 /* EntitiesRO */,
 				93370BE62BC8660D00B65C4C /* RealmDB.swift */,
 			);
 			path = Database;
+			sourceTree = "<group>";
+		};
+		9335EEF32CDCFD67003EFC22 /* EntitiesRO */ = {
+			isa = PBXGroup;
+			children = (
+				932F961B2BC7E4C6001409A5 /* HeroRO.swift */,
+			);
+			path = EntitiesRO;
 			sourceTree = "<group>";
 		};
 		933B27012B93000D00B5E9B4 /* Layers */ = {
@@ -235,6 +256,7 @@
 				93A1F4422B95ABAE007D90B2 /* Fonts */,
 				934D362A2B983F1C004CDDE0 /* Localizable.xcstrings */,
 				93CD1EA82B90F16600AD2752 /* LaunchScreen.storyboard */,
+				939E7F832B9486D200BEE787 /* Constants.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -256,14 +278,6 @@
 				936FEF422C0AE61300D9441E /* Screens.swift */,
 			);
 			path = MarvelHeroesAppUITests;
-			sourceTree = "<group>";
-		};
-		939E7F872B949E2C00BEE787 /* Classes */ = {
-			isa = PBXGroup;
-			children = (
-				939E7F832B9486D200BEE787 /* Constants.swift */,
-			);
-			path = Classes;
 			sourceTree = "<group>";
 		};
 		93A0A6532C1A09910047C680 /* Extensions */ = {
@@ -319,7 +333,6 @@
 			isa = PBXGroup;
 			children = (
 				934D36292B983EE0004CDDE0 /* Resources */,
-				939E7F872B949E2C00BEE787 /* Classes */,
 				933B27052B93155600B5E9B4 /* ViewModel */,
 				933B27042B93154000B5E9B4 /* Controllers */,
 				933B27012B93000D00B5E9B4 /* Layers */,
@@ -337,7 +350,10 @@
 		93E449012BBC7D0D00BAA1EE /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				9303D2502B92158F003567A5 /* ResponseModel.swift */,
+				933B50342CDBEDE300F19F45 /* GenericModel.swift */,
+				933B50312CDBEC7600F19F45 /* ShortModels.swift */,
+				933B502E2CDBEBDC00F19F45 /* ComicsModel.swift */,
+				9303D2502B92158F003567A5 /* HeroesModel.swift */,
 				9369AD1E2BB5D6C200DA5460 /* ResponseFailureModel.swift */,
 			);
 			path = Models;
@@ -575,21 +591,25 @@
 				9381AE022C065C6200BFE4BF /* DetailHeroViewController.swift in Sources */,
 				9381AE032C065C6200BFE4BF /* HeroListViewController.swift in Sources */,
 				9381AE042C065C6200BFE4BF /* CustomHeroItemLayer.swift in Sources */,
-				9381AE052C065C6200BFE4BF /* EntitiesRO.swift in Sources */,
+				9381AE052C065C6200BFE4BF /* HeroRO.swift in Sources */,
 				93A0A6552C1A09E70047C680 /* XCTestExtensions.swift in Sources */,
 				9381AE062C065C6200BFE4BF /* RealmDB.swift in Sources */,
 				9381AE072C065C6200BFE4BF /* APIManager.swift in Sources */,
-				9381AE082C065C6200BFE4BF /* ResponseModel.swift in Sources */,
+				9381AE082C065C6200BFE4BF /* HeroesModel.swift in Sources */,
 				9381AE092C065C6200BFE4BF /* ResponseFailureModel.swift in Sources */,
+				933B50322CDBEC7D00F19F45 /* ShortModels.swift in Sources */,
 				9381AE0A2C065C6200BFE4BF /* Keychain.swift in Sources */,
 				9381AE0B2C065C6200BFE4BF /* HeroCollectionViewCell.swift in Sources */,
 				9381AE0C2C065C6200BFE4BF /* TriangView.swift in Sources */,
+				933B502C2CDBE4C300F19F45 /* DetailHeroBottomSubview.swift in Sources */,
 				9381AE0D2C065C6200BFE4BF /* RoundRectButton.swift in Sources */,
 				9381AE0E2C065C6200BFE4BF /* LoaderView.swift in Sources */,
+				933B50302CDBEBE100F19F45 /* ComicsModel.swift in Sources */,
 				9381AE0F2C065C6200BFE4BF /* Extensions.swift in Sources */,
 				9381AE102C065C6200BFE4BF /* PagingCollectionViewLayout.swift in Sources */,
 				9381ADE62C06576300BFE4BF /* MarvelHeroesAppUITests.swift in Sources */,
 				9381ADE82C06576300BFE4BF /* MarvelHeroesAppUITestsLaunchTests.swift in Sources */,
+				933B50362CDBEDEC00F19F45 /* GenericModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -609,23 +629,27 @@
 				9303D24B2B920114003567A5 /* Extensions.swift in Sources */,
 				93E449042BBC7D4B00BAA1EE /* APIManager.swift in Sources */,
 				9369AD1F2BB5D6C200DA5460 /* ResponseFailureModel.swift in Sources */,
+				933B502F2CDBEBE100F19F45 /* ComicsModel.swift in Sources */,
 				9369AD1B2BB5C3B400DA5460 /* HeroCollectionViewCellViewModel.swift in Sources */,
 				934B93882BA0716B005FA6D6 /* DetailHeroViewModel.swift in Sources */,
 				93370BE72BC8660D00B65C4C /* RealmDB.swift in Sources */,
 				934B93862BA06D42005FA6D6 /* DetailHeroViewController.swift in Sources */,
 				933B27032B93002500B5E9B4 /* CustomHeroItemLayer.swift in Sources */,
 				939E7F822B947AEF00BEE787 /* PagingCollectionViewLayout.swift in Sources */,
+				933B502D2CDBE4C300F19F45 /* DetailHeroBottomSubview.swift in Sources */,
 				93CD1EA22B90F16300AD2752 /* HeroListViewController.swift in Sources */,
 				93F98D912BC6BFCE0050B9AB /* Keychain.swift in Sources */,
 				9338E9032B95B8DE00533C80 /* Fonts.swift in Sources */,
 				93CD1E9E2B90F16300AD2752 /* AppDelegate.swift in Sources */,
-				932F961C2BC7E4C6001409A5 /* EntitiesRO.swift in Sources */,
+				932F961C2BC7E4C6001409A5 /* HeroRO.swift in Sources */,
 				939E7F842B9486D200BEE787 /* Constants.swift in Sources */,
-				9303D2512B92158F003567A5 /* ResponseModel.swift in Sources */,
+				933B50352CDBEDEC00F19F45 /* GenericModel.swift in Sources */,
+				9303D2512B92158F003567A5 /* HeroesModel.swift in Sources */,
 				9303D24E2B9210B8003567A5 /* HeroCollectionViewCell.swift in Sources */,
 				939E7F862B949A9000BEE787 /* HeroListViewModel.swift in Sources */,
 				93CD1EA02B90F16300AD2752 /* SceneDelegate.swift in Sources */,
 				9369AD1D2BB5D26000DA5460 /* LoaderView.swift in Sources */,
+				933B50332CDBEC7D00F19F45 /* ShortModels.swift in Sources */,
 				937BF6D12BA97525007087A4 /* RoundRectButton.swift in Sources */,
 				933B27072B931F1100B5E9B4 /* TriangView.swift in Sources */,
 			);

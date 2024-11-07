@@ -9,8 +9,8 @@ import Foundation
 import RealmSwift
 
 protocol HeroDAO {
-    func saveHeroes(heroes: [HeroModel]) -> (Bool)
-    func getHeroes()-> [HeroModel]
+    func saveHeroes(heroes: Heroes) -> (Bool)
+    func getHeroes()-> Heroes
 }
 
 class RealmDB {
@@ -21,7 +21,7 @@ class RealmDB {
 // MARK: - Hero
 extension RealmDB: HeroDAO {
     
-    func saveHeroes(heroes: [HeroModel]) -> (Bool) {
+    func saveHeroes(heroes: Heroes) -> (Bool) {
         do {
             let realm = try Realm()
             
@@ -36,15 +36,15 @@ extension RealmDB: HeroDAO {
         return true
     }
     
-    func getHeroes() -> [HeroModel] {
+    func getHeroes() -> Heroes {
         do {
             let realm = try Realm()
             
-            var heroes: [HeroModel] = []
+            var heroes: Heroes = []
             let realmObject = realm.objects(HeroRO.self)
             
             for item in realmObject {
-                heroes.append(HeroModel(heroRO: item))
+                heroes.append(HeroItemModel(cashedHero: item))
             }
             return heroes
         } catch {
@@ -52,7 +52,7 @@ extension RealmDB: HeroDAO {
         }
     }
     
-    func saveHero(hero: HeroModel) -> (Bool) {
+    func saveHero(hero: HeroItemModel) -> (Bool) {
         do {
             let realm = try Realm()
             

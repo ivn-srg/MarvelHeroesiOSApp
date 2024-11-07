@@ -30,7 +30,7 @@ final class DetailHeroViewModel {
             
             switch result {
             case .success(let heroData):
-                let statusOfSaving = self?.realmDb.saveHero(hero: heroData)
+                let _ = self?.realmDb.saveHero(hero: heroData)
                 self?.heroItem = HeroRO(heroData: heroData)
                 
                 DispatchQueue.main.async {

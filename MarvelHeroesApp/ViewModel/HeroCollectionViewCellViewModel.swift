@@ -17,7 +17,7 @@ final class HeroCollectionViewCellViewModel {
         self.heroItem = hero
         
         if let heroImageLink = hero.thumbnail {
-            self.heroImageUrlString = "\(heroImageLink.path).\(heroImageLink.extension)"
+            self.heroImageUrlString = "\(heroImageLink.path).\(heroImageLink.thumbnailExtension)"
         } else {
             self.heroImageUrlString = ""
         }

@@ -14,14 +14,12 @@ import UIKit
 
 protocol ApiServiceProtocol: AnyObject {
     func fetchHeroesData(from offset: Int, completion: @escaping (Result<Heroes, Error>) -> Void)
-    func fetchHeroData(heroItem: HeroRO, completion: @escaping (Result<HeroModel, Error>) -> Void)
+    func fetchHeroData(heroItem: HeroRO, completion: @escaping (Result<HeroItemModel, Error>) -> Void)
     func getImageForHero(url: String, imageView: UIImageView)
 }
 
 enum APIType {
-    
-    case getHeroes
-    case getHero
+    case getHeroes, getHero, getComics, getSeries, getStories, getCreators, getEvents
     
     private var baseURL: String {
         "https://gateway.marvel.com/v1/public/"
@@ -31,6 +29,11 @@ enum APIType {
         switch self {
         case .getHeroes: "characters"
         case .getHero: "characters"
+        case .getComics: "comics"
+        case .getSeries: "series"
+        case .getStories: "stories"
+        case .getCreators: "creators"
+        case .getEvents: "events"
         }
     }
     
@@ -40,7 +43,6 @@ enum APIType {
 }
 
 enum HeroError: Error, LocalizedError {
-    
     case unknown
     case invalidURL
     case invalidUserData
@@ -97,7 +99,7 @@ final class APIManager: ApiServiceProtocol {
         
         AF.request(urlString)
             .validate()
-            .responseDecodable(of: ResponseModel.self, queue: .global(), decoder: JSONDecoder()) { (response) in
+            .responseDecodable(of: ResponseModel<HeroItemModel>.self, queue: .global(), decoder: JSONDecoder()) { (response) in
                 switch response.result {
                 case .success(let heroesData):
                     completion(.success(heroesData.data.results))
@@ -115,13 +117,13 @@ final class APIManager: ApiServiceProtocol {
             }
     }
     
-    func fetchHeroData(heroItem: HeroRO, completion: @escaping (Result<HeroModel, Error>) -> Void) {
+    func fetchHeroData(heroItem: HeroRO, completion: @escaping (Result<HeroItemModel, Error>) -> Void) {
         let path = "\(APIType.getHero.request)/\(heroItem.id)?ts=\(currentTimeStamp)&apikey=\(API_KEY)&hash=\(md5Hash)"
         let urlString = String(format: path)
         
         AF.request(urlString)
             .validate()
-            .responseDecodable(of: ResponseModel.self, queue: .global(), decoder: JSONDecoder()) { (response) in
+            .responseDecodable(of: ResponseModel<HeroItemModel>.self, queue: .global(), decoder: JSONDecoder()) { (response) in
                 switch response.result {
                 case .success(let heroesData):
                     let model = heroesData.data.results.first ?? mockUpHeroData
@@ -225,14 +227,58 @@ final class APIMockManager: ApiServiceProtocol {
     
     func fetchHeroesData(from offset: Int, completion: @escaping (Result<Heroes, any Error>) -> Void) {
         let response = [
-            HeroModel(id: 1, name: "Deadpool", heroDescription: "This is the craziest hero in Marvel spacs!", thumbnail: ThumbnailModel(path: "Deadpool", extension: "")),
-            HeroModel(id: 2, name: "Iron Man", heroDescription: "Robert is a clever guy", thumbnail: ThumbnailModel(path: "Iron Man", extension: ""))
+            HeroItemModel(
+                id: 1,
+                name: "Deadpool",
+                description: "This is the craziest hero in Marvel spacs!",
+                modified: Date(),
+                thumbnail: Thumbnail(
+                    path: "Deadpool",
+                    thumbnailExtension: ""
+                ),
+                resourceURI: "",
+                comics: .empty,
+                series: .empty,
+                stories: .empty,
+                events: .empty,
+                urls: []
+            ),
+            HeroItemModel(
+                id: 1,
+                name: "Iron Man",
+                description: "Robert is a clever guy",
+                modified: Date(),
+                thumbnail: Thumbnail(
+                    path: "Iron Man",
+                    thumbnailExtension: ""
+                ),
+                resourceURI: "",
+                comics: .empty,
+                series: .empty,
+                stories: .empty,
+                events: .empty,
+                urls: []
+            )
         ]
         completion(.success(response))
     }
     
-    func fetchHeroData(heroItem: HeroRO, completion: @escaping (Result<HeroModel, any Error>) -> Void) {
-        let heroInfo = HeroModel(id: heroItem.id, name: heroItem.name, heroDescription: heroItem.heroDescription, thumbnail: ThumbnailModel(thumbRO: heroItem.thumbnail ?? ThumbnailRO()))
+    func fetchHeroData(heroItem: HeroRO, completion: @escaping (Result<HeroItemModel, any Error>) -> Void) {
+        let heroInfo = HeroItemModel(
+            id: heroItem.id,
+            name: heroItem.name,
+            description: heroItem.heroDescription,
+            modified: Date(),
+            thumbnail: Thumbnail(
+                thumbRO: heroItem.thumbnail ?? ThumbnailRO()
+            ),
+            resourceURI: "",
+            comics: .empty,
+            series: .empty,
+            stories: .empty,
+            events: .empty,
+            urls: []
+        )
         completion(.success(heroInfo))
     }
     

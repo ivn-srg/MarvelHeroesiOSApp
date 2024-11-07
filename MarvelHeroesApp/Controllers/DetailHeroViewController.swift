@@ -6,9 +6,9 @@
 //
 
 import UIKit
-import Kingfisher
+import SnapKit
 
-final class DetailHeroViewController: UIViewController {
+final class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
     
     // MARK: - Fields
     
@@ -38,7 +38,6 @@ final class DetailHeroViewController: UIViewController {
         let iv = UIImageView()
         iv.translatesAutoresizingMaskIntoConstraints = false
         iv.contentMode = .scaleAspectFill
-        iv.tintColor = .white
         iv.clipsToBounds = true
         iv.layer.cornerRadius = 25
         iv.image = MockUpImage
@@ -51,7 +50,6 @@ final class DetailHeroViewController: UIViewController {
         txt.font = UIFont(name: Font.InterBold, size: 34)
         txt.textColor = .white
         txt.numberOfLines = 2
-        txt.accessibilityIdentifier = "heroNameLabel"
         return txt
     }()
     
@@ -61,23 +59,19 @@ final class DetailHeroViewController: UIViewController {
         txt.font = UIFont(name: Font.InterBold, size: 24)
         txt.textColor = .white
         txt.numberOfLines = 3
-        txt.accessibilityIdentifier = "heroInfoLabel"
         return txt
     }()
     
-    private lazy var panRecognize: UIPanGestureRecognizer = {
-        let gestureRecognizer = UIPanGestureRecognizer()
-        gestureRecognizer.addTarget(self, action: #selector(pull2refresh))
-        return gestureRecognizer
+    private lazy var viewWithDetailInfo: UIView = {
+        let view = UIView()
+        view.backgroundColor = bgColor
+        view.layer.cornerRadius = 25
+        return view
     }()
     
-    private let activityIndicator: UIActivityIndicatorView = {
-        let activityIndicator = UIActivityIndicatorView(style: .medium)
-        activityIndicator.hidesWhenStopped = true
-        activityIndicator.color = loaderColor
-        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-        return activityIndicator
-    }()
+    private let overlapThreshold: CGFloat = 0.4
+    // Приведем начальное положение
+    private var viewWithDetailInfoTopConstraint: NSLayoutConstraint!
     
     // MARK: - Lifecycle
     
@@ -92,92 +86,109 @@ final class DetailHeroViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupView()
         viewModel.fetchHeroData()
-        self.updateView()
+        updateView()
     }
     
-    // MARK: - UI functions
-    
+    // MARK: - UI Setup
     private func setupView() {
-        
-        view.addGestureRecognizer(panRecognize)
-        
-        view.addSubview(activityIndicator)
-        activityIndicator.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(view.frame.height * 0.05)
-            $0.centerX.equalTo(view.safeAreaLayoutGuide.snp.centerX)
-        }
-        
         view.addSubview(box)
-        box.snp.makeConstraints{
-            $0.bottom.top.equalTo(self.view.safeAreaLayoutGuide.snp.verticalEdges)
-            $0.horizontalEdges.equalTo(self.view.safeAreaLayoutGuide.snp.horizontalEdges)
+        box.snp.makeConstraints {
+            $0.top.leading.trailing.equalTo(view.safeAreaLayoutGuide)
+            $0.height.equalTo(view.frame.height * 0.9)
         }
         
         box.addSubview(heroImageView)
-        heroImageView.snp.makeConstraints{
-            $0.top.bottom.trailing.leading.equalToSuperview()
-        }
+        heroImageView.snp.makeConstraints { $0.edges.equalToSuperview() }
         
         box.addSubview(backButton)
-        backButton.snp.makeConstraints {
-            $0.top.leading.equalToSuperview()
-        }
+        backButton.snp.makeConstraints { $0.top.leading.equalToSuperview().inset(20) }
         
         box.addSubview(heroInfoText)
         heroInfoText.snp.makeConstraints {
-            $0.bottom.equalToSuperview().offset(-30)
-            $0.trailing.leading.equalToSuperview().inset(20)
+            $0.bottom.equalToSuperview().inset(30)
+            $0.leading.trailing.equalToSuperview().inset(20)
         }
         
         box.addSubview(heroNameText)
         heroNameText.snp.makeConstraints {
             $0.bottom.equalTo(heroInfoText.snp.top).offset(-8)
-            $0.horizontalEdges.equalTo(heroInfoText.snp.horizontalEdges)
+            $0.leading.trailing.equalToSuperview().inset(20)
         }
+        
+        view.addSubview(viewWithDetailInfo)
+        
+        // Устанавливаем начальное положение viewWithDetailInfo
+        viewWithDetailInfo.snp.makeConstraints {
+            $0.leading.trailing.bottom.equalToSuperview()
+        }
+        viewWithDetailInfoTopConstraint = viewWithDetailInfo.topAnchor.constraint(equalTo: box.bottomAnchor, constant: -40)
+        viewWithDetailInfoTopConstraint.isActive = true
+        
+        // Добавляем распознаватель жестов для перетаскивания
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
+        viewWithDetailInfo.addGestureRecognizer(panGesture)
     }
     
+    // MARK: - Update View
     private func updateView() {
         if let imgLink = viewModel.heroItem.thumbnail {
-            let url = "\(imgLink.path).\(imgLink.extension)"
+            let url = "\(imgLink.path).\(imgLink.thumbnailExtension)"
             viewModel.getHeroImage(from: url, to: heroImageView)
         }
         
         heroNameText.text = viewModel.heroItem.name
-        heroInfoText.text = viewModel.heroItem.heroDescription == "" ? "Just a cool marvel hero" : viewModel.heroItem.heroDescription
+        heroInfoText.text = viewModel.heroItem.heroDescription.isEmpty ? "Just a cool Marvel hero" : viewModel.heroItem.heroDescription
     }
     
-    // MARK: - @objc func
-    
-    @objc func backButtonPressed() {
-        self.navigationController?.popViewController(animated: true)
+    // MARK: - Actions
+    @objc private func backButtonPressed() {
+        navigationController?.popViewController(animated: true)
     }
     
-    @objc func pull2refresh(_ gesture: UIPanGestureRecognizer) {
+    // MARK: - Pan Gesture actions
+    @objc private func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
+        let translation = gesture.translation(in: view)
+        let newTopConstant = max(viewWithDetailInfoTopConstraint.constant + translation.y, -view.frame.height * 0.9)
+        let velocity = gesture.velocity(in: view)
         
-        let translation = gesture.translation(in: box)
-        let newY = max(translation.y, 0)
-        let maxPullDownDistance = self.box.frame.height * 0.2
-        
-        if newY <= maxPullDownDistance {
-            box.transform = CGAffineTransform(translationX: 0, y: newY)
-        }
-        
-        if gesture.state == .began {
-            activityIndicator.startAnimating()
-        }
-        
-        if gesture.state == .ended {
-            if newY > maxPullDownDistance {
-                viewModel.fetchHeroData()
-                self.updateView()
+        switch gesture.state {
+        case .changed:
+            viewWithDetailInfoTopConstraint.constant = newTopConstant
+            gesture.setTranslation(.zero, in: view)
+        case .ended, .cancelled:
+            if abs(velocity.y) > 1000 {
+                if velocity.y < 0 {
+                    animateViewToTop()
+                } else {
+                    animateViewToOriginalPosition()
+                }
+            } else {
+                if abs(newTopConstant) > view.frame.height * 0.45 {
+                    animateViewToTop()
+                } else {
+                    animateViewToOriginalPosition()
+                }
             }
-            UIView.animate(withDuration: 0.3) {
-                self.box.transform = CGAffineTransform.identity
-                self.activityIndicator.stopAnimating()
-            }
+        default:
+            break
         }
+    }
+    
+    // Анимация к исходной позиции
+    private func animateViewToOriginalPosition() {
+        UIView.animate(withDuration: 0.3, animations: {
+            self.viewWithDetailInfoTopConstraint.constant = -40
+            self.view.layoutIfNeeded()
+        })
+    }
+    
+    // Анимация к верхней позиции
+    private func animateViewToTop() {
+        UIView.animate(withDuration: 0.3, animations: {
+            self.viewWithDetailInfoTopConstraint.constant = -self.view.frame.height * 0.9
+            self.view.layoutIfNeeded()
+        })
     }
 }
