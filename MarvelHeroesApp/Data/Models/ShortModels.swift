@@ -11,9 +11,15 @@ import RealmSwift
 struct StoriesItem: Codable {
     let resourceURI: String
     let name: String
-    let type: ItemType
+    let type: String
     
-    static var empty: Self { .init(resourceURI: "", name: "", type: .empty) }
+    static var empty: Self { .init(resourceURI: "", name: "", type: "") }
+    
+    init(resourceURI: String, name: String, type: String) {
+        self.resourceURI = resourceURI
+        self.name = name
+        self.type = type
+    }
 }
 
 // MARK: - Comics

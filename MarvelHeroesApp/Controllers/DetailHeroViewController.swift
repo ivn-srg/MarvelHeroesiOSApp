@@ -25,6 +25,7 @@ final class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
     private lazy var backButton: UIButton = {
         var configuration = UIButton.Configuration.plain()
         configuration.image = UIImage(systemName: "arrow.left")
+        configuration.image?.applyingSymbolConfiguration(.init(weight: .medium))
         configuration.baseForegroundColor = .white
         configuration.buttonSize = .small
         configuration.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20)
@@ -87,7 +88,9 @@ final class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
-        viewModel.fetchHeroData()
+        executeWithErrorHandling {
+            try viewModel.fetchHeroData()
+        }
         updateView()
     }
     
@@ -103,18 +106,18 @@ final class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
         heroImageView.snp.makeConstraints { $0.edges.equalToSuperview() }
         
         box.addSubview(backButton)
-        backButton.snp.makeConstraints { $0.top.leading.equalToSuperview().inset(20) }
+        backButton.snp.makeConstraints { $0.top.leading.equalToSuperview() }
         
         box.addSubview(heroInfoText)
         heroInfoText.snp.makeConstraints {
-            $0.bottom.equalToSuperview().inset(30)
-            $0.leading.trailing.equalToSuperview().inset(20)
+            $0.bottom.equalToSuperview().offset(-60)
+            $0.horizontalEdges.equalToSuperview().inset(20)
         }
         
         box.addSubview(heroNameText)
         heroNameText.snp.makeConstraints {
-            $0.bottom.equalTo(heroInfoText.snp.top).offset(-8)
-            $0.leading.trailing.equalToSuperview().inset(20)
+            $0.bottom.equalTo(heroInfoText.snp.top).offset(-10)
+            $0.horizontalEdges.equalToSuperview().inset(20)
         }
         
         view.addSubview(viewWithDetailInfo)

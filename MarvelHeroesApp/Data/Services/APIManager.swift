@@ -13,9 +13,24 @@ import RealmSwift
 import UIKit
 
 protocol ApiServiceProtocol: AnyObject {
-    func fetchHeroesData(from offset: Int, completion: @escaping (Result<Heroes, Error>) -> Void)
-    func fetchHeroData(heroItem: HeroRO, completion: @escaping (Result<HeroItemModel, Error>) -> Void)
+    func performRequest<T: Decodable>(
+        from urlString: String,
+        modelType: T.Type
+    ) async throws -> T
+    
+    func makeHTTPRequest<T: Decodable>(
+        for request: URLRequest,
+        codableModelType: T.Type
+    ) async throws -> T
+    
     func getImageForHero(url: String, imageView: UIImageView)
+}
+
+enum HTTPMethod: String {
+    case get = "GET"
+    case post = "POST"
+    case patch = "PATCH"
+    case delete = "DELETE"
 }
 
 enum APIType {
@@ -43,23 +58,7 @@ enum APIType {
 }
 
 enum HeroError: Error, LocalizedError {
-    case unknown
-    case invalidURL
-    case invalidUserData
-    case custom(description: String)
-    
-    var errorDescription: String? {
-        switch self {
-        case .invalidUserData:
-            return "This is an invalid data. Please try again."
-        case .invalidURL:
-            return "Invalid url, man"
-        case .unknown:
-            return "Hey, this is an unknown error!"
-        case .custom(let description):
-            return description
-        }
-    }
+    case invalidURL, parsingError(Error), serializationError(Error), noInternetConnection, timeout, otherNetworkError(Error)
 }
 
 final class ApiServiceConfiguration {
@@ -83,8 +82,8 @@ final class ApiServiceConfiguration {
 }
 
 final class APIManager: ApiServiceProtocol {
-    
     public static let shared = APIManager()
+    
     private var currentTimeStamp: Int {
         Int(Date().timeIntervalSince1970)
     }
@@ -92,53 +91,112 @@ final class APIManager: ApiServiceProtocol {
         MD5(string: "\(currentTimeStamp)\(PRIVATE_KEY)\(API_KEY)")
     }
     
-    func fetchHeroesData(from offset: Int, completion: @escaping (Result<Heroes, Error>) -> Void) {
+    func urlString(endpoint: APIType, offset: Int? = nil, entityId: Int? = nil) throws -> String {
         let limit = 30
-        let path = "\(APIType.getHeroes.request)?limit=\(limit)&offset=\(offset)&ts=\(currentTimeStamp)&apikey=\(API_KEY)&hash=\(md5Hash)"
-        let urlString = String(format: path)
         
-        AF.request(urlString)
-            .validate()
-            .responseDecodable(of: ResponseModel<HeroItemModel>.self, queue: .global(), decoder: JSONDecoder()) { (response) in
-                switch response.result {
-                case .success(let heroesData):
-                    completion(.success(heroesData.data.results))
-                    break
-                case .failure(let error):
-                    
-                    if let err = self.getHeroError(error: error, data: response.data) {
-                        completion(.failure(err))
-                    } else {
-                        completion(.failure(error))
-                    }
-                    
-                    break
-                }
-            }
+        switch endpoint {
+        case .getHeroes, .getComics, .getCreators, .getEvents, .getSeries, .getStories:
+            guard let offset = offset else { throw HeroError.invalidURL }
+            return "\(endpoint.request)?limit=\(limit)&offset=\(offset)&ts=\(currentTimeStamp)&apikey=\(API_KEY)&hash=\(md5Hash)"
+        case .getHero:
+            guard let entityId = entityId else { throw HeroError.invalidURL }
+            return "\(endpoint.request)/\(entityId)&ts=\(currentTimeStamp)&apikey=\(API_KEY)&hash=\(md5Hash)"
+        }
     }
     
-    func fetchHeroData(heroItem: HeroRO, completion: @escaping (Result<HeroItemModel, Error>) -> Void) {
-        let path = "\(APIType.getHero.request)/\(heroItem.id)?ts=\(currentTimeStamp)&apikey=\(API_KEY)&hash=\(md5Hash)"
-        let urlString = String(format: path)
+    func performRequest<T: Decodable>(
+        from urlString: String,
+        modelType: T.Type
+    ) async throws -> T {
+        guard let url = URL(string: urlString) else { throw HeroError.invalidURL }
         
-        AF.request(urlString)
-            .validate()
-            .responseDecodable(of: ResponseModel<HeroItemModel>.self, queue: .global(), decoder: JSONDecoder()) { (response) in
-                switch response.result {
-                case .success(let heroesData):
-                    let model = heroesData.data.results.first ?? mockUpHeroData
-                    completion(.success(model))
-                    break
-                case .failure(let error):
-                    if let err = self.getHeroError(error: error, data: response.data) {
-                        completion(.failure(err))
-                    } else {
-                        completion(.failure(error))
-                    }
-                    break
-                }
-            }
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.get.rawValue
+        request.addValue("application/json", forHTTPHeaderField: "accept")
+        
+        return try await makeHTTPRequest(for: request, codableModelType: modelType)
     }
+    
+    internal func makeHTTPRequest<T: Decodable>(
+        for request: URLRequest,
+        codableModelType: T.Type
+    ) async throws -> T {
+        do {
+            let (data, _) = try await URLSession.shared.data(for: request)
+            do {
+                let result = try JSONDecoder().decode(codableModelType, from: data)
+                return result
+            } catch {
+                print("String(data: data, encoding: .utf8) \(String(data: data, encoding: .utf8))")
+                print("error \(error)")
+                let errorModel = try JSONDecoder().decode(ResponseFailureModel.self, from: data)
+                let errorMessage = StringError(errorModel.status)
+                throw HeroError.parsingError(errorMessage)
+            }
+        } catch let error as DecodingError {
+            throw HeroError.parsingError(error)
+        } catch let error as URLError {
+            switch error.code {
+            case .notConnectedToInternet:
+                throw HeroError.noInternetConnection
+            case .timedOut:
+                throw HeroError.timeout
+            default:
+                print("request \(request)")
+                throw HeroError.otherNetworkError(error)
+            }
+        } catch {
+            print("request1 \(request)")
+            throw HeroError.otherNetworkError(error)
+        }
+    }
+    
+//    func fetchHeroesData(from offset: Int, completion: @escaping (Result<Heroes, Error>) -> Void) {
+//        let path = APIManager.shared.urlString(offset: offset, endpoint: .getHeroes)
+//        let urlString = String(format: path)
+//        
+//        AF.request(urlString)
+//            .validate()
+//            .responseDecodable(of: ResponseModel<HeroItemModel>.self, queue: .global(), decoder: JSONDecoder()) { (response) in
+//                switch response.result {
+//                case .success(let heroesData):
+//                    completion(.success(heroesData.data.results))
+//                    break
+//                case .failure(let error):
+//                    
+//                    if let err = self.getHeroError(error: error, data: response.data) {
+//                        completion(.failure(err))
+//                    } else {
+//                        completion(.failure(error))
+//                    }
+//                    
+//                    break
+//                }
+//            }
+//    }
+    
+//    func fetchHeroData(heroItem: HeroRO, completion: @escaping (Result<HeroItemModel, Error>) -> Void) {
+//        let path = "\(APIType.getHero.request)/\(heroItem.id)?ts=\(currentTimeStamp)&apikey=\(API_KEY)&hash=\(md5Hash)"
+//        let urlString = String(format: path)
+//        
+//        AF.request(urlString)
+//            .validate()
+//            .responseDecodable(of: ResponseModel<HeroItemModel>.self, queue: .global(), decoder: JSONDecoder()) { (response) in
+//                switch response.result {
+//                case .success(let heroesData):
+//                    let model = heroesData.data.results.first ?? mockUpHeroData
+//                    completion(.success(model))
+//                    break
+//                case .failure(let error):
+//                    if let err = self.getHeroError(error: error, data: response.data) {
+//                        completion(.failure(err))
+//                    } else {
+//                        completion(.failure(error))
+//                    }
+//                    break
+//                }
+//            }
+//    }
     
     @MainActor func getImageForHero(url: String, imageView: UIImageView) {
         do {
@@ -206,8 +264,8 @@ final class APIManager: ApiServiceProtocol {
     private func getHeroError(error: AFError, data: Data?) -> Error? {
         if let data = data,
            let failure = try? JSONDecoder().decode(ResponseFailureModel.self, from: data) {
-            let message = failure.message
-            return HeroError.custom(description: message)
+            let message = StringError(failure.status)
+            return HeroError.otherNetworkError(message)
         } else {
             return nil
         }
@@ -222,16 +280,17 @@ final class APIManager: ApiServiceProtocol {
 }
 
 final class APIMockManager: ApiServiceProtocol {
+    func performRequest<T>(from urlString: String, modelType: T.Type) async throws -> T where T : Decodable {
+        return try await makeHTTPRequest(for: URLRequest(url: URL(string: urlString)!), codableModelType: ResponseModel<HeroItemModel>.self) as! T
+    }
     
-    public static let shared = APIMockManager()
-    
-    func fetchHeroesData(from offset: Int, completion: @escaping (Result<Heroes, any Error>) -> Void) {
-        let response = [
+    func makeHTTPRequest<T>(for request: URLRequest, codableModelType: T.Type) async throws -> T where T : Decodable {
+        let list = [
             HeroItemModel(
                 id: 1,
                 name: "Deadpool",
                 description: "This is the craziest hero in Marvel spacs!",
-                modified: Date(),
+                modified: "",
                 thumbnail: Thumbnail(
                     path: "Deadpool",
                     thumbnailExtension: ""
@@ -244,10 +303,51 @@ final class APIMockManager: ApiServiceProtocol {
                 urls: []
             ),
             HeroItemModel(
-                id: 1,
+                id: 2,
                 name: "Iron Man",
                 description: "Robert is a clever guy",
-                modified: Date(),
+                modified: "",
+                thumbnail: Thumbnail(
+                    path: "Iron Man",
+                    thumbnailExtension: ""
+                ),
+                resourceURI: "",
+                comics: .empty,
+                series: .empty,
+                stories: .empty,
+                events: .empty,
+                urls: []
+            )
+        ]
+        return try JSONDecoder().decode(codableModelType, from: list.description.data(using: .utf8)!)
+    }
+    
+    
+    public static let shared = APIMockManager()
+    
+    func fetchHeroesData(from offset: Int, completion: @escaping (Result<Heroes, any Error>) -> Void) {
+        let response = [
+            HeroItemModel(
+                id: 1,
+                name: "Deadpool",
+                description: "This is the craziest hero in Marvel spacs!",
+                modified: "",
+                thumbnail: Thumbnail(
+                    path: "Deadpool",
+                    thumbnailExtension: ""
+                ),
+                resourceURI: "",
+                comics: .empty,
+                series: .empty,
+                stories: .empty,
+                events: .empty,
+                urls: []
+            ),
+            HeroItemModel(
+                id: 2,
+                name: "Iron Man",
+                description: "Robert is a clever guy",
+                modified: "",
                 thumbnail: Thumbnail(
                     path: "Iron Man",
                     thumbnailExtension: ""
@@ -268,7 +368,7 @@ final class APIMockManager: ApiServiceProtocol {
             id: heroItem.id,
             name: heroItem.name,
             description: heroItem.heroDescription,
-            modified: Date(),
+            modified: "",
             thumbnail: Thumbnail(
                 thumbRO: heroItem.thumbnail ?? ThumbnailRO()
             ),
@@ -290,5 +390,19 @@ final class APIMockManager: ApiServiceProtocol {
         } else {
             imageView.image = UIImage(named: "mockup")
         }
+    }
+}
+
+struct StringError: Error {
+    let message: String
+    
+    init(_ message: String) {
+        self.message = message
+    }
+}
+
+extension StringError: LocalizedError {
+    var errorDescription: String? {
+        return message
     }
 }

@@ -32,3 +32,4 @@ let mockUpHeroData = HeroItemModel.emptyObject
 
 // network constants
 let heroImageNotAvailable = "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available"
+let apiManager = APIManager.shared

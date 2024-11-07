@@ -64,6 +64,7 @@ enum DateType: String, Codable {
 
 enum Extension: String, Codable {
     case jpg = "jpg"
+    case gif = "gif"
 }
 
 // MARK: - Price
@@ -75,22 +76,6 @@ struct Price: Codable {
     
     let type: PriceType
     let price: Double
-}
-
-enum ItemType: String, Codable {
-    case cover = "cover"
-    case empty = ""
-    case interiorStory = "interiorStory"
-    case promo = "promo"
-    
-    static func stringToCase(_ str: String) -> Self {
-        switch str {
-        case "cover": return .cover
-        case "interiorStory": return .interiorStory
-        case "promo": return .promo
-        default: return .empty
-        }
-    }
 }
 
 // MARK: - TextObject

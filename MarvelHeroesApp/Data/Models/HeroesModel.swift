@@ -12,13 +12,13 @@ typealias Heroes = [HeroItemModel]
 struct HeroItemModel: Codable {
     let id: Int
     let name, description: String
-    let modified: Date
+    let modified: String
     let thumbnail: Thumbnail
     let resourceURI: String
-    let comics: ShortInfoItemModel<ComicsItem>
-    let series: ShortInfoItemModel<ComicsItem>
-    let stories: ShortInfoItemModel<StoriesItem>
-    let events: ShortInfoItemModel<ComicsItem>
+    let comics: ShortInfoItemModel<ComicsItem>?
+    let series: ShortInfoItemModel<ComicsItem>?
+    let stories: ShortInfoItemModel<StoriesItem>?
+    let events: ShortInfoItemModel<ComicsItem>?
     let urls: [URLElement]
 }
 
@@ -28,7 +28,7 @@ extension HeroItemModel {
             id: 0,
             name: "",
             description: "",
-            modified: Date(),
+            modified: "",
             thumbnail: Thumbnail(),
             resourceURI: "",
             comics: .empty,
@@ -52,33 +52,49 @@ extension HeroItemModel {
             self.thumbnail = Thumbnail()
         }
         
-        self.comics = ShortInfoItemModel(
-            available: cashedHero.comics.available,
-            collectionURI: cashedHero.comics.collectionURI,
-            items: cashedHero.comics.items.map { ComicsItem(resourceURI: $0.resourceURI, name: $0.name) },
-            returned: cashedHero.comics.returned
-        )
+        if let comics = cashedHero.comics {
+            self.comics = ShortInfoItemModel(
+                available: comics.available,
+                collectionURI: comics.collectionURI,
+                items: comics.items.map { ComicsItem(resourceURI: $0.resourceURI, name: $0.name) },
+                returned: comics.returned
+            )
+        } else {
+            self.comics = ShortInfoItemModel.empty
+        }
         
-        self.series = ShortInfoItemModel(
-            available: cashedHero.series.available,
-            collectionURI: cashedHero.series.collectionURI,
-            items: cashedHero.series.items.map { ComicsItem(resourceURI: $0.resourceURI, name: $0.name) },
-            returned: cashedHero.series.returned
-        )
+        if let series = cashedHero.series {
+            self.series = ShortInfoItemModel(
+                available: series.available,
+                collectionURI: series.collectionURI,
+                items: series.items.map { ComicsItem(resourceURI: $0.resourceURI, name: $0.name) },
+                returned: series.returned
+            )
+        } else {
+            self.series = ShortInfoItemModel.empty
+        }
         
-        self.stories = ShortInfoItemModel(
-            available: cashedHero.stories.available,
-            collectionURI: cashedHero.stories.collectionURI,
-            items: cashedHero.stories.items.map { StoriesItem(resourceURI: $0.resourceURI, name: $0.name, type: ItemType.stringToCase($0.type)) },
-            returned: cashedHero.stories.returned
-        )
+        if let stories = cashedHero.stories {
+            self.stories = ShortInfoItemModel(
+                available: stories.available,
+                collectionURI: stories.collectionURI,
+                items: stories.items.map { StoriesItem(resourceURI: $0.resourceURI, name: $0.name, type: $0.type) },
+                returned: stories.returned
+            )
+        } else {
+            self.stories = ShortInfoItemModel.empty
+        }
         
-        self.events = ShortInfoItemModel(
-            available: cashedHero.events.available,
-            collectionURI: cashedHero.events.collectionURI,
-            items: cashedHero.events.items.map { ComicsItem(resourceURI: $0.resourceURI, name: $0.name) },
-            returned: cashedHero.events.returned
-        )
+        if let events = cashedHero.events {
+            self.events = ShortInfoItemModel(
+                available: events.available,
+                collectionURI: events.collectionURI,
+                items: events.items.map { ComicsItem(resourceURI: $0.resourceURI, name: $0.name) },
+                returned: events.returned
+            )
+        } else {
+            self.events = ShortInfoItemModel.empty
+        }
         self.urls = cashedHero.urls.map {URLElement(type: $0.type, url: $0.url) }
     }
 }

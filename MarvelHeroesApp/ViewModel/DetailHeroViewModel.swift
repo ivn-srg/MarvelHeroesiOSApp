@@ -22,32 +22,31 @@ final class DetailHeroViewModel {
     
     // MARK: - Network work
     
-    func fetchHeroData() {
+    func fetchHeroData() throws {
         LoadingIndicator.startLoading()
+        let urlString = try apiManager.urlString(endpoint: .getHero, entityId: heroItem.id)
         
-        networkService.fetchHeroData(heroItem: heroItem) { [weak self] (result) in
-            guard self != nil else { return }
-            
-            switch result {
-            case .success(let heroData):
-                let _ = self?.realmDb.saveHero(hero: heroData)
-                self?.heroItem = HeroRO(heroData: heroData)
-                
-                DispatchQueue.main.async {
-                    LoadingIndicator.stopLoading()
+        Task {
+            do {
+                let heroData = try await networkService.performRequest(
+                    from: urlString,
+                    modelType: ResponseModel<HeroItemModel>.self
+                )
+                guard heroData.data.count > 0, let fetchedHeroItem = heroData.data.results.first else {
+                    heroItem = HeroRO(heroData: mockUpHeroData)
+                    return
                 }
-            case .failure(let error):
-                if let heroId = self?.heroItem.id, let heroData = self?.realmDb.getHero(by: heroId) {
-                    self?.heroItem = heroData
+                let _ = realmDb.saveHero(hero: fetchedHeroItem)
+                heroItem = HeroRO(heroData: fetchedHeroItem)
+            } catch {
+                if let heroData = realmDb.getHero(by: heroItem.id) {
+                    heroItem = heroData
                 } else {
-                    self?.heroItem = HeroRO(heroData: mockUpHeroData)
-                }
-                
-                DispatchQueue.main.async {
-                    LoadingIndicator.stopLoading()
+                    heroItem = HeroRO(heroData: mockUpHeroData)
                 }
                 print(error)
             }
+            LoadingIndicator.stopLoading()
         }
     }
     

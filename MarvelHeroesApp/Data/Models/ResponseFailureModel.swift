@@ -8,6 +8,6 @@
 import Foundation
 
 struct ResponseFailureModel: Codable {
-    let code: String
-    let message: String
+    let code: Int
+    let status: String
 }

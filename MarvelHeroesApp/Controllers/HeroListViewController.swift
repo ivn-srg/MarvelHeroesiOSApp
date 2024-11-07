@@ -104,7 +104,9 @@ final class HeroListViewController: UIViewController {
         super.viewDidLoad()
         
         setupUI()
-        viewModel.fetchHeroesData(into: collectionView)
+        executeWithErrorHandling {
+            try viewModel.fetchHeroesData(into: collectionView)
+        }
         
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
@@ -189,7 +191,9 @@ final class HeroListViewController: UIViewController {
         
         if gesture.state == .ended {
             if newY > maxPullDownDistance {
-                viewModel.fetchHeroesData(into: collectionView, needRefresh: true)
+                executeWithErrorHandling {
+                    try viewModel.fetchHeroesData(into: collectionView, needRefresh: true)
+                }
             }
             UIView.animate(withDuration: 0.3) {
                 self.box.transform = CGAffineTransform.identity
@@ -265,7 +269,9 @@ extension HeroListViewController {
             
             if lastRow >= totalRows - 1 {
                 if collectionView.contentOffset.x > 0 {
-                    viewModel.fetchHeroesData(into: collectionView, needsLoadMore: true)
+                    executeWithErrorHandling {
+                        try viewModel.fetchHeroesData(into: collectionView, needsLoadMore: true)
+                    }
                 }
             }
         }

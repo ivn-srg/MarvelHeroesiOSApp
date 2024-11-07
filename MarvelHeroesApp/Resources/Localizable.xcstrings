@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "errorTitle" : {
+
+    },
     "mainScreenTitle" : {
       "extractionState" : "manual",
       "localizations" : {

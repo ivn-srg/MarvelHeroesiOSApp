@@ -1,10 +1,3 @@
-//
-//  EntitiesRO.swift
-//  MarvelHeroesApp
-//
-//  Created by Sergey Ivanov on 11.04.2024.
-//
-
 import Foundation
 import RealmSwift
 
@@ -12,13 +5,13 @@ final class HeroRO: Object {
     @Persisted var id: Int = 0
     @Persisted var name: String = ""
     @Persisted var heroDescription: String = ""
-    @Persisted var modified: Date = Date()
+    @Persisted var modified: String = ""
     @Persisted var thumbnail: ThumbnailRO?
     @Persisted var resourceURI: String = ""
-    @Persisted var comics: ShortInfoItemRO<ComicsItemRO>
-    @Persisted var series: ShortInfoItemRO<ComicsItemRO>
-    @Persisted var stories: ShortInfoItemRO<StoriesItemRO>
-    @Persisted var events: ShortInfoItemRO<ComicsItemRO>
+    @Persisted var comics: ComicsInfoRO?
+    @Persisted var series: ComicsInfoRO?
+    @Persisted var stories: StoriesInfoRO?
+    @Persisted var events: ComicsInfoRO?
     @Persisted var urls: List<URLElementRO>
     
     override public static func primaryKey() -> String? {
@@ -40,16 +33,22 @@ final class ThumbnailRO: EmbeddedObject {
     
     convenience init(heroImageData: Thumbnail) {
         self.init()
-        
         self.path = heroImageData.path
         self.thumbnailExtension = heroImageData.thumbnailExtension
     }
 }
 
-final class ShortInfoItemRO<T: EmbeddedObject>: EmbeddedObject {
+final class ComicsInfoRO: EmbeddedObject {
     @Persisted var available: Int
     @Persisted var collectionURI: String
-    @Persisted var items: List<T>
+    @Persisted var items: List<ComicsItemRO>
+    @Persisted var returned: Int
+}
+
+final class StoriesInfoRO: EmbeddedObject {
+    @Persisted var available: Int
+    @Persisted var collectionURI: String
+    @Persisted var items: List<StoriesItemRO>
     @Persisted var returned: Int
 }
 
@@ -64,25 +63,12 @@ final class ComicsItemRO: EmbeddedObject {
     @Persisted var name: String
 }
 
-final class CreatorsItemRO: EmbeddedObject {
-    @Persisted var resourceURI: String
-    @Persisted var name: String
-    @Persisted var role: String
-    
-    //TODO: - Доделать конвертацию из перечисления в строку и обратно
-}
-
-final class SeriesRO: EmbeddedObject {
-    @Persisted var resourceURI: String
-    @Persisted var name: String
-}
-
 final class URLElementRO: EmbeddedObject {
     @Persisted var type: String
     @Persisted var url: String
 }
 
-// MARK: - Image
+// MARK: - Кеширование изображений
 final class CachedImageData: Object {
     @Persisted var id: String = ""
     @Persisted var url: String = ""
@@ -94,7 +80,6 @@ final class CachedImageData: Object {
     
     convenience init(url: String, imageData: Data?) {
         self.init()
-        
         self.id = UUID().uuidString
         self.url = url
         self.imageData = imageData
