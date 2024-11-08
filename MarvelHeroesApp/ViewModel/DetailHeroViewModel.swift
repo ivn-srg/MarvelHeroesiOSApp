@@ -30,7 +30,7 @@ final class DetailHeroViewModel {
             do {
                 let heroData = try await networkService.performRequest(
                     from: urlString,
-                    modelType: ResponseModel<HeroItemModel>.self
+                    modelType: DataWrapper<HeroItemModel>.self
                 )
                 guard heroData.data.count > 0, let fetchedHeroItem = heroData.data.results.first else {
                     heroItem = HeroRO(heroData: mockUpHeroData)

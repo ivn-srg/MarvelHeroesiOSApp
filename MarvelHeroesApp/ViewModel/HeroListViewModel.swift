@@ -28,7 +28,7 @@ final class HeroListViewModel {
                 do {
                     let heroesData = try await networkService.performRequest(
                         from: urlString,
-                        modelType: ResponseModel<HeroItemModel>.self
+                        modelType: DataWrapper<HeroItemModel>.self
                     )
                     if heroesData.data.count > 0 {
                         let statusOfSaving = realmDb.saveHeroes(heroes: heroesData.data.results)

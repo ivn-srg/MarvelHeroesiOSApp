@@ -281,7 +281,7 @@ final class APIManager: ApiServiceProtocol {
 
 final class APIMockManager: ApiServiceProtocol {
     func performRequest<T>(from urlString: String, modelType: T.Type) async throws -> T where T : Decodable {
-        return try await makeHTTPRequest(for: URLRequest(url: URL(string: urlString)!), codableModelType: ResponseModel<HeroItemModel>.self) as! T
+        return try await makeHTTPRequest(for: URLRequest(url: URL(string: urlString)!), codableModelType: DataWrapper<HeroItemModel>.self) as! T
     }
     
     func makeHTTPRequest<T>(for request: URLRequest, codableModelType: T.Type) async throws -> T where T : Decodable {

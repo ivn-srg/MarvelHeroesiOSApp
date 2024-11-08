@@ -5,19 +5,19 @@
 //  Created by Sergey Ivanov on 07.11.2024.
 //
 
-struct ResponseModel<T: Codable>: Codable {
+struct DataWrapper<T: Codable>: Codable {
     let code: Int
     let status: String
     let etag: String
-    let data: ResponseListModel<T>
+    let data: DataContainer<T>
 }
 
-struct ResponseListModel<T: Codable>: Codable {
+struct DataContainer<T: Codable>: Codable {
     let offset, limit, total, count: Int
     let results: [T]
 }
 
-extension ResponseListModel {
+extension DataContainer {
     init(results: [T]) {
         self.offset = 0
         self.limit = 0
@@ -27,7 +27,7 @@ extension ResponseListModel {
     }
 }
 
-struct ShortInfoItemModel<T: Codable>: Codable{
+struct ListOfEntitiesOfItemModel<T: Codable>: Codable{
     static var empty: Self {
         .init(available: 0, collectionURI: "", items: [], returned: 0)
     }

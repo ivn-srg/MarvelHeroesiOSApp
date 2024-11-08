@@ -11,12 +11,17 @@ import SnapKit
 final class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
     
     // MARK: - Fields
-    
     let viewModel: DetailHeroViewModel
+    private let detailModalOverlapValue = 0.8
     
     // MARK: - UI Components
-    
     private lazy var box: UIView = {
+        let vc = UIView()
+        vc.translatesAutoresizingMaskIntoConstraints = false
+        return vc
+    }()
+    
+    private lazy var upperAlphaView: UIView = {
         let vc = UIView()
         vc.translatesAutoresizingMaskIntoConstraints = false
         return vc
@@ -63,12 +68,7 @@ final class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
         return txt
     }()
     
-    private lazy var viewWithDetailInfo: UIView = {
-        let view = UIView()
-        view.backgroundColor = bgColor
-        view.layer.cornerRadius = 25
-        return view
-    }()
+    private lazy var viewWithDetailInfo = DetailHeroBottomSubview()
     
     private let overlapThreshold: CGFloat = 0.4
     // Приведем начальное положение
@@ -98,15 +98,12 @@ final class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
     private func setupView() {
         view.addSubview(box)
         box.snp.makeConstraints {
-            $0.top.leading.trailing.equalTo(view.safeAreaLayoutGuide)
-            $0.height.equalTo(view.frame.height * 0.9)
+            $0.top.leading.trailing.equalToSuperview()
+            $0.height.equalTo(view.frame.height * detailModalOverlapValue)
         }
         
         box.addSubview(heroImageView)
         heroImageView.snp.makeConstraints { $0.edges.equalToSuperview() }
-        
-        box.addSubview(backButton)
-        backButton.snp.makeConstraints { $0.top.leading.equalToSuperview() }
         
         box.addSubview(heroInfoText)
         heroInfoText.snp.makeConstraints {
@@ -119,6 +116,15 @@ final class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
             $0.bottom.equalTo(heroInfoText.snp.top).offset(-10)
             $0.horizontalEdges.equalToSuperview().inset(20)
         }
+        
+        view.addSubview(backButton)
+        backButton.snp.makeConstraints {
+            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            $0.leading.equalTo(view.safeAreaLayoutGuide.snp.leading)
+        }
+        
+        view.addSubview(upperAlphaView)
+        upperAlphaView.snp.makeConstraints {  $0.edges.equalToSuperview() }
         
         view.addSubview(viewWithDetailInfo)
         
@@ -153,12 +159,20 @@ final class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
     // MARK: - Pan Gesture actions
     @objc private func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
         let translation = gesture.translation(in: view)
-        let newTopConstant = max(viewWithDetailInfoTopConstraint.constant + translation.y, -view.frame.height * 0.9)
+        let newTopConstant = max(viewWithDetailInfoTopConstraint.constant + translation.y, -view.frame.height * detailModalOverlapValue)
         let velocity = gesture.velocity(in: view)
+        let highestYPosition = -view.frame.height * detailModalOverlapValue
+        let lowestYPosition = viewWithDetailInfoTopConstraint.constant
         
         switch gesture.state {
         case .changed:
-            viewWithDetailInfoTopConstraint.constant = newTopConstant
+            print(newTopConstant)
+            viewWithDetailInfoTopConstraint.constant = newTopConstant < -40
+            ? (newTopConstant > highestYPosition ? newTopConstant : highestYPosition)
+            : lowestYPosition
+            
+            upperAlphaView.backgroundColor = bgColor.withAlphaComponent(abs(newTopConstant) / 1000)
+            
             gesture.setTranslation(.zero, in: view)
         case .ended, .cancelled:
             if abs(velocity.y) > 1000 {
@@ -168,7 +182,7 @@ final class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
                     animateViewToOriginalPosition()
                 }
             } else {
-                if abs(newTopConstant) > view.frame.height * 0.45 {
+                if abs(newTopConstant) > view.frame.height * (detailModalOverlapValue / 2) {
                     animateViewToTop()
                 } else {
                     animateViewToOriginalPosition()
@@ -183,6 +197,7 @@ final class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
     private func animateViewToOriginalPosition() {
         UIView.animate(withDuration: 0.3, animations: {
             self.viewWithDetailInfoTopConstraint.constant = -40
+            self.upperAlphaView.backgroundColor = nil
             self.view.layoutIfNeeded()
         })
     }
@@ -190,7 +205,8 @@ final class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
     // Анимация к верхней позиции
     private func animateViewToTop() {
         UIView.animate(withDuration: 0.3, animations: {
-            self.viewWithDetailInfoTopConstraint.constant = -self.view.frame.height * 0.9
+            self.viewWithDetailInfoTopConstraint.constant = -self.view.frame.height * self.detailModalOverlapValue
+            self.upperAlphaView.backgroundColor = bgColor
             self.view.layoutIfNeeded()
         })
     }

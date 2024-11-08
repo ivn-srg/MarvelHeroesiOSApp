@@ -23,6 +23,12 @@ let screenHeight = UIScreen.main.bounds.height
 let Logo = UIImage(named: "marvelLogo")
 let QuestionImage = UIImage(systemName: "questionmark")
 let MockUpImage = UIImage(named: "mockup")
+let minusImage: UIImage? = {
+    let img = UIImage(systemName: "minus")?.withRenderingMode(.alwaysTemplate)
+        .withTintColor(.lightGray, renderingMode: .alwaysOriginal)
+    img?.resizableImage(withCapInsets: .zero, resizingMode: .stretch)
+    return img
+}()
 
 // localizable strings
 let mainScreenTitle = NSLocalizedString("mainScreenTitle", comment: "")
