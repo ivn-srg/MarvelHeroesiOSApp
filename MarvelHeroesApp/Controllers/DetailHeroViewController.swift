@@ -12,7 +12,16 @@ final class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
     
     // MARK: - Fields
     let viewModel: DetailHeroViewModel
-    private let detailModalOverlapValue = 0.8
+    private let detailModalOverlapValue = 0.9
+    private let lowestDetailInfoYPositionConstant: Double = -30
+    
+    private var verticalSafeAreaInsets: Double {
+        view.safeAreaInsets.top + view.safeAreaInsets.bottom
+    }
+    
+    private var highestSafeeAreaYPosition: Double {
+        verticalSafeAreaInsets - lowestDetailInfoYPositionConstant - view.frame.maxY
+    }
     
     // MARK: - UI Components
     private lazy var box: UIView = {
@@ -59,19 +68,7 @@ final class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
         return txt
     }()
     
-    private lazy var heroInfoText: UILabel = {
-        let txt = UILabel()
-        txt.translatesAutoresizingMaskIntoConstraints = false
-        txt.font = UIFont(name: Font.InterBold, size: 24)
-        txt.textColor = .white
-        txt.numberOfLines = 3
-        return txt
-    }()
-    
-    private lazy var viewWithDetailInfo = DetailHeroBottomSubview()
-    
-    private let overlapThreshold: CGFloat = 0.4
-    // Приведем начальное положение
+    private lazy var viewWithDetailInfo = DetailHeroBottomSubview(vm: viewModel)
     private var viewWithDetailInfoTopConstraint: NSLayoutConstraint!
     
     // MARK: - Lifecycle
@@ -105,17 +102,14 @@ final class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
         box.addSubview(heroImageView)
         heroImageView.snp.makeConstraints { $0.edges.equalToSuperview() }
         
-        box.addSubview(heroInfoText)
-        heroInfoText.snp.makeConstraints {
+        box.addSubview(heroNameText)
+        heroNameText.snp.makeConstraints {
             $0.bottom.equalToSuperview().offset(-60)
             $0.horizontalEdges.equalToSuperview().inset(20)
         }
         
-        box.addSubview(heroNameText)
-        heroNameText.snp.makeConstraints {
-            $0.bottom.equalTo(heroInfoText.snp.top).offset(-10)
-            $0.horizontalEdges.equalToSuperview().inset(20)
-        }
+        view.addSubview(upperAlphaView)
+        upperAlphaView.snp.makeConstraints { $0.edges.equalToSuperview() }
         
         view.addSubview(backButton)
         backButton.snp.makeConstraints {
@@ -123,16 +117,12 @@ final class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
             $0.leading.equalTo(view.safeAreaLayoutGuide.snp.leading)
         }
         
-        view.addSubview(upperAlphaView)
-        upperAlphaView.snp.makeConstraints {  $0.edges.equalToSuperview() }
-        
         view.addSubview(viewWithDetailInfo)
-        
         // Устанавливаем начальное положение viewWithDetailInfo
         viewWithDetailInfo.snp.makeConstraints {
             $0.leading.trailing.bottom.equalToSuperview()
         }
-        viewWithDetailInfoTopConstraint = viewWithDetailInfo.topAnchor.constraint(equalTo: box.bottomAnchor, constant: -40)
+        viewWithDetailInfoTopConstraint = viewWithDetailInfo.topAnchor.constraint(equalTo: box.bottomAnchor, constant: lowestDetailInfoYPositionConstant)
         viewWithDetailInfoTopConstraint.isActive = true
         
         // Добавляем распознаватель жестов для перетаскивания
@@ -148,7 +138,6 @@ final class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
         }
         
         heroNameText.text = viewModel.heroItem.name
-        heroInfoText.text = viewModel.heroItem.heroDescription.isEmpty ? "Just a cool Marvel hero" : viewModel.heroItem.heroDescription
     }
     
     // MARK: - Actions
@@ -156,22 +145,34 @@ final class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
         navigationController?.popViewController(animated: true)
     }
     
-    // MARK: - Pan Gesture actions
+    // MARK: - Pan Gesture funcs
     @objc private func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
         let translation = gesture.translation(in: view)
-        let newTopConstant = max(viewWithDetailInfoTopConstraint.constant + translation.y, -view.frame.height * detailModalOverlapValue)
+        let newTopConstant = max(
+            viewWithDetailInfoTopConstraint.constant + translation.y,
+            highestSafeeAreaYPosition
+        )
         let velocity = gesture.velocity(in: view)
-        let highestYPosition = -view.frame.height * detailModalOverlapValue
         let lowestYPosition = viewWithDetailInfoTopConstraint.constant
+        var absNewTopConstant: Double {
+            abs(newTopConstant) / 1000
+        }
+        var scaledValueForBgImage: Double {
+            1 - absNewTopConstant / 10
+        }
         
         switch gesture.state {
         case .changed:
             print(newTopConstant)
-            viewWithDetailInfoTopConstraint.constant = newTopConstant < -40
-            ? (newTopConstant > highestYPosition ? newTopConstant : highestYPosition)
+            viewWithDetailInfo.hideTopSwipeIcon(newTopConstant == highestSafeeAreaYPosition)
+            
+            viewWithDetailInfoTopConstraint.constant = newTopConstant < lowestDetailInfoYPositionConstant
+            ? (newTopConstant > highestSafeeAreaYPosition ? newTopConstant : highestSafeeAreaYPosition)
             : lowestYPosition
             
-            upperAlphaView.backgroundColor = bgColor.withAlphaComponent(abs(newTopConstant) / 1000)
+            // для плавного затемнения фонового изображения героя
+            upperAlphaView.backgroundColor = bgColor.withAlphaComponent(absNewTopConstant)
+            heroImageView.transform = CGAffineTransform(scaleX: scaledValueForBgImage, y: scaledValueForBgImage)
             
             gesture.setTranslation(.zero, in: view)
         case .ended, .cancelled:
@@ -193,20 +194,20 @@ final class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
-    // Анимация к исходной позиции
     private func animateViewToOriginalPosition() {
         UIView.animate(withDuration: 0.3, animations: {
-            self.viewWithDetailInfoTopConstraint.constant = -40
+            self.viewWithDetailInfoTopConstraint.constant = self.lowestDetailInfoYPositionConstant
             self.upperAlphaView.backgroundColor = nil
+            self.heroImageView.transform = .identity
             self.view.layoutIfNeeded()
         })
     }
     
-    // Анимация к верхней позиции
     private func animateViewToTop() {
         UIView.animate(withDuration: 0.3, animations: {
-            self.viewWithDetailInfoTopConstraint.constant = -self.view.frame.height * self.detailModalOverlapValue
+            self.viewWithDetailInfoTopConstraint.constant = self.highestSafeeAreaYPosition
             self.upperAlphaView.backgroundColor = bgColor
+            self.viewWithDetailInfo.hideTopSwipeIcon()
             self.view.layoutIfNeeded()
         })
     }

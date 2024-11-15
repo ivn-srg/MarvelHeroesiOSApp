@@ -35,6 +35,7 @@ let mainScreenTitle = NSLocalizedString("mainScreenTitle", comment: "")
 
 // mockUpData
 let mockUpHeroData = HeroItemModel.emptyObject
+let heroDescriptionMock = "Just a cool Marvel hero"
 
 // network constants
 let heroImageNotAvailable = "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available"
