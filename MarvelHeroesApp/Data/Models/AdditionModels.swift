@@ -142,6 +142,10 @@ extension Thumbnail {
         self.path = thumbRO.path
         self.thumbnailExtension = thumbRO.thumbnailExtension
     }
+    
+    var fullPath: String {
+        "\(self.path).\(self.thumbnailExtension)"
+    }
 }
 
 // MARK: - URLElement

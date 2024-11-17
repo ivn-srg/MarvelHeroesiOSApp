@@ -33,6 +33,16 @@
 		934B93882BA0716B005FA6D6 /* DetailHeroViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934B93872BA0716B005FA6D6 /* DetailHeroViewModel.swift */; };
 		934D36282B983C00004CDDE0 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 934D36272B983C00004CDDE0 /* .gitignore */; };
 		934D362B2B983F1C004CDDE0 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 934D362A2B983F1C004CDDE0 /* Localizable.xcstrings */; };
+		9359D54A2CEA61C1002C9161 /* TextBlockWithTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9359D5492CEA61C1002C9161 /* TextBlockWithTitleView.swift */; };
+		9359D54B2CEA61C1002C9161 /* TextBlockWithTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9359D5492CEA61C1002C9161 /* TextBlockWithTitleView.swift */; };
+		9359D54D2CEA69BA002C9161 /* ComicsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9359D54C2CEA69BA002C9161 /* ComicsCollectionViewCell.swift */; };
+		9359D54E2CEA69BA002C9161 /* ComicsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9359D54C2CEA69BA002C9161 /* ComicsCollectionViewCell.swift */; };
+		9359D5502CEA6E11002C9161 /* ComicsCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9359D54F2CEA6DF1002C9161 /* ComicsCellViewModel.swift */; };
+		9359D5512CEA6E11002C9161 /* ComicsCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9359D54F2CEA6DF1002C9161 /* ComicsCellViewModel.swift */; };
+		9359D5532CEA6F70002C9161 /* APIMockService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9359D5522CEA6F67002C9161 /* APIMockService.swift */; };
+		9359D5542CEA6F70002C9161 /* APIMockService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9359D5522CEA6F67002C9161 /* APIMockService.swift */; };
+		9359D5562CEA7AF0002C9161 /* Ext+ErrorString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9359D5552CEA7AE7002C9161 /* Ext+ErrorString.swift */; };
+		9359D5572CEA7AF0002C9161 /* Ext+ErrorString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9359D5552CEA7AE7002C9161 /* Ext+ErrorString.swift */; };
 		9369AD1B2BB5C3B400DA5460 /* HeroCollectionViewCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9369AD1A2BB5C3B400DA5460 /* HeroCollectionViewCellViewModel.swift */; };
 		9369AD1D2BB5D26000DA5460 /* LoaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9369AD1C2BB5D26000DA5460 /* LoaderView.swift */; };
 		9369AD1F2BB5D6C200DA5460 /* ResponseFailureModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9369AD1E2BB5D6C200DA5460 /* ResponseFailureModel.swift */; };
@@ -124,6 +134,11 @@
 		934B93872BA0716B005FA6D6 /* DetailHeroViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailHeroViewModel.swift; sourceTree = "<group>"; };
 		934D36272B983C00004CDDE0 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		934D362A2B983F1C004CDDE0 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		9359D5492CEA61C1002C9161 /* TextBlockWithTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextBlockWithTitleView.swift; sourceTree = "<group>"; };
+		9359D54C2CEA69BA002C9161 /* ComicsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComicsCollectionViewCell.swift; sourceTree = "<group>"; };
+		9359D54F2CEA6DF1002C9161 /* ComicsCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComicsCellViewModel.swift; sourceTree = "<group>"; };
+		9359D5522CEA6F67002C9161 /* APIMockService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIMockService.swift; sourceTree = "<group>"; };
+		9359D5552CEA7AE7002C9161 /* Ext+ErrorString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Ext+ErrorString.swift"; sourceTree = "<group>"; };
 		9369AD1A2BB5C3B400DA5460 /* HeroCollectionViewCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroCollectionViewCellViewModel.swift; sourceTree = "<group>"; };
 		9369AD1C2BB5D26000DA5460 /* LoaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoaderView.swift; sourceTree = "<group>"; };
 		9369AD1E2BB5D6C200DA5460 /* ResponseFailureModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseFailureModel.swift; sourceTree = "<group>"; };
@@ -183,6 +198,7 @@
 		9303D2492B9200F6003567A5 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				9359D5552CEA7AE7002C9161 /* Ext+ErrorString.swift */,
 				9335EEFB2CDD0044003EFC22 /* Ext+UIViewController.swift */,
 				9335EEF82CDD0021003EFC22 /* Ext+LocalizableStr.swift */,
 				9335EEF52CDCFFF4003EFC22 /* Ext+AlertController.swift */,
@@ -191,16 +207,16 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
-		9303D24C2B92108D003567A5 /* View */ = {
+		9303D24C2B92108D003567A5 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				9359D5482CEA6188002C9161 /* Components */,
 				9303D24D2B9210B8003567A5 /* HeroCollectionViewCell.swift */,
-				933B27062B931F1100B5E9B4 /* TriangView.swift */,
-				937BF6D02BA97525007087A4 /* RoundRectButton.swift */,
+				9359D54C2CEA69BA002C9161 /* ComicsCollectionViewCell.swift */,
 				9369AD1C2BB5D26000DA5460 /* LoaderView.swift */,
 				933B502B2CDBE4C300F19F45 /* DetailHeroBottomSubview.swift */,
 			);
-			path = View;
+			path = Views;
 			sourceTree = "<group>";
 		};
 		9303D24F2B92157A003567A5 /* Data */ = {
@@ -251,6 +267,7 @@
 		933B27052B93155600B5E9B4 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				9359D54F2CEA6DF1002C9161 /* ComicsCellViewModel.swift */,
 				934B93872BA0716B005FA6D6 /* DetailHeroViewModel.swift */,
 				939E7F852B949A9000BEE787 /* HeroListViewModel.swift */,
 				9369AD1A2BB5C3B400DA5460 /* HeroCollectionViewCellViewModel.swift */,
@@ -268,6 +285,16 @@
 				939E7F832B9486D200BEE787 /* Constants.swift */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		9359D5482CEA6188002C9161 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				9359D5492CEA61C1002C9161 /* TextBlockWithTitleView.swift */,
+				933B27062B931F1100B5E9B4 /* TriangView.swift */,
+				937BF6D02BA97525007087A4 /* RoundRectButton.swift */,
+			);
+			path = Components;
 			sourceTree = "<group>";
 		};
 		936DBDA22B91F8A60098E9C6 /* Libraries */ = {
@@ -346,7 +373,7 @@
 				933B27042B93154000B5E9B4 /* Controllers */,
 				933B27012B93000D00B5E9B4 /* Layers */,
 				9303D24F2B92157A003567A5 /* Data */,
-				9303D24C2B92108D003567A5 /* View */,
+				9303D24C2B92108D003567A5 /* Views */,
 				9303D2492B9200F6003567A5 /* Extensions */,
 				936DBDA22B91F8A60098E9C6 /* Libraries */,
 				93CD1E9D2B90F16300AD2752 /* AppDelegate.swift */,
@@ -370,6 +397,7 @@
 		93E449022BBC7D1A00BAA1EE /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				9359D5522CEA6F67002C9161 /* APIMockService.swift */,
 				93E449032BBC7D4B00BAA1EE /* APIManager.swift */,
 			);
 			path = Services;
@@ -585,6 +613,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9381ADF72C065C6200BFE4BF /* Assets.xcassets in Sources */,
+				9359D5512CEA6E11002C9161 /* ComicsCellViewModel.swift in Sources */,
 				9381ADF82C065C6200BFE4BF /* Inter-Bold.otf in Sources */,
 				9381ADF92C065C6200BFE4BF /* Inter-Light.otf in Sources */,
 				9381ADFA2C065C6200BFE4BF /* Inter-Regular.otf in Sources */,
@@ -592,9 +621,11 @@
 				9381ADFC2C065C6200BFE4BF /* Localizable.xcstrings in Sources */,
 				9381ADFD2C065C6200BFE4BF /* LaunchScreen.storyboard in Sources */,
 				9381ADFE2C065C6200BFE4BF /* Constants.swift in Sources */,
+				9359D5572CEA7AF0002C9161 /* Ext+ErrorString.swift in Sources */,
 				936FEF432C0AE61300D9441E /* Screens.swift in Sources */,
 				9381ADFF2C065C6200BFE4BF /* DetailHeroViewModel.swift in Sources */,
 				9381AE002C065C6200BFE4BF /* HeroListViewModel.swift in Sources */,
+				9359D54B2CEA61C1002C9161 /* TextBlockWithTitleView.swift in Sources */,
 				9381AE012C065C6200BFE4BF /* HeroCollectionViewCellViewModel.swift in Sources */,
 				9381AE022C065C6200BFE4BF /* DetailHeroViewController.swift in Sources */,
 				9381AE032C065C6200BFE4BF /* HeroListViewController.swift in Sources */,
@@ -602,6 +633,7 @@
 				9381AE052C065C6200BFE4BF /* HeroRO.swift in Sources */,
 				93A0A6552C1A09E70047C680 /* XCTestExtensions.swift in Sources */,
 				9381AE062C065C6200BFE4BF /* RealmDB.swift in Sources */,
+				9359D5542CEA6F70002C9161 /* APIMockService.swift in Sources */,
 				9381AE072C065C6200BFE4BF /* APIManager.swift in Sources */,
 				9381AE092C065C6200BFE4BF /* ResponseFailureModel.swift in Sources */,
 				933B50322CDBEC7D00F19F45 /* AdditionModels.swift in Sources */,
@@ -611,6 +643,7 @@
 				9335EEF62CDD0000003EFC22 /* Ext+AlertController.swift in Sources */,
 				9335EEFC2CDD004C003EFC22 /* Ext+UIViewController.swift in Sources */,
 				9335EEFA2CDD002A003EFC22 /* Ext+LocalizableStr.swift in Sources */,
+				9359D54D2CEA69BA002C9161 /* ComicsCollectionViewCell.swift in Sources */,
 				933B502C2CDBE4C300F19F45 /* DetailHeroBottomSubview.swift in Sources */,
 				9381AE0D2C065C6200BFE4BF /* RoundRectButton.swift in Sources */,
 				9381AE0E2C065C6200BFE4BF /* LoaderView.swift in Sources */,
@@ -638,11 +671,15 @@
 			files = (
 				9303D24B2B920114003567A5 /* Ext+UIColor+UIImage.swift in Sources */,
 				93E449042BBC7D4B00BAA1EE /* APIManager.swift in Sources */,
+				9359D5562CEA7AF0002C9161 /* Ext+ErrorString.swift in Sources */,
 				9369AD1F2BB5D6C200DA5460 /* ResponseFailureModel.swift in Sources */,
 				9369AD1B2BB5C3B400DA5460 /* HeroCollectionViewCellViewModel.swift in Sources */,
+				9359D5532CEA6F70002C9161 /* APIMockService.swift in Sources */,
 				934B93882BA0716B005FA6D6 /* DetailHeroViewModel.swift in Sources */,
+				9359D54A2CEA61C1002C9161 /* TextBlockWithTitleView.swift in Sources */,
 				93370BE72BC8660D00B65C4C /* RealmDB.swift in Sources */,
 				934B93862BA06D42005FA6D6 /* DetailHeroViewController.swift in Sources */,
+				9359D54E2CEA69BA002C9161 /* ComicsCollectionViewCell.swift in Sources */,
 				933B27032B93002500B5E9B4 /* CustomHeroItemLayer.swift in Sources */,
 				939E7F822B947AEF00BEE787 /* PagingCollectionViewLayout.swift in Sources */,
 				933B502D2CDBE4C300F19F45 /* DetailHeroBottomSubview.swift in Sources */,
@@ -657,6 +694,7 @@
 				9335EEF92CDD002A003EFC22 /* Ext+LocalizableStr.swift in Sources */,
 				9303D24E2B9210B8003567A5 /* HeroCollectionViewCell.swift in Sources */,
 				9335EEF72CDD0000003EFC22 /* Ext+AlertController.swift in Sources */,
+				9359D5502CEA6E11002C9161 /* ComicsCellViewModel.swift in Sources */,
 				939E7F862B949A9000BEE787 /* HeroListViewModel.swift in Sources */,
 				9335EEFD2CDD004C003EFC22 /* Ext+UIViewController.swift in Sources */,
 				93CD1EA02B90F16300AD2752 /* SceneDelegate.swift in Sources */,

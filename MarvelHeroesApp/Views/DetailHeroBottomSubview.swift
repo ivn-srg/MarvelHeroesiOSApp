@@ -21,36 +21,24 @@ final class DetailHeroBottomSubview: UIView {
     }()
     
     private lazy var stackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .vertical
-        stackView.spacing = 10
-        return stackView
+        let view = UIStackView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.axis = .vertical
+        view.spacing = 20
+        return view
     }()
     
-    private lazy var overviewTitle: UILabel = {
-        let txt = UILabel()
-        txt.translatesAutoresizingMaskIntoConstraints = false
-        txt.font = UIFont(name: Font.InterBold, size: 34)
-        txt.textColor = .white
-        txt.text = "Overview"
-        txt.numberOfLines = 1
-        return txt
-    }()
-    
-    private lazy var heroInfoText: UILabel = {
-        let txt = UILabel()
-        txt.translatesAutoresizingMaskIntoConstraints = false
-        txt.font = UIFont(name: Font.InterRegular, size: 24)
-        txt.textColor = .white
-        txt.numberOfLines = 0
-        return txt
-    }()
+    private lazy var heroBrowseView = TextBlockWithTitleViewTests(
+        title: "Overview".localized,
+        text: viewModel.heroItem.heroDescription.isEmpty ? heroDescriptionMock : viewModel.heroItem.heroDescription
+    )
     
     private lazy var comicsCollectionView: UICollectionView = {
         let ccv = UICollectionView()
         ccv.translatesAutoresizingMaskIntoConstraints = false
-//        ccv.register(ComicsCollectionViewCell.self, forCellWithReuseIdentifier: ComicsCollectionViewCell.reuseIdentifier)
+        ccv.register(ComicsCollectionViewCell.self, forCellWithReuseIdentifier: ComicsCollectionViewCell.identifier)
+        ccv.delegate = self
+        ccv.dataSource = self
         return ccv
     }()
     
@@ -79,14 +67,19 @@ final class DetailHeroBottomSubview: UIView {
         
         addSubview(stackView)
         stackView.snp.makeConstraints {
+            $0.edges.equalToSuperview().inset(20)
+        }
+        
+        stackView.addArrangedSubview(heroBrowseView)
+        heroBrowseView.snp.makeConstraints {
             $0.top.equalTo(topSwipeIcon.snp.bottom).offset(20)
             $0.horizontalEdges.equalToSuperview().inset(20)
         }
         
-        stackView.addArrangedSubview(overviewTitle)
-        stackView.addArrangedSubview(heroInfoText)
-        
-        heroInfoText.text = viewModel.heroItem.heroDescription.isEmpty ? heroDescriptionMock : viewModel.heroItem.heroDescription
+        addSubview(comicsCollectionView)
+        comicsCollectionView.snp.makeConstraints {
+            $0.horizontalEdges.equalToSuperview()
+        }
     }
     
     // MARK: - public funcs
@@ -95,4 +88,31 @@ final class DetailHeroBottomSubview: UIView {
             self.topSwipeIcon.isHidden = value
         }
     }
+}
+
+extension DetailHeroBottomSubview: UICollectionViewDelegate {
+    
+}
+
+extension DetailHeroBottomSubview: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        viewModel.heroItem.comics?.available ?? 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard
+            let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: ComicsCollectionViewCell.identifier,
+                for: indexPath
+            ) as? ComicsCollectionViewCell
+        else { return UICollectionViewCell() }
+        
+        let comics = viewModel.heroItem.comics?.items[indexPath.row]
+        
+        cell.configure(comics: comics)
+        
+        return cell
+    }
+    
+    
 }
