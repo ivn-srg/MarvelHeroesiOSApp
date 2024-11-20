@@ -128,6 +128,40 @@ struct ComicsItemModel: Codable {
     let events: ListOfEntitiesOfItemModel<Series>
 }
 
+extension ComicsItemModel {
+    init() {
+        self.id = 0
+        self.digitalId = 0
+        self.title = "Title cell"
+        self.issueNumber = 0
+        self.variantDescription = "variantDescription"
+        self.description = "description"
+        self.modified = "modified"
+        self.isbn = "isbn"
+        self.upc = "upc"
+        self.diamondCode = "diamondCode"
+        self.ean = "ean"
+        self.issn = "issn"
+        self.format = "format"
+        self.pageCount = 1
+        self.textObjects = []
+        self.resourceURI = "resourceURI"
+        self.urls = []
+        self.series = Series.empty
+        self.variants = []
+        self.collections = []
+        self.collectedIssues = []
+        self.dates = []
+        self.prices = []
+        self.thumbnail = Thumbnail(path: "", thumbnailExtension: "")
+        self.images = []
+        self.creators = ListOfEntitiesOfItemModel(available: 0, collectionURI: "", items: [], returned: 0)
+        self.characters = ListOfEntitiesOfItemModel(available: 0, collectionURI: "", items: [], returned: 0)
+        self.stories = ListOfEntitiesOfItemModel(available: 0, collectionURI: "", items: [], returned: 0)
+        self.events = ListOfEntitiesOfItemModel(available: 0, collectionURI: "", items: [], returned: 0)
+    }
+}
+
 struct CreatorsModel: Codable {
     let id: Int
     let firstName, middleName, lastName, suffix: String

@@ -20,32 +20,53 @@ final class DetailHeroBottomSubview: UIView {
         return minus
     }()
     
+    private lazy var scrollView: UIScrollView = {
+        let view = UIScrollView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.showsHorizontalScrollIndicator = false
+        view.showsVerticalScrollIndicator = false
+        view.alwaysBounceVertical = true
+        view.delegate = self
+        return view
+    }()
+    
     private lazy var stackView: UIStackView = {
         let view = UIStackView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.axis = .vertical
-        view.spacing = 20
+        view.spacing = 10
         return view
     }()
     
-    private lazy var heroBrowseView = TextBlockWithTitleViewTests(
+    private lazy var heroBrowseView = TextBlockWithTitleView(
         title: "Overview".localized,
         text: viewModel.heroItem.heroDescription.isEmpty ? heroDescriptionMock : viewModel.heroItem.heroDescription
     )
     
-    private lazy var comicsCollectionView: UICollectionView = {
-        let ccv = UICollectionView()
-        ccv.translatesAutoresizingMaskIntoConstraints = false
-        ccv.register(ComicsCollectionViewCell.self, forCellWithReuseIdentifier: ComicsCollectionViewCell.identifier)
-        ccv.delegate = self
-        ccv.dataSource = self
-        return ccv
+    private let comicsCollectionView: CustomHorizontalCollectionView = {
+        let view = CustomHorizontalCollectionView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.collectionType = .comics
+        return view
     }()
+    
+//    let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
     
     // MARK: - Lyfecycle
     init(vm: DetailHeroViewModel) {
         self.viewModel = vm
         super.init(frame: .zero)
+        
+        if let comicsData = viewModel.heroItem.comics {
+            comicsCollectionView.update(with: comicsData.items)
+        } else {
+            let sampleData = mockUpListData
+            mockUpListData.insert(contentsOf: Array(repeating: ComicsItemRO(), count: 5), at: 0)
+            comicsCollectionView.update(with: sampleData)
+        }
+        
+//        addGestureRecognizer(panGesture)
+        
         configureView()
     }
     
@@ -56,6 +77,7 @@ final class DetailHeroBottomSubview: UIView {
     // MARK: - UI setup
     private func configureView() {
         backgroundColor = bgColor
+        layer.maskedCorners = .init(arrayLiteral: [.layerMinXMinYCorner, .layerMaxXMinYCorner])
         layer.cornerRadius = 25
         
         addSubview(topSwipeIcon)
@@ -65,21 +87,44 @@ final class DetailHeroBottomSubview: UIView {
             $0.centerX.equalToSuperview()
         }
         
-        addSubview(stackView)
+        addSubview(scrollView)
+        let scrollableContentSize = CGSize(width: frame.width, height: frame.height - topSwipeIcon.frame.height)
+        scrollView.contentSize = scrollableContentSize
+        scrollView.snp.makeConstraints {
+            $0.top.equalTo(topSwipeIcon.snp.bottom).offset(10)
+            $0.horizontalEdges.bottomMargin.equalToSuperview()
+        }
+        
+        scrollView.addSubview(stackView)
         stackView.snp.makeConstraints {
-            $0.edges.equalToSuperview().inset(20)
+            $0.top.equalTo(scrollView.contentLayoutGuide.snp.top)
+            $0.horizontalEdges.equalToSuperview().inset(horizontalPadding)
+            $0.width.equalToSuperview().inset(horizontalPadding)
+            $0.centerX.equalToSuperview()
         }
         
         stackView.addArrangedSubview(heroBrowseView)
-        heroBrowseView.snp.makeConstraints {
-            $0.top.equalTo(topSwipeIcon.snp.bottom).offset(20)
-            $0.horizontalEdges.equalToSuperview().inset(20)
-        }
         
-        addSubview(comicsCollectionView)
         comicsCollectionView.snp.makeConstraints {
-            $0.horizontalEdges.equalToSuperview()
+            $0.height.equalTo(250)
         }
+        stackView.addArrangedSubview(comicsCollectionView)
+        
+        
+//        scrollView.addSubview(heroBrowseView)
+//        heroBrowseView.snp.makeConstraints {
+//            $0.top.equalTo(scrollView.contentLayoutGuide.snp.top)
+//            $0.horizontalEdges.equalTo(scrollView.contentLayoutGuide.snp.horizontalEdges)
+//            $0.width.equalToSuperview().inset(horizontalPadding)
+//        }
+//        
+//        scrollView.addSubview(comicsCollectionView)
+//        comicsCollectionView.snp.makeConstraints {
+//            $0.top.equalTo(heroBrowseView.snp.bottom).offset(10)
+//            $0.horizontalEdges.equalTo(scrollView.contentLayoutGuide.snp.horizontalEdges)
+//            $0.width.equalToSuperview().inset(horizontalPadding)
+//            $0.height.equalTo(200)
+//        }
     }
     
     // MARK: - public funcs
@@ -90,29 +135,8 @@ final class DetailHeroBottomSubview: UIView {
     }
 }
 
-extension DetailHeroBottomSubview: UICollectionViewDelegate {
-    
-}
-
-extension DetailHeroBottomSubview: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        viewModel.heroItem.comics?.available ?? 0
+extension DetailHeroBottomSubview: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
     }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard
-            let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: ComicsCollectionViewCell.identifier,
-                for: indexPath
-            ) as? ComicsCollectionViewCell
-        else { return UICollectionViewCell() }
-        
-        let comics = viewModel.heroItem.comics?.items[indexPath.row]
-        
-        cell.configure(comics: comics)
-        
-        return cell
-    }
-    
-    
 }

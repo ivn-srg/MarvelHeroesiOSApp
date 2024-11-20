@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import RealmSwift
 
 // screen size
 let windowScene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene
@@ -18,6 +19,7 @@ let loaderColor = UIColor(rgb: 0xF31B2A)
 
 let screenWidth = UIScreen.main.bounds.width
 let screenHeight = UIScreen.main.bounds.height
+let horizontalPadding: CGFloat = 16
 
 // images
 let Logo = UIImage(named: "marvelLogo")
@@ -36,6 +38,7 @@ let mainScreenTitle = NSLocalizedString("mainScreenTitle", comment: "")
 // mockUpData
 let mockUpHeroData = HeroItemModel.emptyObject
 let heroDescriptionMock = "Just a cool Marvel hero"
+let mockUpListData = List<ComicsItemRO>()
 
 // network constants
 let heroImageNotAvailable = "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available"

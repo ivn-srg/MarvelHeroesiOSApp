@@ -38,7 +38,7 @@ enum HTTPMethod: String {
 enum APIType {
     case getHeroes, getHero, getComics, getOneComics, getSeries, getOneSeries,
          getStories, getStory, getCreators, getCreator, getEvents, getEvent,
-         finalURL
+         finalURL, clearlyURL
     
     private var baseURL: String {
         "https://gateway.marvel.com/v1/public/"
@@ -52,7 +52,7 @@ enum APIType {
         case .getStories, .getStory: "stories"
         case .getCreators, .getCreator: "creators"
         case .getEvents, .getEvent: "events"
-        case .finalURL: ""
+        case .finalURL, .clearlyURL: ""
         }
     }
     
@@ -62,7 +62,8 @@ enum APIType {
 }
 
 enum HeroError: Error, LocalizedError {
-    case invalidURL, parsingError(Error), serializationError(Error), noInternetConnection, timeout, otherNetworkError(Error)
+    case invalidURL, parsingError(Error), serializationError(Error), noInternetConnection, timeout,
+         otherNetworkError(Error), notFoundEntity
 }
 
 final class ApiServiceConfiguration {
@@ -104,10 +105,13 @@ final class APIManager: ApiServiceProtocol {
             return "\(endpoint.request)?limit=\(limit)&offset=\(offset)&ts=\(currentTimeStamp)&apikey=\(API_KEY)&hash=\(md5Hash)"
         case .getHero, .getEvent, .getStory, .getOneComics, .getOneSeries, .getCreator:
             guard let entityId = entityId else { throw HeroError.invalidURL }
-            return "\(endpoint.request)/\(entityId)&ts=\(currentTimeStamp)&apikey=\(API_KEY)&hash=\(md5Hash)"
+            return "\(endpoint.request)/\(entityId)?ts=\(currentTimeStamp)&apikey=\(API_KEY)&hash=\(md5Hash)"
         case .finalURL:
             guard let finalURL = finalURL else { throw HeroError.invalidURL }
-            return "\(finalURL)&ts=\(currentTimeStamp)&apikey=\(API_KEY)&hash=\(md5Hash)"
+            return "\(finalURL)?ts=\(currentTimeStamp)&apikey=\(API_KEY)&hash=\(md5Hash)"
+        case .clearlyURL:
+            guard let finalURL = finalURL else { throw HeroError.invalidURL }
+            return finalURL
         }
     }
     
@@ -124,12 +128,14 @@ final class APIManager: ApiServiceProtocol {
         return try await makeHTTPRequest(for: request, codableModelType: modelType)
     }
     
-    internal func makeHTTPRequest<T: Decodable>(
+    func makeHTTPRequest<T: Decodable>(
         for request: URLRequest,
         codableModelType: T.Type
     ) async throws -> T {
         do {
             let (data, _) = try await URLSession.shared.data(for: request)
+            guard data != notFoundEntityResponseData else { throw HeroError.notFoundEntity }
+//            print("data = \(String(decoding: data, as: UTF8.self))")
             do {
                 let result = try JSONDecoder().decode(codableModelType, from: data)
                 return result
@@ -139,15 +145,16 @@ final class APIManager: ApiServiceProtocol {
                 throw HeroError.parsingError(errorMessage)
             }
         } catch let error as DecodingError {
+            print("request \(request)")
             throw HeroError.parsingError(error)
         } catch let error as URLError {
+            print("request \(request)")
             switch error.code {
             case .notConnectedToInternet:
                 throw HeroError.noInternetConnection
             case .timedOut:
                 throw HeroError.timeout
             default:
-                print("request \(request)")
                 throw HeroError.otherNetworkError(error)
             }
         } catch {

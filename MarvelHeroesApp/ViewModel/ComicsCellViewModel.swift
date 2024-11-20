@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-final class ComicsCellViewModel {
+final class ComicsCellViewModel: CellViewModelProtocol {
     // MARK: - Fields
     private let resourseURI: String
     private var comicsInfo: ComicsItemModel?
@@ -21,7 +21,7 @@ final class ComicsCellViewModel {
     
     // MARK: - funcs
     func getImage(to targetImageView: UIImageView) async throws {
-        let urlString = try apiService.urlString(endpoint: .finalURL, offset: nil, entityId: nil, finalURL: resourseURI)
+        let urlString = try apiService.urlString(endpoint: .clearlyURL, offset: nil, entityId: nil, finalURL: resourseURI)
         
         Task {
             do {

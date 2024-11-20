@@ -7,30 +7,42 @@
 
 import UIKit
 
-final class ComicsCollectionViewCell: UICollectionViewCell {
-    // MARK: - Variables
-    static let identifier = "ComicsCollectionViewCellId"
+protocol DetailHeroItemCellProtocol: AnyObject {
+    var viewModel: CellViewModelProtocol? { get }
+    var viewController: DetailHeroViewController? { get }
+    static var identifier: String { get }
     
-    private var viewModel: ComicsCellViewModel?
+    func setupUI()
+}
+
+protocol CellViewModelProtocol: AnyObject {
+    func getImage(to targetImageView: UIImageView) async throws
+}
+
+final class GeneralCollectionViewCell: UICollectionViewCell, DetailHeroItemCellProtocol {
+    // MARK: - Variables
+    static var identifier = "CollectionViewCellId"
+    
+    var viewModel: CellViewModelProtocol?
     weak var viewController: DetailHeroViewController?
     
     // MARK: - UI components
     
-    private lazy var comicsImageView: UIImageView = {
+    private lazy var cellImageView: UIImageView = {
         let iv = UIImageView()
         iv.translatesAutoresizingMaskIntoConstraints = false
-        iv.contentMode = .scaleAspectFill
+        iv.contentMode = .scaleAspectFit
         iv.image = MockUpImage
         iv.tintColor = .white
         iv.clipsToBounds = true
-        iv.layer.cornerRadius = 20
+        iv.layer.cornerRadius = 12
         return iv
     }()
     
-    private lazy var comicsTitleLbl: UILabel = {
+    private lazy var cellTitleLbl: UILabel = {
         let lbl = UILabel()
         lbl.translatesAutoresizingMaskIntoConstraints = false
-        lbl.font = UIFont(name: Font.InterBold, size: 28)
+        lbl.font = UIFont(name: Font.InterBold, size: 20)
         lbl.textColor = .white
         lbl.textAlignment = .left
         lbl.numberOfLines = 2
@@ -49,17 +61,17 @@ final class ComicsCollectionViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         
-        comicsTitleLbl.text = nil
-        comicsImageView.image = nil
+        cellTitleLbl.text = nil
+        cellImageView.image = nil
     }
     
     // MARK: - Functions
     
-    public func configure(comics: ComicsItemRO?) {
+    func configure(comics: ComicsItemRO?) {
         setupUI()
         guard let comics = comics else {
-            comicsImageView.image = MockUpImage
-            comicsTitleLbl.text = ""
+            cellImageView.image = MockUpImage
+            cellTitleLbl.text = ""
             return
         }
         
@@ -69,7 +81,7 @@ final class ComicsCollectionViewCell: UICollectionViewCell {
             activityIndicator.startAnimating()
             do {
                 if let viewModel = viewModel {
-                    try await viewModel.getImage(to: comicsImageView)
+                    try await viewModel.getImage(to: cellImageView)
                 } else {
                     print("No view model for comics \(comics)")
                 }
@@ -79,21 +91,23 @@ final class ComicsCollectionViewCell: UICollectionViewCell {
             activityIndicator.stopAnimating()
         }
         
-        comicsTitleLbl.text = comics.name
+        cellTitleLbl.text = comics.name
     }
     
-    private func setupUI() {
-        addSubview(activityIndicator)
+    func setupUI() {
+        contentView.addSubview(activityIndicator)
         activityIndicator.center = center
         
-        addSubview(comicsImageView)
-        comicsImageView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+        contentView.addSubview(cellImageView)
+        cellImageView.snp.makeConstraints {
+            $0.top.horizontalEdges.equalToSuperview()
+            $0.bottom.equalToSuperview().multipliedBy(0.67)
         }
         
-        addSubview(comicsTitleLbl)
-        comicsTitleLbl.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+        contentView.addSubview(cellTitleLbl)
+        cellTitleLbl.snp.makeConstraints {
+            $0.top.equalTo(cellImageView.snp.bottom).offset(5)
+            $0.bottom.horizontalEdges.equalToSuperview()
         }
     }
 }

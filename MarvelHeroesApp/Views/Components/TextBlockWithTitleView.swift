@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-final class TextBlockWithTitleViewTests: UIView {
+final class TextBlockWithTitleView: UIView {
     // MARK: - Fields
     private let titleValue: String
     private let textValue: String
@@ -20,7 +20,7 @@ final class TextBlockWithTitleViewTests: UIView {
         txt.font = UIFont(name: Font.InterBold, size: 34)
         txt.textColor = .white
         txt.text = "Overview".localized
-        txt.numberOfLines = 1
+        txt.numberOfLines = 0
         return txt
     }()
     
@@ -29,6 +29,7 @@ final class TextBlockWithTitleViewTests: UIView {
         txt.translatesAutoresizingMaskIntoConstraints = false
         txt.font = UIFont(name: Font.InterRegular, size: 20)
         txt.textColor = .white
+        txt.lineBreakMode = .byWordWrapping
         txt.numberOfLines = 0
         return txt
     }()
@@ -58,7 +59,7 @@ final class TextBlockWithTitleViewTests: UIView {
         addSubview(detailTextLbl)
         detailTextLbl.snp.makeConstraints {
             $0.top.equalTo(titleLbl.snp.bottom).offset(10)
-            $0.horizontalEdges.equalToSuperview()
+            $0.horizontalEdges.bottom.equalToSuperview()
         }
     }
 }
