@@ -14,23 +14,25 @@ final class TextBlockWithTitleView: UIView {
     private let textValue: String
     
     // MARK: - UI components
-    private lazy var titleLbl: UILabel = {
-        let txt = UILabel()
+    private lazy var titleLbl: LabelWithPadding = {
+        let txt = LabelWithPadding()
         txt.translatesAutoresizingMaskIntoConstraints = false
         txt.font = UIFont(name: Font.InterBold, size: 34)
         txt.textColor = .white
         txt.text = "Overview".localized
         txt.numberOfLines = 0
+        txt.edgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         return txt
     }()
     
-    private lazy var detailTextLbl: UILabel = {
-        let txt = UILabel()
+    private lazy var detailTextLbl: LabelWithPadding = {
+        let txt = LabelWithPadding()
         txt.translatesAutoresizingMaskIntoConstraints = false
         txt.font = UIFont(name: Font.InterRegular, size: 20)
         txt.textColor = .white
         txt.lineBreakMode = .byWordWrapping
         txt.numberOfLines = 0
+        txt.edgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         return txt
     }()
     

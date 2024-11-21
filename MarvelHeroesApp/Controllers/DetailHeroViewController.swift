@@ -55,7 +55,6 @@ final class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
         iv.contentMode = .scaleAspectFill
         iv.clipsToBounds = true
         iv.layer.cornerRadius = 25
-        iv.image = MockUpImage
         return iv
     }()
     
@@ -133,8 +132,9 @@ final class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
     // MARK: - Update View
     private func updateView() {
         if let imgLink = viewModel.heroItem.thumbnail {
-            let url = "\(imgLink.path).\(imgLink.thumbnailExtension)"
-            viewModel.getHeroImage(from: url, to: heroImageView)
+            Task {
+                heroImageView.image = try await viewModel.getHeroImage(from: imgLink.fullPath)
+            }
         }
         
         heroNameText.text = viewModel.heroItem.name

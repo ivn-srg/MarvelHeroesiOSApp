@@ -11,13 +11,12 @@ import UIKit
 final class HeroListViewModel {
     
     var dataSource: [HeroItemModel] = []
-    var realmDb = RealmDB.shared
+    var realmDb = RealmManager.shared
     let networkService = ApiServiceConfiguration.shared.apiService
     
     // MARK: - Network work
     
     func fetchHeroesData(into collectionView: UICollectionView, needRefresh: Bool = false, needsLoadMore: Bool = false) throws {
-        
         LoadingIndicator.startLoading()
         
         if dataSource.isEmpty || needRefresh || needsLoadMore {

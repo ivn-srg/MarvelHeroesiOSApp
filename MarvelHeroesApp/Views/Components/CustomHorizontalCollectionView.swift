@@ -32,20 +32,19 @@ class CustomHorizontalCollectionView: UIView {
     var collectionType: EntitiesType?
     
     // MARK: - UI components
-    private let collectionViewTitleLbl: UILabel = {
-        let layout = UILabel()
-        layout.translatesAutoresizingMaskIntoConstraints = false
-        layout.font = UIFont(name: Font.InterBold, size: 25)
-        layout.textColor = .white
-        layout.numberOfLines = 1
-        return layout
+    private let collectionViewTitleLbl: LabelWithPadding = {
+        let label = LabelWithPadding()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont(name: Font.InterBold, size: 25)
+        label.textColor = .white
+        label.numberOfLines = 1
+        label.edgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        return label
     }()
     
     private let collectionViewLayout: UICollectionViewFlowLayout = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        layout.minimumLineSpacing = 10
-        layout.minimumInteritemSpacing = 10
         return layout
     }()
     
@@ -59,14 +58,6 @@ class CustomHorizontalCollectionView: UIView {
         collectionView.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         collectionView.register(GeneralCollectionViewCell.self, forCellWithReuseIdentifier: GeneralCollectionViewCell.identifier)
         return collectionView
-    }()
-    
-    private let cellTitleLbl: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 3
-        label.font = .systemFont(ofSize: 14, weight: .medium)
-        return label
     }()
     
     // MARK: - Life cycle
@@ -87,7 +78,7 @@ class CustomHorizontalCollectionView: UIView {
         }
         addSubview(collectionView)
         collectionView.snp.makeConstraints {
-            $0.top.equalTo(collectionViewTitleLbl.snp.bottom).offset(5)
+            $0.top.equalTo(collectionViewTitleLbl.snp.bottom).offset(10)
             $0.horizontalEdges.bottom.equalToSuperview()
         }
     }
@@ -115,7 +106,7 @@ extension CustomHorizontalCollectionView: UICollectionViewDataSource {
         }
         
         guard let entity = data[indexPath.row] as? ComicsItemRO else { return cell }
-        cell.configure(comics: entity)
+        cell.configure(entities: entity)
         
         return cell
     }
@@ -128,6 +119,22 @@ extension CustomHorizontalCollectionView: UICollectionViewDelegateFlowLayout {
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAt indexPath: IndexPath
     ) -> CGSize {
-        CGSize(width: 200, height: self.frame.height)
+        CGSize(width: 240, height: self.frame.height)
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        minimumInteritemSpacingForSectionAt section: Int
+    ) -> CGFloat {
+        40
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        minimumLineSpacingForSectionAt section: Int
+    ) -> CGFloat {
+        40
     }
 }

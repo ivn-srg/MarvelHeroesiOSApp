@@ -24,7 +24,7 @@ let horizontalPadding: CGFloat = 16
 // images
 let Logo = UIImage(named: "marvelLogo")
 let QuestionImage = UIImage(systemName: "questionmark")
-let MockUpImage = UIImage(named: "mockup")
+let MockUpImage = UIImage(named: "mockup")!
 let minusImage: UIImage? = {
     let img = UIImage(systemName: "minus")?.withRenderingMode(.alwaysTemplate)
         .withTintColor(.lightGray, renderingMode: .alwaysOriginal)

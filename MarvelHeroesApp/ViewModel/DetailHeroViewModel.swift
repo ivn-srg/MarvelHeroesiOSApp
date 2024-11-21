@@ -14,7 +14,7 @@ final class DetailHeroViewModel {
     
     var heroItem: HeroRO
     private let networkService = ApiServiceConfiguration.shared.apiService
-    var realmDb = RealmDB.shared
+    var realmDb = RealmManager.shared
     
     init(hero: HeroRO) {
         self.heroItem = hero
@@ -50,7 +50,7 @@ final class DetailHeroViewModel {
         }
     }
     
-    func getHeroImage(from url: String, to heroImageView: UIImageView) {
-        networkService.getImageForHero(url: url, imageView: heroImageView)
+    func getHeroImage(from url: String) async throws -> UIImage {
+        try await networkService.getImage(url: url)
     }
 }

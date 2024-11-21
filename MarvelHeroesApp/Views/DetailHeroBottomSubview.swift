@@ -34,7 +34,7 @@ final class DetailHeroBottomSubview: UIView {
         let view = UIStackView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.axis = .vertical
-        view.spacing = 10
+        view.spacing = 20
         return view
     }()
     
@@ -98,33 +98,15 @@ final class DetailHeroBottomSubview: UIView {
         scrollView.addSubview(stackView)
         stackView.snp.makeConstraints {
             $0.top.equalTo(scrollView.contentLayoutGuide.snp.top)
-            $0.horizontalEdges.equalToSuperview().inset(horizontalPadding)
-            $0.width.equalToSuperview().inset(horizontalPadding)
-            $0.centerX.equalToSuperview()
+            $0.horizontalEdges.width.centerX.equalToSuperview()
         }
         
         stackView.addArrangedSubview(heroBrowseView)
         
         comicsCollectionView.snp.makeConstraints {
-            $0.height.equalTo(250)
+            $0.height.equalTo(450)
         }
         stackView.addArrangedSubview(comicsCollectionView)
-        
-        
-//        scrollView.addSubview(heroBrowseView)
-//        heroBrowseView.snp.makeConstraints {
-//            $0.top.equalTo(scrollView.contentLayoutGuide.snp.top)
-//            $0.horizontalEdges.equalTo(scrollView.contentLayoutGuide.snp.horizontalEdges)
-//            $0.width.equalToSuperview().inset(horizontalPadding)
-//        }
-//        
-//        scrollView.addSubview(comicsCollectionView)
-//        comicsCollectionView.snp.makeConstraints {
-//            $0.top.equalTo(heroBrowseView.snp.bottom).offset(10)
-//            $0.horizontalEdges.equalTo(scrollView.contentLayoutGuide.snp.horizontalEdges)
-//            $0.width.equalToSuperview().inset(horizontalPadding)
-//            $0.height.equalTo(200)
-//        }
     }
     
     // MARK: - public funcs

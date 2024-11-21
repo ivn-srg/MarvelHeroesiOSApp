@@ -8,15 +8,15 @@
 import Foundation
 
 struct ResponseFailureModel: Codable {
-    let code: String
+    let code: Int
     let status: String
     
-    init(code: Int, status: String) {
-        self.code = code.description
+    init(code: String, status: String) {
+        self.code = Int(code) ?? 0
         self.status = status
     }
     
-    init(code: String, status: String) {
+    init(code: Int, status: String) {
         self.code = code
         self.status = status
     }

@@ -52,6 +52,8 @@
 		937BF6D12BA97525007087A4 /* RoundRectButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937BF6D02BA97525007087A4 /* RoundRectButton.swift */; };
 		937DF9092CDE55EC000A003A /* PrimaryModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937DF9082CDE55DA000A003A /* PrimaryModels.swift */; };
 		937DF90A2CDE55EC000A003A /* PrimaryModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937DF9082CDE55DA000A003A /* PrimaryModels.swift */; };
+		938163012CEF6A6500E105E3 /* LabelWithPadding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938163002CEF6A5800E105E3 /* LabelWithPadding.swift */; };
+		938163022CEF6A6500E105E3 /* LabelWithPadding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938163002CEF6A5800E105E3 /* LabelWithPadding.swift */; };
 		9381ADE62C06576300BFE4BF /* MarvelHeroesAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9381ADE52C06576300BFE4BF /* MarvelHeroesAppUITests.swift */; };
 		9381ADE82C06576300BFE4BF /* MarvelHeroesAppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9381ADE72C06576300BFE4BF /* MarvelHeroesAppUITestsLaunchTests.swift */; };
 		9381ADF72C065C6200BFE4BF /* Assets.xcassets in Sources */ = {isa = PBXBuildFile; fileRef = 93CD1EA62B90F16600AD2752 /* Assets.xcassets */; };
@@ -148,6 +150,7 @@
 		936FEF422C0AE61300D9441E /* Screens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screens.swift; sourceTree = "<group>"; };
 		937BF6D02BA97525007087A4 /* RoundRectButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundRectButton.swift; sourceTree = "<group>"; };
 		937DF9082CDE55DA000A003A /* PrimaryModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryModels.swift; sourceTree = "<group>"; };
+		938163002CEF6A5800E105E3 /* LabelWithPadding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelWithPadding.swift; sourceTree = "<group>"; };
 		9381ADE52C06576300BFE4BF /* MarvelHeroesAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarvelHeroesAppUITests.swift; sourceTree = "<group>"; };
 		9381ADE72C06576300BFE4BF /* MarvelHeroesAppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarvelHeroesAppUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		9381ADF42C06589900BFE4BF /* MarvelHeroesApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MarvelHeroesApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -291,6 +294,7 @@
 		9359D5482CEA6188002C9161 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				938163002CEF6A5800E105E3 /* LabelWithPadding.swift */,
 				9359D5492CEA61C1002C9161 /* TextBlockWithTitleView.swift */,
 				933B27062B931F1100B5E9B4 /* TriangView.swift */,
 				937BF6D02BA97525007087A4 /* RoundRectButton.swift */,
@@ -649,6 +653,7 @@
 				9335EEFA2CDD002A003EFC22 /* Ext+LocalizableStr.swift in Sources */,
 				9359D54D2CEA69BA002C9161 /* GeneralCollectionViewCell.swift in Sources */,
 				933B502C2CDBE4C300F19F45 /* DetailHeroBottomSubview.swift in Sources */,
+				938163012CEF6A6500E105E3 /* LabelWithPadding.swift in Sources */,
 				9381AE0D2C065C6200BFE4BF /* RoundRectButton.swift in Sources */,
 				9381AE0E2C065C6200BFE4BF /* LoaderView.swift in Sources */,
 				9344A4022CEB4C2A009E35BF /* CustomHorizontalCollectionView.swift in Sources */,
@@ -696,6 +701,7 @@
 				939E7F842B9486D200BEE787 /* Constants.swift in Sources */,
 				933B50352CDBEDEC00F19F45 /* GenericModels.swift in Sources */,
 				937DF9092CDE55EC000A003A /* PrimaryModels.swift in Sources */,
+				938163022CEF6A6500E105E3 /* LabelWithPadding.swift in Sources */,
 				9335EEF92CDD002A003EFC22 /* Ext+LocalizableStr.swift in Sources */,
 				9303D24E2B9210B8003567A5 /* HeroCollectionViewCell.swift in Sources */,
 				9335EEF72CDD0000003EFC22 /* Ext+AlertController.swift in Sources */,

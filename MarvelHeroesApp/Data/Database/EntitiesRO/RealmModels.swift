@@ -42,6 +42,10 @@ final class ThumbnailRO: EmbeddedObject {
     @Persisted var path: String
     @Persisted var thumbnailExtension: String
     
+    var fullPath: String {
+        return "\(self.path).\(self.thumbnailExtension)"
+    }
+    
     convenience init(heroImageData: Thumbnail) {
         self.init()
         self.path = heroImageData.path
@@ -177,7 +181,7 @@ final class TextObjectRO: EmbeddedObject {
 
 final class DateElementRO: EmbeddedObject {
     @Persisted var type: String
-    @Persisted var date: Date?
+    @Persisted var date: String
 }
 
 final class PriceRO: EmbeddedObject {

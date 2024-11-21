@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 
 final class APIMockManager: ApiServiceProtocol {
+    
     func urlString(endpoint: APIType, offset: Int?, entityId: Int?, finalURL: String?) throws -> String { "" }
     
     func performRequest<T>(from urlString: String, modelType: T.Type) async throws -> T where T : Decodable {
@@ -113,13 +114,13 @@ final class APIMockManager: ApiServiceProtocol {
         completion(.success(heroInfo))
     }
     
-    func getImageForHero(url: String, imageView: UIImageView) {
+    func getImage(url: String) async throws -> UIImage {
         if url == "Deadpool." {
-            imageView.image = UIImage(named: "deadPool")
+            return UIImage(named: "deadPool") ?? UIImage()
         } else if url == "Iron Man." {
-            imageView.image = UIImage(named: "ironMan")
+            return UIImage(named: "ironMan") ?? UIImage()
         } else {
-            imageView.image = UIImage(named: "mockup")
+            return UIImage(named: "mockup") ?? UIImage()
         }
     }
 }

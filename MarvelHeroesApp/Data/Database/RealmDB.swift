@@ -13,13 +13,53 @@ protocol HeroDAO {
     func getHeroes()-> Heroes
 }
 
-class RealmDB {
+final class RealmManager {
+    static let shared = RealmManager()
     
-    static let shared : RealmDB = RealmDB()
+    private init() {}
+    
+    private var realm: Realm?
+
+    func setupRealm() {
+        DispatchQueue.main.sync {
+            do {
+                self.realm = try Realm()
+            } catch {
+                print("Error initializing Realm: \(error)")
+            }
+        }
+    }
+
+    func getRealm() -> Realm? {
+        if Thread.isMainThread {
+            return realm
+        } else {
+            return DispatchQueue.main.sync {
+                return realm
+            }
+        }
+    }
 }
 
+extension RealmManager {
+    func asyncGetRealm() async -> Realm? {
+        return await MainActor.run {
+            return self.getRealm()
+        }
+    }
+
+    func fetchCachedImage(url: String) async -> CachedImageData? {
+        guard let realm = await asyncGetRealm() else { return nil }
+
+        let cachedImage = realm.objects(CachedImageData.self).filter { $0.url == url }.first
+        return cachedImage
+    }
+}
+
+
+
 // MARK: - Hero
-extension RealmDB: HeroDAO {
+extension RealmManager: HeroDAO {
     
     func saveHeroes(heroes: Heroes) -> (Bool) {
         do {
@@ -71,6 +111,33 @@ extension RealmDB: HeroDAO {
             
             if let realmHeroObject = realm.objects(HeroRO.self).filter("id == %@", itemId).first {
                 return realmHeroObject
+            } else {
+                return nil
+            }
+        } catch {
+            return nil
+        }
+    }
+    
+    func saveComics(_ comics: ComicsItemModel) -> (Bool) {
+        do {
+            let realm = try Realm()
+            
+            try realm.write {
+                realm.add(ComicsItemModelRO(comicsData: comics), update: .modified)
+            }
+        } catch {
+            return false
+        }
+        return true
+    }
+    
+    func getComics(by resourseURI: String) -> ComicsItemModelRO? {
+        do {
+            let realm = try Realm()
+            
+            if let realmComicsObject = realm.objects(ComicsItemModelRO.self).filter("resourceURI == %@", resourseURI).first {
+                return realmComicsObject
             } else {
                 return nil
             }

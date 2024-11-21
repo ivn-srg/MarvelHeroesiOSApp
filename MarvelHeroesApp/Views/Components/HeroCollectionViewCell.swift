@@ -14,7 +14,7 @@ final class HeroCollectionViewCell: UICollectionViewCell {
     
     static let identifier = "CollectionViewCellId"
     var avgColorOfImage: UIColor = UIColor()
-    var heroImage: UIImage = UIImage()
+    var heroImage: UIImage?
     var apiService = ApiServiceConfiguration.shared.apiService
     
     // MARK: - UI components
@@ -23,7 +23,6 @@ final class HeroCollectionViewCell: UICollectionViewCell {
         let iv = UIImageView()
         iv.translatesAutoresizingMaskIntoConstraints = false
         iv.contentMode = .scaleAspectFill
-        iv.image = MockUpImage
         iv.tintColor = .white
         iv.clipsToBounds = true
         iv.layer.cornerRadius = 20
@@ -39,6 +38,13 @@ final class HeroCollectionViewCell: UICollectionViewCell {
         lbl.numberOfLines = 2
         lbl.accessibilityIdentifier = "heroCellName"
         return lbl
+    }()
+    
+    private lazy var activityIndicator: UIActivityIndicatorView = {
+        let ai = UIActivityIndicatorView(style: .medium)
+        ai.translatesAutoresizingMaskIntoConstraints = false
+        ai.color = loaderColor
+        return ai
     }()
 
     // MARK: - Lyfecycle
@@ -60,26 +66,37 @@ final class HeroCollectionViewCell: UICollectionViewCell {
         setupUI()
         
         heroImageView.addObserver(self, forKeyPath: "image", options: [.new], context: nil)
-        apiService.getImageForHero(url: viewModel.heroImageUrlString, imageView: heroImageView)
+        
+        Task {
+            activityIndicator.startAnimating()
+            do {
+                heroImageView.image = try await apiService.getImage(url: viewModel.heroImageUrlString)
+            } catch {
+                print(error)
+            }
+            activityIndicator.stopAnimating()
+        }
         
         nameOfHero.text = viewModel.heroItem.name
     }
     
     private func setupUI() {
-        self.addSubview(heroImageView)
+        contentView.addSubview(heroImageView)
         heroImageView.snp.makeConstraints{
             $0.verticalEdges.width.equalToSuperview()
         }
         
-        self.addSubview(nameOfHero)
+        contentView.addSubview(nameOfHero)
         nameOfHero.snp.makeConstraints {
             $0.bottom.equalTo(self.snp.bottom).offset(-30)
             $0.horizontalEdges.equalToSuperview().inset(25)
         }
+        
+        contentView.addSubview(activityIndicator)
+        activityIndicator.center = center
     }
     
     // MARK: - KVO
-    
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == "image" {
             guard let img = heroImageView.image else { return }

@@ -62,21 +62,8 @@ struct Series: Codable {
 
 // MARK: - DateElement
 struct DateElement: Codable {
-    let type: DateType
-    let date: Date?
-    
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.type = try container.decode(DateType.self, forKey: .type)
-        if let parsedDate = try container.decodeIfPresent(Date.self, forKey: .date) {
-            self.date = parsedDate
-            return
-        }
-        throw DecodingError.typeMismatch(
-            DateElement.self,
-            DecodingError.Context(codingPath: container.codingPath, debugDescription: "Wrong type for DateElement")
-        )
-    }
+    let type: String
+    let date: String
 }
 
 enum DateType: String, Codable {

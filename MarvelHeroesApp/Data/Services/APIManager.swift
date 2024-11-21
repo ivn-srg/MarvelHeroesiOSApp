@@ -23,7 +23,7 @@ protocol ApiServiceProtocol: AnyObject {
         codableModelType: T.Type
     ) async throws -> T
     
-    func getImageForHero(url: String, imageView: UIImageView)
+    func getImage(url: String) async throws -> UIImage
     
     func urlString(endpoint: APIType, offset: Int?, entityId: Int?, finalURL: String?) throws -> String
 }
@@ -63,7 +63,7 @@ enum APIType {
 
 enum HeroError: Error, LocalizedError {
     case invalidURL, parsingError(Error), serializationError(Error), noInternetConnection, timeout,
-         otherNetworkError(Error), notFoundEntity
+         otherNetworkError(Error), notFoundEntity, cashingFailed(Error), unexpectedData
 }
 
 final class ApiServiceConfiguration {
@@ -163,69 +163,51 @@ final class APIManager: ApiServiceProtocol {
         }
     }
     
-    @MainActor func getImageForHero(url: String, imageView: UIImageView) {
-        do {
-            let realm = try Realm()
-            let cachedImage = realm.objects(CachedImageData.self).filter { $0.url == url }.first
-            
-            if let cachedImage = cachedImage, let imageData = cachedImage.imageData, let image = UIImage(data: imageData) {
-                imageView.image = image
-                return
-            }
-        } catch {
-            print("Error saving image to Realm cache: \(error)")
-            imageView.image = MockUpImage
+    // MARK: - getting Image funcs
+    func getImage(url: String) async throws -> UIImage {
+        if let cachedImage = await RealmManager.shared.fetchCachedImage(url: url),
+            let imageData = cachedImage.imageData,
+            let image = UIImage(data: imageData) {
+            return image
         }
         
         // if image isn't cached
-        getImageForHeroFromNet(url: url, imageView: imageView)
+        return try await getImageForHeroFromNet(url: url)
     }
     
-    // MARK: - private func
-    
-    @MainActor private func getImageForHeroFromNet(url: String, imageView: UIImageView) {
-        let url = URL(string: url)
-        let processor = RoundCornerImageProcessor(cornerRadius: 20)
-        let indicatorStyle = UIActivityIndicatorView.Style.large
-        let indicator = UIActivityIndicatorView(style: indicatorStyle)
+    private func getImageForHeroFromNet(url: String) async throws -> UIImage {
+        guard let url = URL(string: url) else { throw HeroError.invalidURL }
         
-        indicator.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        imageView.kf.indicatorType = .activity
-        (imageView.kf.indicator?.view as? UIActivityIndicatorView)?.color = .white
+        var request = try URLRequest(url: url, method: .get)
+        request.allHTTPHeaderFields = ["Accept": "application/json,image/png,image/jpeg,image/gif"]
         
-        imageView.kf.setImage(with: url, options: [.processor(processor), .transition(.fade(0.2))]){ result in
-            switch result {
-            case .success(let imageResult):
-                imageView.image = imageResult.image
-                
-                let cachedImageData = CachedImageData(
-                    url: url?.absoluteString ?? "",
-                    imageData: imageResult.image.pngData()
-                )
-                
-                do {
+        let (data, _) = try await URLSession.shared.data(for: request)
+        
+        if let uiImage = UIImage(data: data) {
+            let cachedImageData = CachedImageData(
+                url: url.absoluteString,
+                imageData: data
+            )
+            
+            do {
+                try await MainActor.run {
                     let realm = try Realm()
                     
                     try realm.write {
                         realm.add(cachedImageData, update: .modified)
                     }
-                    print("Downloaded and cached image for \(String(describing: url))")
-                } catch {
-                    print("Error saving image to Realm cache: \(error)")
                 }
-                break
-            case .failure(let error):
-                imageView.image = MockUpImage
-                print("Error loading image: \(error)")
-                
-                DispatchQueue.main.async {
-                    LoadingIndicator.stopLoading()
-                }
-                break
+            } catch {
+                throw HeroError.cashingFailed("Error saving image to Realm cache: \(error)".errorString)
             }
+            return uiImage
+        } else {
+            print("Error loading image: \(url)")
+            return MockUpImage
         }
     }
     
+    // MARK: - private utility func
     private func getHeroError(error: AFError, data: Data?) -> Error? {
         if let data = data,
            let failure = try? JSONDecoder().decode(ResponseFailureModel.self, from: data) {
