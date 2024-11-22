@@ -84,7 +84,7 @@ final class HeroListViewController: UIViewController {
     private let activityIndicator: UIActivityIndicatorView = {
         let activityIndicator = UIActivityIndicatorView(style: .medium)
         activityIndicator.hidesWhenStopped = true
-        activityIndicator.color = loaderColor
+        activityIndicator.color = UIColor.loaderColor
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         return activityIndicator
     }()
@@ -104,7 +104,9 @@ final class HeroListViewController: UIViewController {
         super.viewDidLoad()
         
         setupUI()
-        viewModel.fetchHeroesData(into: collectionView)
+        executeWithErrorHandling {
+            try viewModel.fetchHeroesData(into: collectionView)
+        }
         
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
@@ -114,7 +116,7 @@ final class HeroListViewController: UIViewController {
     
     private func setupUI() {
         
-        box.backgroundColor = bgColor
+        box.backgroundColor = UIColor.bgColor
         
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         
@@ -164,13 +166,15 @@ final class HeroListViewController: UIViewController {
         }
     }
     
-    private func moveFocusOnFirstItem() {
-        if customLayout.currentPage == 0 {
-            let indexPath = IndexPath(item: 0, section: 0)
-            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-            
-            setupCell()
-        }
+    private func moveFocusOnItem() {
+        let itemCount = collectionView.numberOfItems(inSection: 0)
+        var (currentPage, _) = UDManager.shared.getCurrentPosition()
+        currentPage = currentPage > itemCount ? itemCount - 1 : currentPage
+        
+        let indexPath = IndexPath(item: currentPage, section: 0)
+        collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+        
+        setupCell()
     }
     
     @objc func pull2refresh(_ gesture: UIPanGestureRecognizer) {
@@ -189,7 +193,9 @@ final class HeroListViewController: UIViewController {
         
         if gesture.state == .ended {
             if newY > maxPullDownDistance {
-                viewModel.fetchHeroesData(into: collectionView, needRefresh: true)
+                executeWithErrorHandling {
+                    try viewModel.fetchHeroesData(into: collectionView, needRefresh: true)
+                }
             }
             UIView.animate(withDuration: 0.3) {
                 self.box.transform = CGAffineTransform.identity
@@ -219,13 +225,12 @@ extension HeroListViewController: UICollectionViewDelegate, UICollectionViewData
         
         cell.configure(viewModel: HeroCollectionViewCellViewModel(hero: HeroRO(heroData: hero)))
         
-        moveFocusOnFirstItem()
+        moveFocusOnItem()
         
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
         let hero = viewModel.dataSource[indexPath.row]
         
         if indexPath.item == customLayout.currentPage {
@@ -243,8 +248,11 @@ extension HeroListViewController: UICollectionViewDelegate, UICollectionViewData
 
 extension HeroListViewController: UICollectionViewDelegateFlowLayout {
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAt indexPath: IndexPath
+    ) -> CGSize {
         CGSize(
             width: collectionView.frame.width * 0.7,
             height: collectionView.frame.height * 0.75
@@ -265,7 +273,9 @@ extension HeroListViewController {
             
             if lastRow >= totalRows - 1 {
                 if collectionView.contentOffset.x > 0 {
-                    viewModel.fetchHeroesData(into: collectionView, needsLoadMore: true)
+                    executeWithErrorHandling {
+                        try viewModel.fetchHeroesData(into: collectionView, needsLoadMore: true)
+                    }
                 }
             }
         }
@@ -276,7 +286,6 @@ extension HeroListViewController {
         guard let cell = collectionView.cellForItem(at: indexPath) as? HeroCollectionViewCell else { return }
 
         updateTriangleViewColor(didLoadImage: cell.heroImage)
-
         transformCell(cell)
     }
     

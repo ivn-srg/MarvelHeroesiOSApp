@@ -9,13 +9,24 @@ import UIKit
 
 final class CustomHeroItemLayer: UICollectionViewFlowLayout {
     
-    var previousOffset: CGFloat = 0.0
-    var currentPage = 0
+    var currentPage = 0 {
+        didSet {
+            UDManager.shared.saveCurrentPage(currentPage)
+        }
+    }
+    
+    var previousOffset: CGFloat = 0 {
+        didSet {
+            UDManager.shared.savePreviousOffset(previousOffset)
+        }
+    }
     
     override func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint, withScrollingVelocity velocity: CGPoint) -> CGPoint {
         guard let cv = collectionView else {
             return super.targetContentOffset(forProposedContentOffset: proposedContentOffset, withScrollingVelocity: velocity)
         }
+        
+        (currentPage, previousOffset) = UDManager.shared.getCurrentPosition()
         
         let itemCount = cv.numberOfItems(inSection: 0)
         
@@ -27,6 +38,7 @@ final class CustomHeroItemLayer: UICollectionViewFlowLayout {
         
         let offset = updateOffset(cv)
         previousOffset = offset
+        
         return CGPoint(x: offset, y: proposedContentOffset.y)
     }
     

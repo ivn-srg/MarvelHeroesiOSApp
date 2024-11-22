@@ -10,43 +10,38 @@ import UIKit
 
 final class HeroListViewModel {
     
-    var dataSource: [HeroModel] = []
-    var realmDb = RealmDB.shared
+    var dataSource: [HeroItemModel] = []
+    var realmDb = RealmManager.shared
     let networkService = ApiServiceConfiguration.shared.apiService
     
     // MARK: - Network work
     
-    func fetchHeroesData(into collectionView: UICollectionView, needRefresh: Bool = false, needsLoadMore: Bool = false) {
-        
+    func fetchHeroesData(into collectionView: UICollectionView, needRefresh: Bool = false, needsLoadMore: Bool = false) throws {
         LoadingIndicator.startLoading()
         
         if dataSource.isEmpty || needRefresh || needsLoadMore {
             let offset = needsLoadMore ? countOfRow() : 0
-            DispatchQueue.global().async {
-                self.networkService.fetchHeroesData(from: offset) { [weak self] (result) in
-                    guard self != nil else { return }
-                    
-                    switch result {
-                    case .success(let heroes):
-                        if heroes.count > 0 {
-                            let statusOfSaving = self?.realmDb.saveHeroes(heroes: heroes)
-                            self?.dataSource.append(contentsOf: heroes)
-                            print("Saving status \(statusOfSaving ?? false)")
-                        }
-                        
-                        DispatchQueue.main.async {
-                            LoadingIndicator.stopLoading()
-                            collectionView.reloadData()
-                        }
-                    case .failure(let error):
-                        self?.dataSource = self?.realmDb.getHeroes() ?? [mockUpHeroData]
-                        
-                        DispatchQueue.main.async {
-                            LoadingIndicator.stopLoading()
-                            print(error)
-                        }
+            let urlString = try apiManager.urlString(endpoint: .getHeroes, offset: offset)
+            
+            Task {
+                do {
+                    let heroesData = try await networkService.performRequest(
+                        from: urlString,
+                        modelType: DataWrapper<HeroItemModel>.self
+                    )
+                    if heroesData.data.count > 0 {
+                        let statusOfSaving = realmDb.saveHeroes(heroes: heroesData.data.results)
+                        dataSource.append(contentsOf: heroesData.data.results)
+                        print("Saving status \(statusOfSaving)")
                     }
+                    
+                } catch {
+                    let cashedHeroed = realmDb.getHeroes()
+                    dataSource = cashedHeroed.isEmpty ? [mockUpHeroData] : cashedHeroed
+                    print(error)
                 }
+                LoadingIndicator.stopLoading()
+                await collectionView.reloadData()
             }
         } else {
             LoadingIndicator.stopLoading()
