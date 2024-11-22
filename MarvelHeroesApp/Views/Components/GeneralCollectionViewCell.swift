@@ -9,7 +9,6 @@ import UIKit
 
 protocol DetailHeroItemCellProtocol: AnyObject {
     var viewModel: CellViewModelProtocol? { get }
-    var viewController: DetailHeroViewController? { get }
     static var identifier: String { get }
     
     func setupUI()
@@ -19,13 +18,21 @@ protocol CellViewModelProtocol: AnyObject {
     func getImage() async throws -> UIImage
 }
 
+@objc protocol GeneralHeroItemProtocol: AnyObject {
+    var resourceURI: String { get }
+    var name: String { get }
+    @objc optional var role: String { get }
+    @objc optional var type: String { get }
+}
+
+
 final class GeneralCollectionViewCell: UICollectionViewCell, DetailHeroItemCellProtocol {
     // MARK: - Variables
     static var identifier = "CollectionViewCellId"
     
     var viewModel: CellViewModelProtocol?
-    weak var viewController: DetailHeroViewController?
     private var entityImage: UIImage?
+    private var cellType: EntitiesType?
     
     // MARK: - UI components
     
@@ -52,29 +59,32 @@ final class GeneralCollectionViewCell: UICollectionViewCell, DetailHeroItemCellP
     private lazy var activityIndicator: UIActivityIndicatorView = {
         let ai = UIActivityIndicatorView(style: .medium)
         ai.translatesAutoresizingMaskIntoConstraints = false
-        ai.color = loaderColor
+        ai.color = UIColor.loaderColor
         return ai
     }()
 
     // MARK: - Lyfecycle
-    
     override func prepareForReuse() {
         super.prepareForReuse()
         
         cellTitleLbl.text = nil
         cellImageView.image = nil
+        activityIndicator.removeFromSuperview()
     }
     
     // MARK: - Functions
-    @MainActor func configure(entities: ComicsItemRO?) {
+    @MainActor func configure(collectionType: EntitiesType?, entities: GeneralHeroItemProtocol?) {
         setupUI()
-        guard let entities = entities else {
-            cellImageView.image = MockUpImage
+        
+        cellType = collectionType
+        
+        guard let entities = entities, let cellType = cellType else {
+            cellImageView.image = emptyEntityImage
             cellTitleLbl.text = ""
             return
         }
         
-        viewModel = ComicsCellViewModel(resourseURI: entities.resourceURI)
+        viewModel = GeneralCellViewModel(cellType: cellType, resourseURI: entities.resourceURI)
         
         cellImageView.addObserver(self, forKeyPath: "cellImageView", options: [.new], context: nil)
         
@@ -109,7 +119,9 @@ final class GeneralCollectionViewCell: UICollectionViewCell, DetailHeroItemCellP
         }
         
         contentView.addSubview(activityIndicator)
-        activityIndicator.center = center
+        activityIndicator.snp.makeConstraints {
+            $0.center.equalTo(cellImageView.snp.center)
+        }
     }
     
     // MARK: - KVO

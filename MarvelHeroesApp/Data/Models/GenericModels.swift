@@ -8,7 +8,7 @@
 struct DataWrapper<T: Codable>: Codable {
     let code: Int
     let status: String
-    let etag: String
+    let etag: String?
     let data: DataContainer<T>
 }
 

@@ -33,23 +33,11 @@ struct ComicsItem: Codable {
 
 // MARK: - Creators
 struct CreatorsItem: Codable {
-    enum Role: String, Codable {
-        case colorist = "colorist"
-        case editor = "editor"
-        case inker = "inker"
-        case letterer = "letterer"
-        case other = "other"
-        case penciler = "penciler"
-        case penciller = "penciller"
-        case pencillerCover = "penciller (cover)"
-        case writer = "writer"
-    }
-    
     let resourceURI: String
     let name: String
-    let role: Role
+    let role: String
     
-    static var empty: Self { .init(resourceURI: "", name: "", role: .other) }
+    static var empty: Self { .init(resourceURI: "", name: "", role: "") }
 }
 
 // MARK: - Series
@@ -121,8 +109,8 @@ struct Thumbnail: Codable {
 
 extension Thumbnail {
     init() {
-        self.path = ""
-        self.thumbnailExtension = ""
+        self.path = imageNotAvailable
+        self.thumbnailExtension = "jpg"
     }
     
     init(thumbRO: ThumbnailRO) {
@@ -136,7 +124,28 @@ extension Thumbnail {
 }
 
 // MARK: - URLElement
+enum EntityURLType: String {
+    case detail = "detail"
+    case wiki = "wiki"
+    case comicLink = "comicLink"
+    case inAppLink = "inAppLink"
+    case purchase = "purchase"
+    case reader = "reader"
+}
+
 struct URLElement: Codable {
     let type: String
     let url: String
+    
+    var urlType: EntityURLType {
+        switch type {
+            case "detail": return .detail
+            case "wiki": return .wiki
+            case "comicLink": return .comicLink
+            case "inAppLink": return .inAppLink
+            case "purchase": return .purchase
+            case "reader": return .reader
+            default: return .detail
+        }
+    }
 }

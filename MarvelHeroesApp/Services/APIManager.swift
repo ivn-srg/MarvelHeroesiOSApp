@@ -140,6 +140,7 @@ final class APIManager: ApiServiceProtocol {
                 let result = try JSONDecoder().decode(codableModelType, from: data)
                 return result
             } catch {
+                print(HeroError.parsingError(error))
                 let errorModel = try JSONDecoder().decode(ResponseFailureModel.self, from: data)
                 let errorMessage = StringError(errorModel.status)
                 throw HeroError.parsingError(errorMessage)
@@ -165,6 +166,12 @@ final class APIManager: ApiServiceProtocol {
     
     // MARK: - getting Image funcs
     func getImage(url: String) async throws -> UIImage {
+        if url == "entity." || url == "entity" {
+            return emptyEntityImage
+        } else if url == "hero." || url == "hero" || url == "\(imageNotAvailable).jpg" {
+            return MockUpImage
+        }
+        
         if let cachedImage = await RealmManager.shared.fetchCachedImage(url: url),
             let imageData = cachedImage.imageData,
             let image = UIImage(data: imageData) {
@@ -203,7 +210,7 @@ final class APIManager: ApiServiceProtocol {
             return uiImage
         } else {
             print("Error loading image: \(url)")
-            return MockUpImage
+            return emptyEntityImage
         }
     }
     

@@ -9,6 +9,13 @@ import UIKit
 import CommonCrypto
 
 extension UIColor {
+    static let dirtyWhite = UIColor(rgb: 0xefffff)
+    static let bgColor = UIColor(rgb: 0x2b272b)
+    static let loaderColor = UIColor(rgb: 0xF31B2A)
+    static let darkRedColor = UIColor(rgb: 0x931c29)
+}
+
+extension UIColor {
     convenience init(red: Int, green: Int, blue: Int) {
         assert(red >= 0 && red <= 255, "Invalid red component")
         assert(green >= 0 && green <= 255, "Invalid green component")

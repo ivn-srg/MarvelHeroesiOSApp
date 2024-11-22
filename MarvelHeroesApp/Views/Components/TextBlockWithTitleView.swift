@@ -21,7 +21,7 @@ final class TextBlockWithTitleView: UIView {
         txt.textColor = .white
         txt.text = "Overview".localized
         txt.numberOfLines = 0
-        txt.edgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        txt.edgeInsets = UIEdgeInsets(top: 0, left: horizontalPadding, bottom: 0, right: horizontalPadding)
         return txt
     }()
     
@@ -32,7 +32,7 @@ final class TextBlockWithTitleView: UIView {
         txt.textColor = .white
         txt.lineBreakMode = .byWordWrapping
         txt.numberOfLines = 0
-        txt.edgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        txt.edgeInsets = UIEdgeInsets(top: 0, left: horizontalPadding, bottom: 0, right: horizontalPadding)
         return txt
     }()
     

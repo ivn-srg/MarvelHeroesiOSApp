@@ -10,6 +10,8 @@ import UIKit
 final class DetailHeroBottomSubview: UIView {
     // MARK: - Fields
     private var viewModel: DetailHeroViewModel
+    private var navControl: UINavigationController?
+    private var startScrollPosition: CGFloat?
     
     // MARK: - UI components
     private lazy var topSwipeIcon: UIImageView = {
@@ -43,29 +45,57 @@ final class DetailHeroBottomSubview: UIView {
         text: viewModel.heroItem.heroDescription.isEmpty ? heroDescriptionMock : viewModel.heroItem.heroDescription
     )
     
-    private let comicsCollectionView: CustomHorizontalCollectionView = {
+    private lazy var comicsCollectionView: CustomHorizontalCollectionView = {
         let view = CustomHorizontalCollectionView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.collectionType = .comics
         return view
     }()
     
+    private lazy var seriesCollectionView: CustomHorizontalCollectionView = {
+        let view = CustomHorizontalCollectionView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.collectionType = .series
+        return view
+    }()
+    
+    private lazy var storiesCollectionView: CustomHorizontalCollectionView = {
+        let view = CustomHorizontalCollectionView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.collectionType = .stories
+        return view
+    }()
+    
+    private lazy var eventsCollectionView: CustomHorizontalCollectionView = {
+        let view = CustomHorizontalCollectionView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.collectionType = .events
+        return view
+    }()
+    
+    private lazy var buttonStackView: StackWithButtonsView = {
+        let view = StackWithButtonsView(
+            navigationController: self.navControl,
+            listOfURLs: Array(viewModel.heroItem.urls)
+        )
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    var currentViewTopConstraint: NSLayoutConstraint!
+    
 //    let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
     
     // MARK: - Lyfecycle
-    init(vm: DetailHeroViewModel) {
+    init(navigationController: UINavigationController?, vm: DetailHeroViewModel) {
         self.viewModel = vm
+        self.navControl = navigationController
         super.init(frame: .zero)
         
-        if let comicsData = viewModel.heroItem.comics {
-            comicsCollectionView.update(with: comicsData.items)
-        } else {
-            let sampleData = mockUpListData
-            mockUpListData.insert(contentsOf: Array(repeating: ComicsItemRO(), count: 5), at: 0)
-            comicsCollectionView.update(with: sampleData)
-        }
-        
-//        addGestureRecognizer(panGesture)
+        comicsCollectionView.update(with: viewModel.heroItem.comics)
+        seriesCollectionView.update(with: viewModel.heroItem.series)
+        storiesCollectionView.update(with: viewModel.heroItem.stories)
+        eventsCollectionView.update(with: viewModel.heroItem.events)
         
         configureView()
     }
@@ -76,7 +106,7 @@ final class DetailHeroBottomSubview: UIView {
     
     // MARK: - UI setup
     private func configureView() {
-        backgroundColor = bgColor
+        backgroundColor = UIColor.bgColor
         layer.maskedCorners = .init(arrayLiteral: [.layerMinXMinYCorner, .layerMaxXMinYCorner])
         layer.cornerRadius = 25
         
@@ -88,17 +118,16 @@ final class DetailHeroBottomSubview: UIView {
         }
         
         addSubview(scrollView)
-        let scrollableContentSize = CGSize(width: frame.width, height: frame.height - topSwipeIcon.frame.height)
-        scrollView.contentSize = scrollableContentSize
         scrollView.snp.makeConstraints {
             $0.top.equalTo(topSwipeIcon.snp.bottom).offset(10)
-            $0.horizontalEdges.bottomMargin.equalToSuperview()
+            $0.bottomMargin.equalTo(safeAreaLayoutGuide.snp.bottomMargin)
+            $0.horizontalEdges.equalTo(safeAreaLayoutGuide.snp.horizontalEdges)
         }
         
         scrollView.addSubview(stackView)
         stackView.snp.makeConstraints {
             $0.top.equalTo(scrollView.contentLayoutGuide.snp.top)
-            $0.horizontalEdges.width.centerX.equalToSuperview()
+            $0.horizontalEdges.width.centerX.bottomMargin.equalToSuperview()
         }
         
         stackView.addArrangedSubview(heroBrowseView)
@@ -107,6 +136,22 @@ final class DetailHeroBottomSubview: UIView {
             $0.height.equalTo(450)
         }
         stackView.addArrangedSubview(comicsCollectionView)
+        
+        seriesCollectionView.snp.makeConstraints {
+            $0.height.equalTo(450)
+        }
+        stackView.addArrangedSubview(seriesCollectionView)
+        
+        storiesCollectionView.snp.makeConstraints {
+            $0.height.equalTo(450)
+        }
+        stackView.addArrangedSubview(storiesCollectionView)
+        
+        eventsCollectionView.snp.makeConstraints {
+            $0.height.equalTo(450)
+        }
+        stackView.addArrangedSubview(eventsCollectionView)
+        stackView.addArrangedSubview(buttonStackView)
     }
     
     // MARK: - public funcs
@@ -119,6 +164,25 @@ final class DetailHeroBottomSubview: UIView {
 
 extension DetailHeroBottomSubview: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if startScrollPosition == nil { startScrollPosition = currentViewTopConstraint.constant }
+        guard let startScrollPosition = startScrollPosition else { return }
         
+        var offsetFromStartPosition: CGFloat {
+            currentViewTopConstraint.constant - scrollView.contentOffset.y
+        }
+        var diffStartAndOffset: CGFloat {
+            abs(startScrollPosition - offsetFromStartPosition)
+        }
+        
+        if scrollView.contentOffset.y <= 0 && !scrollView.isDecelerating {
+            print("abs(startPosition - offsetFromStartPosition) \(diffStartAndOffset)")
+            print("transition \(scrollView.contentOffset.y)")
+            currentViewTopConstraint.constant = offsetFromStartPosition
+            
+            if diffStartAndOffset > screenHeight / 6 {
+                guard let superView = navControl?.viewControllers.last as? DetailHeroViewController else { return }
+                superView.animateViewToOriginalPosition()
+            }
+        }
     }
 }

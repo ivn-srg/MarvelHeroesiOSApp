@@ -41,9 +41,9 @@ final class HeroCollectionViewCell: UICollectionViewCell {
     }()
     
     private lazy var activityIndicator: UIActivityIndicatorView = {
-        let ai = UIActivityIndicatorView(style: .medium)
+        let ai = UIActivityIndicatorView(style: .large)
         ai.translatesAutoresizingMaskIntoConstraints = false
-        ai.color = loaderColor
+        ai.color = UIColor.loaderColor
         return ai
     }()
 
@@ -88,12 +88,14 @@ final class HeroCollectionViewCell: UICollectionViewCell {
         
         contentView.addSubview(nameOfHero)
         nameOfHero.snp.makeConstraints {
-            $0.bottom.equalTo(self.snp.bottom).offset(-30)
+            $0.bottom.equalTo(snp.bottom).offset(-30)
             $0.horizontalEdges.equalToSuperview().inset(25)
         }
         
         contentView.addSubview(activityIndicator)
-        activityIndicator.center = center
+        activityIndicator.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
     }
     
     // MARK: - KVO

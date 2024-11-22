@@ -13,10 +13,6 @@ let windowScene = UIApplication.shared.connectedScenes.first(where: { $0.activat
 let window = windowScene?.windows.first(where: { $0.isKeyWindow })
 let safeArea = UIScreen.main.bounds.inset(by: window?.safeAreaInsets ?? UIEdgeInsets.zero)
 
-// color
-let bgColor = UIColor(rgb: 0x2b272b)
-let loaderColor = UIColor(rgb: 0xF31B2A)
-
 let screenWidth = UIScreen.main.bounds.width
 let screenHeight = UIScreen.main.bounds.height
 let horizontalPadding: CGFloat = 16
@@ -25,6 +21,7 @@ let horizontalPadding: CGFloat = 16
 let Logo = UIImage(named: "marvelLogo")
 let QuestionImage = UIImage(systemName: "questionmark")
 let MockUpImage = UIImage(named: "mockup")!
+let emptyEntityImage = UIImage(named: "emptyEntity")!
 let minusImage: UIImage? = {
     let img = UIImage(systemName: "minus")?.withRenderingMode(.alwaysTemplate)
         .withTintColor(.lightGray, renderingMode: .alwaysOriginal)
@@ -38,8 +35,8 @@ let mainScreenTitle = NSLocalizedString("mainScreenTitle", comment: "")
 // mockUpData
 let mockUpHeroData = HeroItemModel.emptyObject
 let heroDescriptionMock = "Just a cool Marvel hero"
-let mockUpListData = List<ComicsItemRO>()
+let mockUpListData = List<HeroEntityItemRO>()
 
 // network constants
-let heroImageNotAvailable = "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available"
+let imageNotAvailable = "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available"
 let apiManager = APIManager.shared

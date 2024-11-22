@@ -24,11 +24,33 @@ enum EntitiesType: String {
         case .series: return "Series".localized
         }
     }
+    
+    var dataWrapperType: Codable.Type {
+        switch self {
+        case .comics:
+            return ComicsItemModel.self
+        case .stories:
+            return StoriesModel.self
+        case .creators:
+            return CreatorsModel.self
+        case .events:
+            return EventsModel.self
+        case .series:
+            return SeriesModel.self
+        }
+    }
+}
+
+protocol GeneralDataContainerProtocol: AnyObject {
+    var available: Int { get }
+    var collectionURI: String { get }
+    var returned: Int { get }
+    var itemsListToArray: [GeneralHeroItemProtocol] { get }
 }
 
 class CustomHorizontalCollectionView: UIView {
     // MARK: - Fields
-    private var data = List<ComicsItemRO>()
+    private var data = [GeneralHeroItemProtocol]()
     var collectionType: EntitiesType?
     
     // MARK: - UI components
@@ -38,7 +60,7 @@ class CustomHorizontalCollectionView: UIView {
         label.font = UIFont(name: Font.InterBold, size: 25)
         label.textColor = .white
         label.numberOfLines = 1
-        label.edgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        label.edgeInsets = UIEdgeInsets(top: 0, left: horizontalPadding, bottom: 0, right: horizontalPadding)
         return label
     }()
     
@@ -55,7 +77,7 @@ class CustomHorizontalCollectionView: UIView {
         collectionView.dataSource = self
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.backgroundColor = .clear
-        collectionView.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        collectionView.contentInset = UIEdgeInsets(top: 0, left: horizontalPadding, bottom: 0, right: horizontalPadding)
         collectionView.register(GeneralCollectionViewCell.self, forCellWithReuseIdentifier: GeneralCollectionViewCell.identifier)
         return collectionView
     }()
@@ -83,10 +105,14 @@ class CustomHorizontalCollectionView: UIView {
         }
     }
     
-    func update(with data: List<ComicsItemRO>) {
-        collectionViewTitleLbl.text = collectionType?.rawValue
-        self.data = data
-        collectionView.reloadData()
+    func update(with data: GeneralDataContainerProtocol?) {
+        if let data = data?.itemsListToArray, !data.isEmpty {
+            collectionViewTitleLbl.text = collectionType?.rawValue
+            self.data = data
+            collectionView.reloadData()
+        } else {
+            self.isHidden = true
+        }
     }
 }
 
@@ -105,10 +131,13 @@ extension CustomHorizontalCollectionView: UICollectionViewDataSource {
             return UICollectionViewCell()
         }
         
-        guard let entity = data[indexPath.row] as? ComicsItemRO else { return cell }
-        cell.configure(entities: entity)
+        cell.configure(collectionType: collectionType, entities: data[indexPath.row])
         
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print("tapped")
     }
 }
 

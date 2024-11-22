@@ -7,19 +7,51 @@
 
 import Foundation
 
+protocol Item {
+    var id: Int { get }
+    var thumbnail: Thumbnail? { get }
+    var resourceURI: String { get }
+    var modified: String { get }
+}
+
 typealias Heroes = [HeroItemModel]
 
-struct HeroItemModel: Codable {
+struct HeroItemModel: Codable, Item {
     let id: Int
-    let name, description: String
+    let name: String
+    let description: String?
     let modified: String
-    let thumbnail: Thumbnail
+    let thumbnail: Thumbnail?
     let resourceURI: String
     let comics: ListOfEntitiesOfItemModel<ComicsItem>?
     let series: ListOfEntitiesOfItemModel<ComicsItem>?
     let stories: ListOfEntitiesOfItemModel<StoriesItem>?
     let events: ListOfEntitiesOfItemModel<ComicsItem>?
     let urls: [URLElement]
+    
+    init(
+        id: Int, name: String, description: String?, modified: String, thumbnail: Thumbnail?,
+        resourceURI: String, comics: ListOfEntitiesOfItemModel<ComicsItem>?,
+        series: ListOfEntitiesOfItemModel<ComicsItem>?, stories: ListOfEntitiesOfItemModel<StoriesItem>?,
+        events: ListOfEntitiesOfItemModel<ComicsItem>?, urls: [URLElement]
+    ) {
+        self.id = id
+        self.name = name
+        self.description = description
+        self.modified = modified
+        
+        if let thumbnail = thumbnail, thumbnail.path != imageNotAvailable {
+            self.thumbnail = thumbnail
+        } else {
+            self.thumbnail = Thumbnail(path: "hero", thumbnailExtension: "")
+        }
+        self.resourceURI = resourceURI
+        self.comics = comics
+        self.series = series
+        self.stories = stories
+        self.events = events
+        self.urls = urls
+    }
 }
 
 extension HeroItemModel {
@@ -99,19 +131,20 @@ extension HeroItemModel {
     }
 }
 
-struct ComicsItemModel: Codable {
-    let id, digitalId: Int
+struct ComicsItemModel: Codable, Item {
+    let id: Int
+    let digitalId: Int?
     let title: String
-    let issueNumber: Int
-    let variantDescription: String
-    let description: String
+    let issueNumber: Int?
+    let variantDescription: String?
+    let description: String?
     let modified: String
-    let isbn: String
-    let upc: String
-    let diamondCode: String
-    let ean: String
-    let issn: String
-    let format: String
+    let isbn: String?
+    let upc: String?
+    let diamondCode: String?
+    let ean: String?
+    let issn: String?
+    let format: String?
     let pageCount: Int
     let textObjects: [TextObject]
     let resourceURI: String
@@ -120,12 +153,56 @@ struct ComicsItemModel: Codable {
     let variants, collections, collectedIssues: [Series]
     let dates: [DateElement]
     let prices: [Price]
-    let thumbnail: Thumbnail
+    let thumbnail: Thumbnail?
     let images: [Thumbnail]
-    let creators: ListOfEntitiesOfItemModel<Series>
+    let creators: ListOfEntitiesOfItemModel<CreatorsItem>
     let characters: ListOfEntitiesOfItemModel<Series>
     let stories: ListOfEntitiesOfItemModel<StoriesItem>
     let events: ListOfEntitiesOfItemModel<Series>
+    
+    init(
+        id: Int, digitalId: Int?, title: String, issueNumber: Int?, variantDescription: String?, description: String?,
+        modified: String, isbn: String?, upc: String?, diamondCode: String?, ean: String?, issn: String?, format: String?,
+        pageCount: Int, textObjects: [TextObject], resourceURI: String, urls: [URLElement], series: Series, variants: [Series],
+        collections: [Series], collectedIssues: [Series], dates: [DateElement], prices: [Price], thumbnail: Thumbnail?,
+        images: [Thumbnail], creators: ListOfEntitiesOfItemModel<CreatorsItem>, characters: ListOfEntitiesOfItemModel<Series>,
+        stories: ListOfEntitiesOfItemModel<StoriesItem>, events: ListOfEntitiesOfItemModel<Series>
+    ) {
+        self.id = id
+        self.digitalId = digitalId
+        self.title = title
+        self.issueNumber = issueNumber
+        self.variantDescription = variantDescription
+        self.description = description
+        self.modified = modified
+        self.isbn = isbn
+        self.upc = upc
+        self.diamondCode = diamondCode
+        self.ean = ean
+        self.issn = issn
+        self.format = format
+        self.pageCount = pageCount
+        self.textObjects = textObjects
+        self.resourceURI = resourceURI
+        self.urls = urls
+        self.series = series
+        self.variants = variants
+        self.collections = collections
+        self.collectedIssues = collectedIssues
+        self.dates = dates
+        self.prices = prices
+        
+        if let thumbnail = thumbnail, thumbnail.path != imageNotAvailable {
+            self.thumbnail = thumbnail
+        } else {
+            self.thumbnail = Thumbnail(path: "entity", thumbnailExtension: "")
+        }
+        self.images = images
+        self.creators = creators
+        self.characters = characters
+        self.stories = stories
+        self.events = events
+    }
 }
 
 extension ComicsItemModel {
@@ -162,35 +239,94 @@ extension ComicsItemModel {
     }
 }
 
-struct CreatorsModel: Codable {
+struct CreatorsModel: Codable, Item {
     let id: Int
     let firstName, middleName, lastName, suffix: String
     let fullName: String
     let modified: String
-    let thumbnail: Thumbnail
+    let thumbnail: Thumbnail?
     let resourceURI: String
     let comics, series: ListOfEntitiesOfItemModel<ComicsItem>
     let stories: ListOfEntitiesOfItemModel<StoriesItem>
     let events: ListOfEntitiesOfItemModel<ComicsItem>
     let urls: [URLElement]
+    
+    init(
+        id: Int, firstName: String, middleName: String, lastName: String, suffix: String, fullName: String,
+        modified: String, thumbnail: Thumbnail?, resourceURI: String,
+        comics: ListOfEntitiesOfItemModel<ComicsItem>, series: ListOfEntitiesOfItemModel<ComicsItem>,
+        stories: ListOfEntitiesOfItemModel<StoriesItem>, events: ListOfEntitiesOfItemModel<ComicsItem>,
+        urls: [URLElement]
+    ) {
+        self.id = id
+        self.firstName = firstName
+        self.middleName = middleName
+        self.lastName = lastName
+        self.suffix = suffix
+        self.fullName = fullName
+        self.modified = modified
+        
+        if let thumbnail = thumbnail, thumbnail.path != imageNotAvailable {
+            self.thumbnail = thumbnail
+        } else {
+            self.thumbnail = Thumbnail(path: "entity", thumbnailExtension: "")
+        }
+        self.resourceURI = resourceURI
+        self.comics = comics
+        self.series = series
+        self.stories = stories
+        self.events = events
+        self.urls = urls
+    }
 }
 
-struct EventsModel: Codable {
+struct EventsModel: Codable, Item {
     let id: Int
-    let title, description: String
+    let title: String
+    let description: String?
     let resourceURI: String
     let urls: [URLElement]
     let modified: String
     let start, end: String?
-    let thumbnail: Thumbnail
+    let thumbnail: Thumbnail?
     let creators: ListOfEntitiesOfItemModel<CreatorsItem>
     let characters: ListOfEntitiesOfItemModel<ComicsItem>
     let stories: ListOfEntitiesOfItemModel<StoriesItem>
     let comics, series: ListOfEntitiesOfItemModel<ComicsItem>
     let next, previous: Series?
+    
+    init(
+        id: Int,  title: String, description: String?, resourceURI: String, urls: [URLElement], modified: String,
+        start: String?, end: String?, thumbnail: Thumbnail?,  creators: ListOfEntitiesOfItemModel<CreatorsItem>,
+        characters: ListOfEntitiesOfItemModel<ComicsItem>, stories: ListOfEntitiesOfItemModel<StoriesItem>,
+        comics: ListOfEntitiesOfItemModel<ComicsItem>, series: ListOfEntitiesOfItemModel<ComicsItem>,
+        next: Series?, previous: Series?
+    ) {
+        self.id = id
+        self.title = title
+        self.description = description
+        self.resourceURI = resourceURI
+        self.urls = urls
+        self.modified = modified
+        self.start = start
+        self.end = end
+        
+        if let thumbnail = thumbnail, thumbnail.path != imageNotAvailable {
+            self.thumbnail = thumbnail
+        } else {
+            self.thumbnail = Thumbnail(path: "entity", thumbnailExtension: "")
+        }
+        self.creators = creators
+        self.characters = characters
+        self.stories = stories
+        self.comics = comics
+        self.series = series
+        self.next = next
+        self.previous = previous
+    }
 }
 
-struct SeriesModel: Codable {
+struct SeriesModel: Codable, Item {
     let id: Int
     let title: String
     let description: String?
@@ -200,16 +336,49 @@ struct SeriesModel: Codable {
     let rating: String
     let type: String
     let modified: String
-    let thumbnail: Thumbnail
+    let thumbnail: Thumbnail?
     let creators: ListOfEntitiesOfItemModel<CreatorsItem>
     let stories: ListOfEntitiesOfItemModel<StoriesItem>
     let characters, comics, events: ListOfEntitiesOfItemModel<ComicsItem>
     let next, previous: Series?
+    
+    init(
+        id: Int, title: String, description: String?, resourceURI: String, urls: [URLElement], startYear: Int,
+        endYear: Int, rating: String, type: String, modified: String, thumbnail: Thumbnail?,
+        creators: ListOfEntitiesOfItemModel<CreatorsItem>, stories: ListOfEntitiesOfItemModel<StoriesItem>,
+        characters: ListOfEntitiesOfItemModel<ComicsItem>, comics: ListOfEntitiesOfItemModel<ComicsItem>,
+        events: ListOfEntitiesOfItemModel<ComicsItem>, next: Series?, previous: Series?
+    ) {
+        self.id = id
+        self.title = title
+        self.description = description
+        self.resourceURI = resourceURI
+        self.urls = urls
+        self.startYear = startYear
+        self.endYear = endYear
+        self.rating = rating
+        self.type = type
+        self.modified = modified
+        
+        if let thumbnail = thumbnail, thumbnail.path != imageNotAvailable {
+            self.thumbnail = thumbnail
+        } else {
+            self.thumbnail = Thumbnail(path: "entity", thumbnailExtension: "")
+        }
+        self.creators = creators
+        self.stories = stories
+        self.characters = characters
+        self.comics = comics
+        self.events = events
+        self.next = next
+        self.previous = previous
+    }
 }
 
-struct StoriesModel: Codable {
+struct StoriesModel: Codable, Item {
     let id: Int
-    let title, description: String
+    let title: String
+    let description: String?
     let resourceURI: String
     let type: String
     let modified: String
@@ -217,4 +386,31 @@ struct StoriesModel: Codable {
     let creators: ListOfEntitiesOfItemModel<CreatorsItem>
     let events, characters, series, comics: ListOfEntitiesOfItemModel<ComicsItem>
     let originalIssue: Series
+    
+    init(
+        id: Int, title: String, description: String?,  resourceURI: String, type: String, modified: String,
+        thumbnail: Thumbnail?, creators: ListOfEntitiesOfItemModel<CreatorsItem>,
+        events: ListOfEntitiesOfItemModel<ComicsItem>, characters: ListOfEntitiesOfItemModel<ComicsItem>,
+        series: ListOfEntitiesOfItemModel<ComicsItem>, comics: ListOfEntitiesOfItemModel<ComicsItem>,
+        originalIssue: Series
+    ) {
+        self.id = id
+        self.title = title
+        self.description = description
+        self.resourceURI = resourceURI
+        self.type = type
+        self.modified = modified
+        
+        if let thumbnail = thumbnail, thumbnail.path != imageNotAvailable {
+            self.thumbnail = thumbnail
+        } else {
+            self.thumbnail = Thumbnail(path: "entity", thumbnailExtension: "")
+        }
+        self.creators = creators
+        self.events = events
+        self.characters = characters
+        self.series = series
+        self.comics = comics
+        self.originalIssue = originalIssue
+    }
 }

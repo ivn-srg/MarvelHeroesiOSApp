@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-final class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
+final class DetailHeroViewController: UIViewController {
     
     // MARK: - Fields
     let viewModel: DetailHeroViewModel
@@ -67,7 +67,11 @@ final class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
         return txt
     }()
     
-    private lazy var viewWithDetailInfo = DetailHeroBottomSubview(vm: viewModel)
+    private lazy var viewWithDetailInfo = DetailHeroBottomSubview(
+        navigationController: self.navigationController,
+        vm: viewModel
+    )
+    
     private var viewWithDetailInfoTopConstraint: NSLayoutConstraint!
     
     // MARK: - Lifecycle
@@ -117,14 +121,13 @@ final class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
         }
         
         view.addSubview(viewWithDetailInfo)
-        // Устанавливаем начальное положение viewWithDetailInfo
         viewWithDetailInfo.snp.makeConstraints {
             $0.leading.trailing.bottom.equalToSuperview()
         }
         viewWithDetailInfoTopConstraint = viewWithDetailInfo.topAnchor.constraint(equalTo: box.bottomAnchor, constant: lowestDetailInfoYPositionConstant)
         viewWithDetailInfoTopConstraint.isActive = true
+        viewWithDetailInfo.currentViewTopConstraint = viewWithDetailInfoTopConstraint
         
-        // Добавляем распознаватель жестов для перетаскивания
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
         viewWithDetailInfo.addGestureRecognizer(panGesture)
     }
@@ -163,7 +166,6 @@ final class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
         
         switch gesture.state {
         case .changed:
-            print(newTopConstant)
             viewWithDetailInfo.hideTopSwipeIcon(newTopConstant == highestSafeeAreaYPosition)
             
             viewWithDetailInfoTopConstraint.constant = newTopConstant < lowestDetailInfoYPositionConstant
@@ -171,7 +173,7 @@ final class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
             : lowestYPosition
             
             // для плавного затемнения фонового изображения героя
-            upperAlphaView.backgroundColor = bgColor.withAlphaComponent(absNewTopConstant)
+            upperAlphaView.backgroundColor = UIColor.bgColor.withAlphaComponent(absNewTopConstant)
             heroImageView.transform = CGAffineTransform(scaleX: scaledValueForBgImage, y: scaledValueForBgImage)
             
             gesture.setTranslation(.zero, in: view)
@@ -194,8 +196,9 @@ final class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
-    private func animateViewToOriginalPosition() {
+    func animateViewToOriginalPosition() {
         UIView.animate(withDuration: 0.3, animations: {
+            self.viewWithDetailInfo.hideTopSwipeIcon(false)
             self.viewWithDetailInfoTopConstraint.constant = self.lowestDetailInfoYPositionConstant
             self.upperAlphaView.backgroundColor = nil
             self.heroImageView.transform = .identity
@@ -205,8 +208,9 @@ final class DetailHeroViewController: UIViewController, UIScrollViewDelegate {
     
     private func animateViewToTop() {
         UIView.animate(withDuration: 0.3, animations: {
+            self.viewWithDetailInfo.hideTopSwipeIcon()
             self.viewWithDetailInfoTopConstraint.constant = self.highestSafeeAreaYPosition
-            self.upperAlphaView.backgroundColor = bgColor
+            self.upperAlphaView.backgroundColor = UIColor.bgColor
             self.viewWithDetailInfo.hideTopSwipeIcon()
             self.view.layoutIfNeeded()
         })
