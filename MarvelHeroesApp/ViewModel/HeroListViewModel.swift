@@ -16,35 +16,48 @@ final class HeroListViewModel {
     
     // MARK: - Network work
     
-    func fetchHeroesData(into collectionView: UICollectionView, needRefresh: Bool = false, needsLoadMore: Bool = false) throws {
-        LoadingIndicator.startLoading()
+    func fetchHeroesData(
+        into collectionView: UICollectionView,
+        needRefresh: Bool = false,
+        needsLoadMore: Bool = false
+    ) async throws {
+        await MainActor.run {
+            LoadingIndicator.startLoading()
+        }
         
         if dataSource.isEmpty || needRefresh || needsLoadMore {
             let offset = needsLoadMore ? countOfRow() : 0
             let urlString = try apiManager.urlString(endpoint: .getHeroes, offset: offset)
             
-            Task {
-                do {
+            do {
+                let cashedHeroes = realmDb.getHeroes(exclude: dataSource)
+                dataSource.append(contentsOf: cashedHeroes)
+                
+                if cashedHeroes.isEmpty {
                     let heroesData = try await networkService.performRequest(
                         from: urlString,
                         modelType: DataWrapper<HeroItemModel>.self
                     )
+                    
                     if heroesData.data.count > 0 {
                         let statusOfSaving = realmDb.saveHeroes(heroes: heroesData.data.results)
                         dataSource.append(contentsOf: heroesData.data.results)
                         print("Saving status \(statusOfSaving)")
                     }
-                    
-                } catch {
-                    let cashedHeroed = realmDb.getHeroes()
-                    dataSource = cashedHeroed.isEmpty ? [mockUpHeroData] : cashedHeroed
-                    print(error)
                 }
+            } catch {
+                dataSource = [mockUpHeroData]
+                print(error)
+            }
+            
+            await MainActor.run {
                 LoadingIndicator.stopLoading()
-                await collectionView.reloadData()
+                collectionView.reloadData()
             }
         } else {
-            LoadingIndicator.stopLoading()
+            await MainActor.run {
+                LoadingIndicator.stopLoading()
+            }
         }
     }
     

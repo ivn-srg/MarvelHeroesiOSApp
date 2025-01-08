@@ -10,48 +10,35 @@ import RealmSwift
 
 protocol HeroDAO {
     func saveHeroes(heroes: Heroes) -> (Bool)
-    func getHeroes()-> Heroes
+    func getHeroes(exclude excludedHeroes: Heroes)-> Heroes
 }
 
 final class RealmManager {
     static let shared = RealmManager()
     
+    private var realm: Realm?
+    
     private init() {}
     
-    private var realm: Realm?
-
-    func setupRealm() {
-        DispatchQueue.main.sync {
-            do {
-                self.realm = try Realm()
-            } catch {
-                print("Error initializing Realm: \(error)")
-            }
+    private func createRealmInstance() -> Realm? {
+        do {
+            return try Realm()
+        } catch {
+            print("Error initializing Realm: \(error)")
+            return nil
         }
     }
 
     func getRealm() -> Realm? {
-        if Thread.isMainThread {
-            return realm
-        } else {
-            return DispatchQueue.main.sync {
-                return realm
-            }
-        }
+        createRealmInstance()
     }
 }
 
 extension RealmManager {
-    func asyncGetRealm() async -> Realm? {
-        return await MainActor.run {
-            return self.getRealm()
-        }
-    }
-
     func fetchCachedImage(url: String) async -> CachedImageData? {
-        guard let realm = await asyncGetRealm() else { return nil }
+        guard let realm = getRealm() else { return nil }
 
-        let cachedImage = realm.objects(CachedImageData.self).filter { $0.url == url }.first
+        let cachedImage = realm.objects(CachedImageData.self).filter("url == %@", url).first
         return cachedImage
     }
 }
@@ -76,12 +63,19 @@ extension RealmManager: HeroDAO {
         return true
     }
     
-    func getHeroes() -> Heroes {
+    func getHeroes(exclude excludedHeroes: Heroes = []) -> Heroes {
         do {
             let realm = try Realm()
             
             var heroes: Heroes = []
-            let realmObject = realm.objects(HeroRO.self)
+            let realmObject: Results<HeroRO>
+            
+            if excludedHeroes.isEmpty {
+                realmObject = realm.objects(HeroRO.self)
+            } else {
+                let idsOfExcludedHeroes = excludedHeroes.map { $0.id }
+                realmObject = realm.objects(HeroRO.self).filter("NOT (id IN %@)", idsOfExcludedHeroes)
+            }
             
             for item in realmObject {
                 heroes.append(HeroItemModel(cashedHero: item))

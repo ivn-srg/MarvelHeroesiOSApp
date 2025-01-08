@@ -9,10 +9,10 @@ import UIKit
 import CommonCrypto
 
 extension UIColor {
-    static let dirtyWhite = UIColor(rgb: 0xefffff)
-    static let bgColor = UIColor(rgb: 0x2b272b)
-    static let loaderColor = UIColor(rgb: 0xF31B2A)
-    static let darkRedColor = UIColor(rgb: 0x931c29)
+    static let bgColor = UIColor(named: "background")!
+    static let themeRed = UIColor(named: "customRedColor")!
+    static let primaryColor = UIColor(named: "primaryColor")!
+    static let heroTitleCellColor = UIColor(named: "dirtyWhite")!
 }
 
 extension UIColor {

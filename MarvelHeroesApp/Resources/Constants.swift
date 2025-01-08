@@ -18,7 +18,7 @@ let screenHeight = UIScreen.main.bounds.height
 let horizontalPadding: CGFloat = 16
 
 // images
-let Logo = UIImage(named: "marvelLogo")
+let Logo = UIImage(named: "marvelLogo")!
 let QuestionImage = UIImage(systemName: "questionmark")
 let MockUpImage = UIImage(named: "mockup")!
 let emptyEntityImage = UIImage(named: "emptyEntity")!
@@ -28,13 +28,20 @@ let minusImage: UIImage? = {
     img?.resizableImage(withCapInsets: .zero, resizingMode: .stretch)
     return img
 }()
+let arrowLeftImage: UIImage? = {
+    let img = UIImage(systemName: "arrow.left")!.withRenderingMode(.alwaysTemplate)
+        .applyingSymbolConfiguration(.init(weight: .bold))?
+        .withTintColor(.dirtyWhite, renderingMode: .alwaysOriginal)
+    img?.resizableImage(withCapInsets: .zero, resizingMode: .stretch)
+    return img
+}()
 
 // localizable strings
-let mainScreenTitle = NSLocalizedString("mainScreenTitle", comment: "")
+let mainScreenTitle = "Choose your hero".localized
 
 // mockUpData
 let mockUpHeroData = HeroItemModel.emptyObject
-let heroDescriptionMock = "Just a cool Marvel hero"
+let heroDescriptionMock = "Just a cool Marvel hero".localized
 let mockUpListData = List<HeroEntityItemRO>()
 
 // network constants

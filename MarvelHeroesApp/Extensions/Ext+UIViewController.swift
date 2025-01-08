@@ -9,11 +9,15 @@ import UIKit
 
 extension UIViewController {
     // Universalized func for error handling
-    func executeWithErrorHandling(_ action: () throws -> Void) {
-        do {
-            try action()
-        } catch {
-            UIAlertController.showSimpleAlert(on: self, message: error.localizedDescription)
+    func executeWithErrorHandling(_ action: @escaping () async throws -> Void) {
+        Task {
+            do {
+                try await action()
+            } catch {
+                await MainActor.run {
+                    UIAlertController.showSimpleAlert(on: self, message: error.localizedDescription)
+                }
+            }
         }
     }
 }

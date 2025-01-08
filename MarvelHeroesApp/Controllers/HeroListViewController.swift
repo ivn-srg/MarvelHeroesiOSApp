@@ -41,7 +41,6 @@ final class HeroListViewController: UIViewController {
         let txt = UILabel()
         txt.translatesAutoresizingMaskIntoConstraints = false
         txt.font = UIFont(name: Font.InterBold, size: 28)
-        txt.textColor = .white
         txt.textAlignment = .center
         txt.numberOfLines = 2
         return txt
@@ -84,7 +83,7 @@ final class HeroListViewController: UIViewController {
     private let activityIndicator: UIActivityIndicatorView = {
         let activityIndicator = UIActivityIndicatorView(style: .medium)
         activityIndicator.hidesWhenStopped = true
-        activityIndicator.color = UIColor.loaderColor
+        activityIndicator.color = UIColor.themeRed
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         return activityIndicator
     }()
@@ -105,11 +104,11 @@ final class HeroListViewController: UIViewController {
         
         setupUI()
         executeWithErrorHandling {
-            try viewModel.fetchHeroesData(into: collectionView)
+            try await self.viewModel.fetchHeroesData(into: self.collectionView)
         }
         
-        self.collectionView.dataSource = self
-        self.collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.delegate = self
     }
     
     // MARK: - UI functions
@@ -118,7 +117,7 @@ final class HeroListViewController: UIViewController {
         
         box.backgroundColor = UIColor.bgColor
         
-        self.navigationController?.setNavigationBarHidden(true, animated: false)
+        navigationController?.setNavigationBarHidden(true, animated: false)
         
         marvelLogo.image = Logo
         
@@ -134,28 +133,27 @@ final class HeroListViewController: UIViewController {
         
         view.addSubview(box)
         box.snp.makeConstraints{
-            $0.verticalEdges.equalTo(self.view.safeAreaLayoutGuide.snp.verticalEdges)
-            $0.horizontalEdges.equalToSuperview()
+            $0.edges.equalTo(view.safeAreaLayoutGuide.snp.edges)
         }
         
         triangleView.backgroundColor = .clear
         box.addSubview(triangleView)
         triangleView.snp.makeConstraints{
-            $0.top.equalTo(self.box.snp.top).offset(self.view.frame.height * 0.25)
+            $0.height.equalToSuperview().multipliedBy(0.75)
             $0.bottom.horizontalEdges.equalToSuperview()
         }
         
         box.addSubview(marvelLogo)
         marvelLogo.snp.makeConstraints{
-            $0.top.equalTo(self.box.snp.top).offset(20)
-            $0.width.equalTo(self.box.snp.width).multipliedBy(0.4)
-            $0.height.equalTo(self.box.snp.height).multipliedBy(0.09)
+            $0.top.equalTo(box.snp.top).offset(20)
+            $0.width.equalTo(box.snp.width).multipliedBy(0.4)
+            $0.height.equalTo(box.snp.height).multipliedBy(0.09)
             $0.centerX.equalToSuperview()
         }
         
         box.addSubview(chooseHeroText)
         chooseHeroText.snp.makeConstraints{
-            $0.top.equalTo(self.marvelLogo.snp.bottom).offset(20)
+            $0.top.equalTo(marvelLogo.snp.bottom).offset(20)
             $0.width.equalToSuperview()
         }
         
@@ -174,7 +172,7 @@ final class HeroListViewController: UIViewController {
         let indexPath = IndexPath(item: currentPage, section: 0)
         collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         
-        setupCell()
+        setupCell(at: currentPage)
     }
     
     @objc func pull2refresh(_ gesture: UIPanGestureRecognizer) {
@@ -194,7 +192,7 @@ final class HeroListViewController: UIViewController {
         if gesture.state == .ended {
             if newY > maxPullDownDistance {
                 executeWithErrorHandling {
-                    try viewModel.fetchHeroesData(into: collectionView, needRefresh: true)
+                    try await self.viewModel.fetchHeroesData(into: self.collectionView, needRefresh: true)
                 }
             }
             UIView.animate(withDuration: 0.3) {
@@ -274,15 +272,15 @@ extension HeroListViewController {
             if lastRow >= totalRows - 1 {
                 if collectionView.contentOffset.x > 0 {
                     executeWithErrorHandling {
-                        try viewModel.fetchHeroesData(into: collectionView, needsLoadMore: true)
+                        try await self.viewModel.fetchHeroesData(into: self.collectionView, needsLoadMore: true)
                     }
                 }
             }
         }
     }
     
-    private func setupCell() {
-        let indexPath = IndexPath(item: customLayout.currentPage, section: 0)
+    private func setupCell(at indexPathRow: Int? = nil) {
+        let indexPath = IndexPath(item: indexPathRow == nil ? customLayout.currentPage : indexPathRow!, section: 0)
         guard let cell = collectionView.cellForItem(at: indexPath) as? HeroCollectionViewCell else { return }
 
         updateTriangleViewColor(didLoadImage: cell.heroImage)

@@ -24,21 +24,6 @@ enum EntitiesType: String {
         case .series: return "Series".localized
         }
     }
-    
-    var dataWrapperType: Codable.Type {
-        switch self {
-        case .comics:
-            return ComicsItemModel.self
-        case .stories:
-            return StoriesModel.self
-        case .creators:
-            return CreatorsModel.self
-        case .events:
-            return EventsModel.self
-        case .series:
-            return SeriesModel.self
-        }
-    }
 }
 
 protocol GeneralDataContainerProtocol: AnyObject {
@@ -51,20 +36,20 @@ protocol GeneralDataContainerProtocol: AnyObject {
 class CustomHorizontalCollectionView: UIView {
     // MARK: - Fields
     private var data = [GeneralHeroItemProtocol]()
-    var collectionType: EntitiesType?
+    var collectionType: EntitiesType!
     
     // MARK: - UI components
-    private let collectionViewTitleLbl: LabelWithPadding = {
+    private lazy var collectionViewTitleLbl: LabelWithPadding = {
         let label = LabelWithPadding()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont(name: Font.InterBold, size: 25)
-        label.textColor = .white
         label.numberOfLines = 1
+        label.text = collectionType.title
         label.edgeInsets = UIEdgeInsets(top: 0, left: horizontalPadding, bottom: 0, right: horizontalPadding)
         return label
     }()
     
-    private let collectionViewLayout: UICollectionViewFlowLayout = {
+    private lazy var collectionViewLayout: UICollectionViewFlowLayout = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         return layout
@@ -83,8 +68,9 @@ class CustomHorizontalCollectionView: UIView {
     }()
     
     // MARK: - Life cycle
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(collectionType: EntitiesType) {
+        self.collectionType = collectionType
+        super.init(frame: .zero)
         setupCollectionView()
     }
     
@@ -93,6 +79,7 @@ class CustomHorizontalCollectionView: UIView {
         setupCollectionView()
     }
     
+    // MARK: - setup/update UI
     private func setupCollectionView() {
         addSubview(collectionViewTitleLbl)
         collectionViewTitleLbl.snp.makeConstraints {
@@ -107,7 +94,6 @@ class CustomHorizontalCollectionView: UIView {
     
     func update(with data: GeneralDataContainerProtocol?) {
         if let data = data?.itemsListToArray, !data.isEmpty {
-            collectionViewTitleLbl.text = collectionType?.rawValue
             self.data = data
             collectionView.reloadData()
         } else {

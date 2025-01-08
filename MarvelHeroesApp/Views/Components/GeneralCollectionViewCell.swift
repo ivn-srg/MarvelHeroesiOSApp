@@ -31,7 +31,6 @@ final class GeneralCollectionViewCell: UICollectionViewCell, DetailHeroItemCellP
     static var identifier = "CollectionViewCellId"
     
     var viewModel: CellViewModelProtocol?
-    private var entityImage: UIImage?
     private var cellType: EntitiesType?
     
     // MARK: - UI components
@@ -42,7 +41,8 @@ final class GeneralCollectionViewCell: UICollectionViewCell, DetailHeroItemCellP
         iv.contentMode = .scaleAspectFit
         iv.tintColor = .white
         iv.clipsToBounds = true
-        iv.layer.cornerRadius = 12
+        iv.layer.cornerRadius = 10
+        iv.backgroundColor = .primaryColor
         return iv
     }()
     
@@ -50,7 +50,6 @@ final class GeneralCollectionViewCell: UICollectionViewCell, DetailHeroItemCellP
         let lbl = UILabel()
         lbl.translatesAutoresizingMaskIntoConstraints = false
         lbl.font = UIFont(name: Font.InterRegular, size: 20)
-        lbl.textColor = .white
         lbl.textAlignment = .left
         lbl.numberOfLines = 2
         return lbl
@@ -59,7 +58,7 @@ final class GeneralCollectionViewCell: UICollectionViewCell, DetailHeroItemCellP
     private lazy var activityIndicator: UIActivityIndicatorView = {
         let ai = UIActivityIndicatorView(style: .medium)
         ai.translatesAutoresizingMaskIntoConstraints = false
-        ai.color = UIColor.loaderColor
+        ai.color = UIColor.themeRed
         return ai
     }()
 
@@ -86,10 +85,9 @@ final class GeneralCollectionViewCell: UICollectionViewCell, DetailHeroItemCellP
         
         viewModel = GeneralCellViewModel(cellType: cellType, resourseURI: entities.resourceURI)
         
-        cellImageView.addObserver(self, forKeyPath: "cellImageView", options: [.new], context: nil)
-        
         Task {
             activityIndicator.startAnimating()
+            
             do {
                 if let viewModel = viewModel {
                     cellImageView.image = try await viewModel.getImage()
@@ -99,6 +97,7 @@ final class GeneralCollectionViewCell: UICollectionViewCell, DetailHeroItemCellP
             } catch {
                 print(error)
             }
+            
             activityIndicator.stopAnimating()
         }
         
@@ -121,14 +120,6 @@ final class GeneralCollectionViewCell: UICollectionViewCell, DetailHeroItemCellP
         contentView.addSubview(activityIndicator)
         activityIndicator.snp.makeConstraints {
             $0.center.equalTo(cellImageView.snp.center)
-        }
-    }
-    
-    // MARK: - KVO
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if keyPath == "cellImageView" {
-            guard let img = cellImageView.image else { return }
-            entityImage = img
         }
     }
 }

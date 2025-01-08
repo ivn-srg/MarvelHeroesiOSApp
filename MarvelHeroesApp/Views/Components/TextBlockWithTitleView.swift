@@ -18,7 +18,6 @@ final class TextBlockWithTitleView: UIView {
         let txt = LabelWithPadding()
         txt.translatesAutoresizingMaskIntoConstraints = false
         txt.font = UIFont(name: Font.InterBold, size: 34)
-        txt.textColor = .white
         txt.text = "Overview".localized
         txt.numberOfLines = 0
         txt.edgeInsets = UIEdgeInsets(top: 0, left: horizontalPadding, bottom: 0, right: horizontalPadding)
@@ -29,7 +28,6 @@ final class TextBlockWithTitleView: UIView {
         let txt = LabelWithPadding()
         txt.translatesAutoresizingMaskIntoConstraints = false
         txt.font = UIFont(name: Font.InterRegular, size: 20)
-        txt.textColor = .white
         txt.lineBreakMode = .byWordWrapping
         txt.numberOfLines = 0
         txt.edgeInsets = UIEdgeInsets(top: 0, left: horizontalPadding, bottom: 0, right: horizontalPadding)

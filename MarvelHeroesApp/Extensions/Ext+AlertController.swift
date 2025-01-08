@@ -10,7 +10,7 @@ import UIKit
 extension UIAlertController {
     static func showSimpleAlert(
         on viewController: UIViewController,
-        title: String = String(localized: "errorTitle"),
+        title: String = "Error".localized,
         message: String
     ) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)

@@ -4,15 +4,15 @@
 <dict>
 	<key>NSAppTransportSecurity</key>
 	<dict>
-    		<key>NSAllowsArbitraryLoads</key>
-    		<true/>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
 	</dict>
-	
 	<key>UIAppFonts</key>
 	<array>
 		<string>Inter-Regular.otf</string>
 		<string>Inter-Bold.otf</string>
 		<string>Inter-Light.otf</string>
+		<string>Inter-Medium.ttf</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>

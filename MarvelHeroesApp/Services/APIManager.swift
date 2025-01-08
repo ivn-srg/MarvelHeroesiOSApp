@@ -6,9 +6,7 @@
 //
 
 import Foundation
-import Alamofire
 import CryptoKit
-import Kingfisher
 import RealmSwift
 import UIKit
 
@@ -63,7 +61,7 @@ enum APIType {
 
 enum HeroError: Error, LocalizedError {
     case invalidURL, parsingError(Error), serializationError(Error), noInternetConnection, timeout,
-         otherNetworkError(Error), notFoundEntity, cashingFailed(Error), unexpectedData
+         otherNetworkError(Error), notFoundEntity, cashingFailed(Error), unexpectedData, parsingFailureModelError(Error)
 }
 
 final class ApiServiceConfiguration {
@@ -135,15 +133,14 @@ final class APIManager: ApiServiceProtocol {
         do {
             let (data, _) = try await URLSession.shared.data(for: request)
             guard data != notFoundEntityResponseData else { throw HeroError.notFoundEntity }
-//            print("data = \(String(decoding: data, as: UTF8.self))")
             do {
                 let result = try JSONDecoder().decode(codableModelType, from: data)
                 return result
             } catch {
-                print(HeroError.parsingError(error))
+                print("data = \(String(decoding: data, as: UTF8.self))")
                 let errorModel = try JSONDecoder().decode(ResponseFailureModel.self, from: data)
                 let errorMessage = StringError(errorModel.status)
-                throw HeroError.parsingError(errorMessage)
+                throw HeroError.parsingFailureModelError(errorMessage)
             }
         } catch let error as DecodingError {
             print("request \(request)")
@@ -160,7 +157,8 @@ final class APIManager: ApiServiceProtocol {
             }
         } catch {
             print("request1 \(request)")
-            throw HeroError.otherNetworkError(error)
+            guard let error = error as? HeroError else { throw HeroError.otherNetworkError(error) }
+            throw error
         }
     }
     
@@ -185,7 +183,8 @@ final class APIManager: ApiServiceProtocol {
     private func getImageForHeroFromNet(url: String) async throws -> UIImage {
         guard let url = URL(string: url) else { throw HeroError.invalidURL }
         
-        var request = try URLRequest(url: url, method: .get)
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
         request.allHTTPHeaderFields = ["Accept": "application/json,image/png,image/jpeg,image/gif"]
         
         let (data, _) = try await URLSession.shared.data(for: request)
@@ -215,16 +214,6 @@ final class APIManager: ApiServiceProtocol {
     }
     
     // MARK: - private utility func
-    private func getHeroError(error: AFError, data: Data?) -> Error? {
-        if let data = data,
-           let failure = try? JSONDecoder().decode(ResponseFailureModel.self, from: data) {
-            let message = StringError(failure.status)
-            return HeroError.otherNetworkError(message)
-        } else {
-            return nil
-        }
-    }
-    
     private func MD5(string: String) -> String {
         let digest = Insecure.MD5.hash(data: string.data(using: .utf8) ?? Data())
         return digest.map {

@@ -385,14 +385,14 @@ struct StoriesModel: Codable, Item {
     let thumbnail: Thumbnail?
     let creators: ListOfEntitiesOfItemModel<CreatorsItem>
     let events, characters, series, comics: ListOfEntitiesOfItemModel<ComicsItem>
-    let originalIssue: Series
+    let originalIssue: Series?
     
     init(
         id: Int, title: String, description: String?,  resourceURI: String, type: String, modified: String,
         thumbnail: Thumbnail?, creators: ListOfEntitiesOfItemModel<CreatorsItem>,
         events: ListOfEntitiesOfItemModel<ComicsItem>, characters: ListOfEntitiesOfItemModel<ComicsItem>,
         series: ListOfEntitiesOfItemModel<ComicsItem>, comics: ListOfEntitiesOfItemModel<ComicsItem>,
-        originalIssue: Series
+        originalIssue: Series?
     ) {
         self.id = id
         self.title = title

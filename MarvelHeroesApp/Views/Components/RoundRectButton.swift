@@ -8,20 +8,16 @@
 import UIKit
 
 /// UIButton subclass that draws a rounded rectangle in its background.
-
-public final class RoundRectButton: UIButton {
-
-    // MARK: Public interface
-
+final class RoundRectButton: UIButton {
     /// Corner radius of the background rectangle
-    public var roundRectCornerRadius: CGFloat = 8 {
+    var roundRectCornerRadius: CGFloat = 8 {
         didSet {
             self.setNeedsLayout()
         }
     }
 
     /// Color of the background rectangle
-    public var roundRectColor: UIColor = UIColor.clear {
+    var roundRectColor: UIColor = UIColor.clear {
         didSet {
             self.setNeedsLayout()
         }

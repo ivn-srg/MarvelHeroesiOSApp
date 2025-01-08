@@ -9,6 +9,11 @@ import UIKit
 
 final class DetailHeroBottomSubview: UIView {
     // MARK: - Fields
+    var isCollapsed = true {
+        didSet {
+            scrollView.isScrollEnabled = !isCollapsed
+        }
+    }
     private var viewModel: DetailHeroViewModel
     private var navControl: UINavigationController?
     private var startScrollPosition: CGFloat?
@@ -28,6 +33,7 @@ final class DetailHeroBottomSubview: UIView {
         view.showsHorizontalScrollIndicator = false
         view.showsVerticalScrollIndicator = false
         view.alwaysBounceVertical = true
+        view.isScrollEnabled = !isCollapsed
         view.delegate = self
         return view
     }()
@@ -46,30 +52,26 @@ final class DetailHeroBottomSubview: UIView {
     )
     
     private lazy var comicsCollectionView: CustomHorizontalCollectionView = {
-        let view = CustomHorizontalCollectionView()
+        let view = CustomHorizontalCollectionView(collectionType: .comics)
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.collectionType = .comics
         return view
     }()
     
     private lazy var seriesCollectionView: CustomHorizontalCollectionView = {
-        let view = CustomHorizontalCollectionView()
+        let view = CustomHorizontalCollectionView(collectionType: .series)
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.collectionType = .series
         return view
     }()
     
     private lazy var storiesCollectionView: CustomHorizontalCollectionView = {
-        let view = CustomHorizontalCollectionView()
+        let view = CustomHorizontalCollectionView(collectionType: .stories)
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.collectionType = .stories
         return view
     }()
     
     private lazy var eventsCollectionView: CustomHorizontalCollectionView = {
-        let view = CustomHorizontalCollectionView()
+        let view = CustomHorizontalCollectionView(collectionType: .events)
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.collectionType = .events
         return view
     }()
     
@@ -83,8 +85,6 @@ final class DetailHeroBottomSubview: UIView {
     }()
     
     var currentViewTopConstraint: NSLayoutConstraint!
-    
-//    let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
     
     // MARK: - Lyfecycle
     init(navigationController: UINavigationController?, vm: DetailHeroViewModel) {
@@ -155,9 +155,10 @@ final class DetailHeroBottomSubview: UIView {
     }
     
     // MARK: - public funcs
-    func hideTopSwipeIcon(_ value: Bool = true) {
+    func willMoveToTopOfScreen(_ value: Bool = true) {
         UIView.animate(withDuration: 0.2) {
             self.topSwipeIcon.isHidden = value
+            self.isCollapsed = !value
         }
     }
 }
@@ -175,8 +176,6 @@ extension DetailHeroBottomSubview: UIScrollViewDelegate {
         }
         
         if scrollView.contentOffset.y <= 0 && !scrollView.isDecelerating {
-            print("abs(startPosition - offsetFromStartPosition) \(diffStartAndOffset)")
-            print("transition \(scrollView.contentOffset.y)")
             currentViewTopConstraint.constant = offsetFromStartPosition
             
             if diffStartAndOffset > screenHeight / 6 {

@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import Kingfisher
 
 final class HeroCollectionViewCell: UICollectionViewCell {
     
@@ -33,8 +32,8 @@ final class HeroCollectionViewCell: UICollectionViewCell {
         let lbl = UILabel()
         lbl.translatesAutoresizingMaskIntoConstraints = false
         lbl.font = UIFont(name: Font.InterBold, size: 28)
-        lbl.textColor = .white
         lbl.textAlignment = .left
+        lbl.textColor = UIColor.heroTitleCellColor
         lbl.numberOfLines = 2
         lbl.accessibilityIdentifier = "heroCellName"
         return lbl
@@ -43,7 +42,7 @@ final class HeroCollectionViewCell: UICollectionViewCell {
     private lazy var activityIndicator: UIActivityIndicatorView = {
         let ai = UIActivityIndicatorView(style: .large)
         ai.translatesAutoresizingMaskIntoConstraints = false
-        ai.color = UIColor.loaderColor
+        ai.color = UIColor.themeRed
         return ai
     }()
 

@@ -3,7 +3,7 @@ import RealmSwift
 
 // MARK: - Main Objects
 final class HeroRO: Object {
-    @Persisted var id: Int = 0
+    @Persisted(primaryKey: true) var id: Int = 0
     @Persisted var name: String = ""
     @Persisted var heroDescription: String = ""
     @Persisted var modified: String = ""
@@ -14,10 +14,6 @@ final class HeroRO: Object {
     @Persisted var stories: StoriesInfoRO?
     @Persisted var events: HeroEntitiesInfoRO?
     @Persisted var urls: List<URLElementRO>
-    
-    override public static func primaryKey() -> String? {
-        "id"
-    }
     
     convenience init(heroData: HeroItemModel) {
         self.init()
@@ -41,7 +37,7 @@ final class HeroRO: Object {
 
 // MARK: - Comics
 final class ComicsItemModelRO: Object {
-    @Persisted var id: Int
+    @Persisted(primaryKey: true) var id: Int
     @Persisted var digitalId: Int?
     @Persisted var title: String
     @Persisted var issueNumber: Int?
@@ -70,12 +66,10 @@ final class ComicsItemModelRO: Object {
     @Persisted var characters: HeroEntitiesInfoRO?
     @Persisted var stories: StoriesInfoRO?
     @Persisted var events: HeroEntitiesInfoRO?
-    
-    override public static func primaryKey() -> String? {
-        "id"
-    }
 
     override init() {
+        super.init()
+        
         self.id = 0
         self.digitalId = 0
         self.title = "Title cell"
@@ -143,7 +137,7 @@ extension ComicsItemModelRO {
 
 // MARK: - Creator
 final class CreatorsModelRO: Object {
-    @Persisted var id: Int
+    @Persisted(primaryKey: true) var id: Int
     @Persisted var firstName: String
     @Persisted var middleName: String
     @Persisted var lastName: String
@@ -157,12 +151,10 @@ final class CreatorsModelRO: Object {
     @Persisted var stories: StoriesInfoRO?
     @Persisted var events: HeroEntitiesInfoRO?
     @Persisted var urls: List<URLElementRO>
-    
-    override public static func primaryKey() -> String? {
-        "id"
-    }
 
     override init() {
+        super.init()
+        
         self.id = 0
         self.firstName = "firstName"
         self.middleName = "middleName"
@@ -202,7 +194,7 @@ extension CreatorsModelRO {
 
 // MARK: - Events
 final class EventModelRO: Object {
-    @Persisted var id: Int
+    @Persisted(primaryKey: true) var id: Int
     @Persisted var title: String
     @Persisted var eventDescription: String
     @Persisted var resourceURI: String
@@ -218,12 +210,10 @@ final class EventModelRO: Object {
     @Persisted var series: HeroEntitiesInfoRO?
     @Persisted var next: HeroEntityItemRO?
     @Persisted var previous: HeroEntityItemRO?
-    
-    override public static func primaryKey() -> String? {
-        "id"
-    }
 
     override init() {
+        super.init()
+        
         self.id = 0
         self.title = "title"
         self.eventDescription = "eventDescription"
@@ -272,7 +262,7 @@ extension EventModelRO {
 
 // MARK: - Series
 final class SeriesModelRO: Object {
-    @Persisted var id: Int
+    @Persisted(primaryKey: true) var id: Int
     @Persisted var title: String
     @Persisted var seriesDescription: String
     @Persisted var resourceURI: String
@@ -290,12 +280,10 @@ final class SeriesModelRO: Object {
     @Persisted var events: HeroEntitiesInfoRO?
     @Persisted var next: HeroEntityItemRO?
     @Persisted var previous: HeroEntityItemRO?
-    
-    override public static func primaryKey() -> String? {
-        "id"
-    }
 
     override init() {
+        super.init()
+        
         self.id = 0
         self.title = "title"
         self.seriesDescription = "eventDescription"
@@ -586,13 +574,9 @@ final class PriceRO: EmbeddedObject {
 
 // MARK: - Кеширование изображений
 final class CachedImageData: Object {
-    @Persisted var id: String = ""
+    @Persisted(primaryKey: true) var id: String = ""
     @Persisted var url: String = ""
     @Persisted var imageData: Data? = nil
-    
-    override public static func primaryKey() -> String? {
-        "id"
-    }
     
     convenience init(url: String, imageData: Data?) {
         self.init()

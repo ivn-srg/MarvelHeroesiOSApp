@@ -38,8 +38,8 @@ final class DetailHeroViewController: UIViewController {
     
     private lazy var backButton: UIButton = {
         var configuration = UIButton.Configuration.plain()
-        configuration.image = UIImage(systemName: "arrow.left")
-        configuration.image?.applyingSymbolConfiguration(.init(weight: .medium))
+        configuration.image = arrowLeftImage
+        configuration.image?.applyingSymbolConfiguration(.init(weight: .bold))
         configuration.baseForegroundColor = .white
         configuration.buttonSize = .small
         configuration.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20)
@@ -62,13 +62,13 @@ final class DetailHeroViewController: UIViewController {
         let txt = UILabel()
         txt.translatesAutoresizingMaskIntoConstraints = false
         txt.font = UIFont(name: Font.InterBold, size: 34)
-        txt.textColor = .white
+        txt.textColor = UIColor.heroTitleCellColor
         txt.numberOfLines = 2
         return txt
     }()
     
     private lazy var viewWithDetailInfo = DetailHeroBottomSubview(
-        navigationController: self.navigationController,
+        navigationController: navigationController,
         vm: viewModel
     )
     
@@ -89,7 +89,7 @@ final class DetailHeroViewController: UIViewController {
         super.viewDidLoad()
         setupView()
         executeWithErrorHandling {
-            try viewModel.fetchHeroData()
+            try await self.viewModel.fetchHeroData()
         }
         updateView()
     }
@@ -166,7 +166,7 @@ final class DetailHeroViewController: UIViewController {
         
         switch gesture.state {
         case .changed:
-            viewWithDetailInfo.hideTopSwipeIcon(newTopConstant == highestSafeeAreaYPosition)
+            viewWithDetailInfo.willMoveToTopOfScreen(newTopConstant == highestSafeeAreaYPosition)
             
             viewWithDetailInfoTopConstraint.constant = newTopConstant < lowestDetailInfoYPositionConstant
             ? (newTopConstant > highestSafeeAreaYPosition ? newTopConstant : highestSafeeAreaYPosition)
@@ -198,7 +198,7 @@ final class DetailHeroViewController: UIViewController {
     
     func animateViewToOriginalPosition() {
         UIView.animate(withDuration: 0.3, animations: {
-            self.viewWithDetailInfo.hideTopSwipeIcon(false)
+            self.viewWithDetailInfo.willMoveToTopOfScreen(false)
             self.viewWithDetailInfoTopConstraint.constant = self.lowestDetailInfoYPositionConstant
             self.upperAlphaView.backgroundColor = nil
             self.heroImageView.transform = .identity
@@ -208,10 +208,10 @@ final class DetailHeroViewController: UIViewController {
     
     private func animateViewToTop() {
         UIView.animate(withDuration: 0.3, animations: {
-            self.viewWithDetailInfo.hideTopSwipeIcon()
+            self.viewWithDetailInfo.willMoveToTopOfScreen()
             self.viewWithDetailInfoTopConstraint.constant = self.highestSafeeAreaYPosition
             self.upperAlphaView.backgroundColor = UIColor.bgColor
-            self.viewWithDetailInfo.hideTopSwipeIcon()
+//            self.viewWithDetailInfo.willMoveToTopOfScreen()
             self.view.layoutIfNeeded()
         })
     }

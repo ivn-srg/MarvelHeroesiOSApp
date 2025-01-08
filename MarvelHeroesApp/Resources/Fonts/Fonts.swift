@@ -11,5 +11,6 @@ import Foundation
 struct Font {
     static let InterBold = "Inter-Bold"
     static let InterRegular = "Inter-Regular"
+    static let InterMedium = "Inter-Medium"
     static let InterLight = "Inter-Light"
 }
