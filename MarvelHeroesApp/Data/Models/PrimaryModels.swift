@@ -43,7 +43,7 @@ struct HeroItemModel: Codable, Item {
         if let thumbnail = thumbnail, thumbnail.path != imageNotAvailable {
             self.thumbnail = thumbnail
         } else {
-            self.thumbnail = Thumbnail(path: "hero", thumbnailExtension: "")
+            self.thumbnail = Thumbnail(path: "hero", thumbnailExtension: "mock")
         }
         self.resourceURI = resourceURI
         self.comics = comics
@@ -195,7 +195,7 @@ struct ComicsItemModel: Codable, Item {
         if let thumbnail = thumbnail, thumbnail.path != imageNotAvailable {
             self.thumbnail = thumbnail
         } else {
-            self.thumbnail = Thumbnail(path: "entity", thumbnailExtension: "")
+            self.thumbnail = Thumbnail(path: "entity", thumbnailExtension: "mock")
         }
         self.images = images
         self.creators = creators
@@ -269,7 +269,7 @@ struct CreatorsModel: Codable, Item {
         if let thumbnail = thumbnail, thumbnail.path != imageNotAvailable {
             self.thumbnail = thumbnail
         } else {
-            self.thumbnail = Thumbnail(path: "entity", thumbnailExtension: "")
+            self.thumbnail = Thumbnail(path: "entity", thumbnailExtension: "mock")
         }
         self.resourceURI = resourceURI
         self.comics = comics
@@ -314,7 +314,7 @@ struct EventsModel: Codable, Item {
         if let thumbnail = thumbnail, thumbnail.path != imageNotAvailable {
             self.thumbnail = thumbnail
         } else {
-            self.thumbnail = Thumbnail(path: "entity", thumbnailExtension: "")
+            self.thumbnail = Thumbnail(path: "entity", thumbnailExtension: "mock")
         }
         self.creators = creators
         self.characters = characters
@@ -363,7 +363,7 @@ struct SeriesModel: Codable, Item {
         if let thumbnail = thumbnail, thumbnail.path != imageNotAvailable {
             self.thumbnail = thumbnail
         } else {
-            self.thumbnail = Thumbnail(path: "entity", thumbnailExtension: "")
+            self.thumbnail = Thumbnail(path: "entity", thumbnailExtension: "mock")
         }
         self.creators = creators
         self.stories = stories
@@ -404,7 +404,7 @@ struct StoriesModel: Codable, Item {
         if let thumbnail = thumbnail, thumbnail.path != imageNotAvailable {
             self.thumbnail = thumbnail
         } else {
-            self.thumbnail = Thumbnail(path: "entity", thumbnailExtension: "")
+            self.thumbnail = Thumbnail(path: "entity", thumbnailExtension: "mock")
         }
         self.creators = creators
         self.events = events

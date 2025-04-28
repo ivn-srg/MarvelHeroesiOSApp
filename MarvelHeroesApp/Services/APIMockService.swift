@@ -10,10 +10,10 @@ import UIKit
 
 final class APIMockManager: ApiServiceProtocol {
     
-    func urlString(endpoint: APIType, offset: Int?, entityId: Int?, finalURL: String?) throws -> String { "" }
+    func composeURL(for method: API.Endpoint, urlComponents: [String?]?, queryItems: [API.QueryParams : Int?]?) -> URL? { URL(string: API.baseURL) }
     
-    func performRequest<T>(from urlString: String, modelType: T.Type) async throws -> T where T : Decodable {
-        return try await makeHTTPRequest(for: URLRequest(url: URL(string: urlString)!), codableModelType: DataWrapper<HeroItemModel>.self) as! T
+    func performRequest<T>(from url: URL?, modelType: T.Type) async throws -> T where T : Decodable {
+        return try await makeHTTPRequest(for: URLRequest(url: url!), codableModelType: DataWrapper<HeroItemModel>.self) as! T
     }
     
     func makeHTTPRequest<T>(for request: URLRequest, codableModelType: T.Type) async throws -> T where T : Decodable {

@@ -27,7 +27,7 @@ final class HeroListViewModel {
         
         if dataSource.isEmpty || needRefresh || needsLoadMore {
             let offset = needsLoadMore ? countOfRow() : 0
-            let urlString = try apiManager.urlString(endpoint: .getHeroes, offset: offset)
+            let urlString = apiManager.composeURL(for: .getHeroes, urlComponents: nil, queryItems: [.offset: offset])
             
             do {
                 let cashedHeroes = realmDb.getHeroes(exclude: dataSource)
@@ -48,16 +48,19 @@ final class HeroListViewModel {
             } catch {
                 dataSource = [mockUpHeroData]
                 print(error)
+                
+                await MainActor.run {
+                    LoadingIndicator.stopLoading()
+                    collectionView.reloadData()
+                }
+                
+                throw error
             }
-            
-            await MainActor.run {
-                LoadingIndicator.stopLoading()
-                collectionView.reloadData()
-            }
-        } else {
-            await MainActor.run {
-                LoadingIndicator.stopLoading()
-            }
+        }
+        
+        await MainActor.run {
+            LoadingIndicator.stopLoading()
+            collectionView.reloadData()
         }
     }
     

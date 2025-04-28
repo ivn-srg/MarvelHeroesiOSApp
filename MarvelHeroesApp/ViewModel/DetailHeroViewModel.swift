@@ -24,7 +24,8 @@ final class DetailHeroViewModel {
         await MainActor.run {
             LoadingIndicator.startLoading()
         }
-        let urlString = try apiManager.urlString(endpoint: .getHero, entityId: heroItem.id)
+        
+        let urlString = apiManager.composeURL(for: .getHero, urlComponents: [String(heroItem.id)])
         
         do {
             let heroData = try await networkService.performRequest(

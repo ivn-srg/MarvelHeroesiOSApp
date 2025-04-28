@@ -42,7 +42,7 @@ final class MarvelHeroesAppTests: XCTestCase {
 
     func testPerformanceExample() throws {
         measure {
-            testedImage?.averageColor()
+            let _ = testedImage?.averageColor()
         }
     }
 }
